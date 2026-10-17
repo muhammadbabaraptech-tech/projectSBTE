@@ -211,9 +211,18 @@
         // Retry cloud connection when user clicks the Retry button
         const cloudRetryBtn = document.getElementById('cloudRetryBtn');
         if (cloudRetryBtn) {
-            cloudRetryBtn.addEventListener('click', () => {
-                setCloudStatus('connecting');
-                window.location.reload();
+            cloudRetryBtn.addEventListener('click', async () => {
+                cloudRetryBtn.disabled = true;
+                cloudRetryBtn.textContent = 'Retrying…';
+                try {
+                    await bootFirebase();
+                    cloudRetryBtn.textContent = 'Retry';
+                    cloudRetryBtn.disabled = false;
+                } catch (err) {
+                    cloudRetryBtn.textContent = 'Retry';
+                    cloudRetryBtn.disabled = false;
+                    console.warn('Retry failed:', err);
+                }
             });
         }
 
@@ -3127,7 +3136,7 @@
             return window.__fbReady;
         }
 
-        (async function bootFirebase() {
+        async function bootFirebase() {
             setCloudStatus('connecting');
             try {
                 const fbReadyPromise = await waitForFirebaseModule(4000);
@@ -3250,7 +3259,10 @@
                 USING_FIREBASE = false;
                 setCloudStatus('offline');
             }
-        })().finally(() => stuPwResolve());
+        }
+
+        // Start Firebase connection on load
+        bootFirebase().finally(() => stuPwResolve());
 
 
         // ---------- Dark / Light Theme Management ----------
