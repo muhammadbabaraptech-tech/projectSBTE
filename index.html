@@ -34,38 +34,7 @@
     <link rel="stylesheet" href="style.css">
 
 
-<script type="module">
-
-        // Firebase — loaded as an ES module, bridging into the classic app script via window.__fbReady
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import {
-            getDatabase, ref, get, set, update, remove
-        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyA9_Vgowe4f6-i_2SOECkEWmXgMkKB2mvo",
-            authDomain: "sbte-evaluation.firebaseapp.com",
-            databaseURL: "https://sbte-evaluation-default-rtdb.firebaseio.com",
-            projectId: "sbte-evaluation",
-            storageBucket: "sbte-evaluation.firebasestorage.app",
-            messagingSenderId: "910503065646",
-            appId: "1:910503065646:web:b59050662856cbb28947bf"
-        };
-
-        window.__fbReady = (async () => {
-            try {
-                const app = initializeApp(firebaseConfig);
-                const db = getDatabase(app);
-                // cheap connectivity probe so a blocked/offline network fails fast instead of hanging
-                await get(ref(db, 'records'));
-                return { ok: true, db, ref, get, set, update, remove };
-            } catch (err) {
-                console.warn('Firebase unavailable, falling back to local data:', err);
-                return { ok: false, error: err };
-            }
-        })();
-    
-</script>
+<!-- MongoDB Atlas backend: http://localhost:3000/api -->
 </head><body>
 
     <div id="loginOverlay">
@@ -789,3 +758,4 @@
 </body>
 
 </html>
+

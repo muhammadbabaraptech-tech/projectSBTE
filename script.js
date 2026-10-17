@@ -195,10 +195,76 @@
             return `${opener}. ${rankLine} ${catLine}`;
         }
 
-        /* ============ Firebase sync state ============ */
-        let USING_FIREBASE = false;
-        let FB = null; // {ok, db, ref, get, set, update, remove}
-        function recKey(r) {
+/* ============ MongoDB Atlas sync state (via backend API) ============ */
+const API_BASE = 'http://localhost:3000/api';
+let USING_FIREBASE = false;
+let FB = null;
+
+async function apiRequest(path, method = 'GET', body = null) {
+    const url = `${API_BASE}/${path}`;
+    const opts = { method };
+    if (body) {
+        opts.headers = { 'Content-Type': 'application/json' };
+        opts.body = JSON.stringify(body);
+    }
+    const res = await fetch(url, opts);
+    if (!res.ok) throw new Error(`API ${method} ${path} failed: ${res.status}`);
+    return res.json();
+}
+
+// Firebase-compatible interface backed by MongoDB API
+FB = {
+    ref: (db, path) => path,
+    get: async (path) => {
+        try {
+            const data = await apiRequest(path, 'GET');
+            if (data === null || data === undefined) {
+                return { exists: () => false, val: () => null, key: '', forEach: () => {} };
+            }
+            if (Array.isArray(data)) {
+                const obj = {};
+                data.forEach(item => { if (item && item.mongoId) obj[item.mongoId] = item; });
+                return {
+                    exists: () => Object.keys(obj).length > 0,
+                    val: () => obj,
+                    key: '',
+                    forEach: (cb) => Object.entries(obj).forEach(([key, val]) => cb({ key, val: () => val }))
+                };
+            }
+            return {
+                exists: () => Object.keys(data).length > 0,
+                val: () => data,
+                key: '',
+                forEach: (cb) => Object.entries(data).forEach(([key, val]) => cb({ key, val: () => val }))
+            };
+        } catch (e) {
+            return { exists: () => false, val: () => null, key: '', forEach: () => {} };
+        }
+    },
+    set: async (path, data) => {
+        const parts = path.split('/');
+        const collection = parts[0];
+        const key = parts.slice(1).join('/');
+        if (key) {
+            await apiRequest(`${collection}/${key}`, 'POST', data);
+        } else {
+            await apiRequest(collection, 'POST', data);
+        }
+        return { ok: true };
+    },
+    remove: async (path) => {
+        const parts = path.split('/');
+        const collection = parts[0];
+        const key = parts.slice(1).join('/');
+        await apiRequest(`${collection}/${key}`, 'DELETE');
+        return { ok: true };
+    },
+    update: async (path, data) => {
+        return FB.set(path, data);
+    }
+};
+
+function recKey(r) {
             return String(r.name + '_' + r.month).trim().replace(/[.#$\[\]\/\s]+/g, '_');
         }
         function setCloudStatus(state) {
@@ -215,7 +281,7 @@
                 cloudRetryBtn.disabled = true;
                 cloudRetryBtn.textContent = 'Retrying…';
                 try {
-                    await bootFirebase();
+                    await checkMongoDB();
                     cloudRetryBtn.textContent = 'Retry';
                     cloudRetryBtn.disabled = false;
                 } catch (err) {
@@ -1915,11 +1981,11 @@
             if (custom) return custom === await stuHash(id, pw) || custom === 'plain:' + pw;
             return pw.trim().toLowerCase() === String(rec.name).trim().toLowerCase();
         }
-        async function stuLoadPasswords(fb) {
+        async function stuLoadPasswords() {
             try {
-                const ref = fb.ref(fb.db, STU_PW_PATH), snap = await fb.get(ref);
+                const ref = FB.ref(null, STU_PW_PATH), snap = await FB.get(ref);
                 if (snap.exists()) STU_PW = snap.val() || {};
-                else if (isAdminRole() && Object.keys(STU_PW).length) await fb.set(ref, STU_PW);
+                else if (isAdminRole() && Object.keys(STU_PW).length) await FB.set(ref, STU_PW);
                 else STU_PW = {};
                 stuPwLocal();
             } catch (e) { console.warn('Student passwords load failed:', e); }
@@ -2526,13 +2592,13 @@
             if (now === true) run(); else stSaveTimer = setTimeout(run, 500);
         }
         // Called from the Firebase boot sequence once the cloud is reachable.
-        async function stLoadCloud(fb) {
-            const snap = await fb.get(fb.ref(fb.db, ST_CLOUD_PATH));
+        async function stLoadCloud() {
+            const snap = await FB.get(FB.ref(null, ST_CLOUD_PATH));
             if (snap.exists()) {
                 const labs = stNormalize(snap.val());
                 if (labs) { ST_LABS = labs; ST_ACTIVE = Math.min(ST_ACTIVE, labs.length - 1); }
             } else if (isAdminRole()) {
-                await fb.set(fb.ref(fb.db, ST_CLOUD_PATH), JSON.stringify(ST_LABS));   // first run: seed the cloud
+                await FB.set(FB.ref(null, ST_CLOUD_PATH), JSON.stringify(ST_LABS));
             }
             renderSeating();
         }
@@ -2995,8 +3061,8 @@
             };
             if (now === true) run(); else atSaveTimer = setTimeout(run, 500);
         }
-        async function atLoadCloud(fb) {
-            const snap = await fb.get(fb.ref(fb.db, AT_CLOUD));
+        async function atLoadCloud() {
+            const snap = await FB.get(FB.ref(null, AT_CLOUD));
             const cloud = snap.exists() ? snap.val() : {};
             Object.keys(cloud).forEach(k => { try { const v = typeof cloud[k] === 'string' ? JSON.parse(cloud[k]) : cloud[k]; if (v && typeof v === 'object') ATT[k] = atMigrate(v); } catch (e) { } });
             try { localStorage.setItem(AT_KEY, JSON.stringify(ATT)); } catch (e) { }
@@ -3123,146 +3189,121 @@
 
         /* ============ Firebase boot: load saved data, or seed it on first run ============ */
 
-        // Module scripts (type="module") always execute AFTER classic scripts finish,
-        // even when they appear earlier in the file — so window.__fbReady may not be
-        // set yet the instant this classic script runs. Poll briefly for it instead
-        // of reading it once, or every load falls back to "offline" no matter what.
-        async function waitForFirebaseModule(maxWaitMs) {
-            const start = Date.now();
-            while (!window.__fbReady) {
-                if (Date.now() - start > maxWaitMs) return null;
-                await new Promise(r => setTimeout(r, 20));
-            }
-            return window.__fbReady;
-        }
+        // ============ MongoDB Atlas connection check ============
+async function checkMongoDB() {
+    setCloudStatus('connecting');
+    try {
+        const res = await fetch(`${API_BASE}/records`);
+        if (res.ok) {
+            USING_FIREBASE = true;
+            FB = { ref: (db, path) => path, get: FB.get, set: FB.set, update: FB.update, remove: FB.remove };
+            setCloudStatus('connected');
+            console.log('✅ Connected to MongoDB Atlas backend');
 
-        async function bootFirebase() {
-            setCloudStatus('connecting');
-            try {
-                const fbReadyPromise = await waitForFirebaseModule(4000);
-                if (!fbReadyPromise) {
-                    USING_FIREBASE = false;
-                    setCloudStatus('offline');
-                    console.warn('Firebase module never loaded (blocked network, ad-blocker, or offline).');
-                    return;
-                }
+            // Load student passwords
+            await stuLoadPasswords();
 
-                const fb = await Promise.race([
-                    fbReadyPromise,
-                    new Promise(resolve => setTimeout(() => resolve({ ok: false, error: 'timeout' }), 6000))
-                ]);
+            // Load records (or seed if first run)
+            const snap = await FB.get(FB.ref(null, 'records'));
+            if (snap.exists()) {
+                const val = snap.val();
+                const cloudRecords = Object.values(val).map(rec => ({ ...rec, id: rec.id })).map(normalizeRecord);
+                if (cloudRecords.length) {
+                    RECORDS.length = 0;
+                    cloudRecords.forEach(r => RECORDS.push(r));
+                    rebuildSelectors();
+                    refreshReportMonths();
+                    refreshBatchMonths();
+                    renderDashboard();
 
-                if (!fb || !fb.ok) {
-                    USING_FIREBASE = false;
-                    setCloudStatus('offline');
-                    console.warn('Firebase connect failed:', fb && fb.error);
-                    return;
-                }
-
-                FB = fb;
-                await stuLoadPasswords(fb);
-                const snap = await fb.get(fb.ref(fb.db, 'records'));
-
-                if (snap.exists()) {
-                    // cloud already has data (e.g. earlier saved edits) — use it as the source of truth
-                    const val = snap.val();
-                    const cloudRecords = Object.values(val).map(rec => ({
-                        ...rec,
-                        id: rec.id,
-                    })).map(normalizeRecord);
-                    if (cloudRecords.length) {
-                        RECORDS.length = 0;
-                        cloudRecords.forEach(r => RECORDS.push(r));
-                        rebuildSelectors();
+                    const curSession = getSavedSession();
+                    if (curSession && curSession.role === 'student') {
+                        repStudent.value = curSession.name;
                         refreshReportMonths();
-                        refreshBatchMonths();
-                        renderDashboard();
-
-                        const curSession = getSavedSession();
-                        if (curSession && curSession.role === 'student') {
-                            repStudent.value = curSession.name;
-                            refreshReportMonths();
-                        } else if (curSession && curSession.role === 'admin') {
-                            try {
-                                const savedRep = JSON.parse(localStorage.getItem(ACTIVE_REPORT_KEY));
-                                if (savedRep && savedRep.student && [...repStudent.options].some(o => o.value === savedRep.student)) {
-                                    repStudent.value = savedRep.student;
-                                    refreshReportMonths();
-                                    if (savedRep.month && [...repMonth.options].some(o => o.value === savedRep.month)) {
-                                        repMonth.value = savedRep.month;
-                                    }
+                    } else if (curSession && curSession.role === 'admin') {
+                        try {
+                            const savedRep = JSON.parse(localStorage.getItem(ACTIVE_REPORT_KEY));
+                            if (savedRep && savedRep.student && [...repStudent.options].some(o => o.value === savedRep.student)) {
+                                repStudent.value = savedRep.student;
+                                refreshReportMonths();
+                                if (savedRep.month && [...repMonth.options].some(o => o.value === savedRep.month)) {
+                                    repMonth.value = savedRep.month;
                                 }
-                            } catch (e) { }
-                        }
-                        renderReport(currentReportRecord());
-                        renderBatch();
-
-                        let savedView = null;
-                        try { savedView = localStorage.getItem(ACTIVE_VIEW_KEY); } catch (e) { }
-                        if (savedView) switchView(savedView);
+                            }
+                        } catch (e) { }
                     }
-                } else {
-                    // first run ever — seed the cloud database with the workbook data baked into this page
-                    const seedObj = {};
-                    RECORDS.forEach(r => { seedObj[recKey(r)] = r; });
-                    await fb.set(fb.ref(fb.db, 'records'), seedObj);
+                    renderReport(currentReportRecord());
+                    renderBatch();
+
+                    let savedView = null;
+                    try { savedView = localStorage.getItem(ACTIVE_VIEW_KEY); } catch (e) { }
+                    if (savedView) switchView(savedView);
                 }
-
-                // ---- Notes: load from cloud (or migrate any local-only notes up) ----
-                const notesSnap = await fb.get(fb.ref(fb.db, 'notes'));
-                if (notesSnap.exists()) {
-                    NOTES = Object.values(notesSnap.val());
-                } else {
-                    const localNotes = loadNotesLocal();
-                    if (localNotes.length) {
-                        const seedNotes = {};
-                        localNotes.forEach(n => { seedNotes[n.id] = n; });
-                        await fb.set(fb.ref(fb.db, 'notes'), seedNotes);
-                    }
-                    NOTES = localNotes;
+            } else {
+                // first run ever — seed the MongoDB database with the workbook data baked into this page
+                for (const r of RECORDS) {
+                    await FB.set(FB.ref(null, 'records/' + recKey(r)), r);
                 }
-                renderNotes();
-
-                // ---- Simulations: load from cloud (or migrate any local-only sims up) ----
-                const simsSnap = await fb.get(fb.ref(fb.db, 'simulations'));
-                if (simsSnap.exists()) {
-                    SIMULATIONS = Object.values(simsSnap.val());
-                } else {
-                    const localSims = loadSimsLocal();
-                    if (localSims.length) {
-                        const seedSims = {};
-                        localSims.forEach(s => { seedSims[s.id] = s; });
-                        await fb.set(fb.ref(fb.db, 'simulations'), seedSims);
-                    }
-                    SIMULATIONS = localSims;
-                }
-                renderSims();
-
-                // ---- Seating plan: load from cloud (admins seed it on first run) ----
-                try { await stLoadCloud(fb); } catch (err) { console.warn('Seating load failed:', err); }
-                try { await atLoadCloud(fb); } catch (err) { console.warn('Attendance load failed:', err); }
-
-                // ---- Layout settings: the admin's saved layout applies to everyone ----
-                try {
-                    const layoutSnap = await fb.get(fb.ref(fb.db, 'settings/layout'));
-                    if (layoutSnap.exists()) {
-                        LAYOUT = mergeLayout(layoutSnap.val());
-                        try { localStorage.setItem(LAYOUT_KEY, JSON.stringify(LAYOUT)); } catch (e) { }
-                        applyLayout(); renderSettings(); renderDashboard();
-                    }
-                } catch (err) { console.warn('Layout settings load failed:', err); }
-
-                USING_FIREBASE = true;
-                setCloudStatus('connected');
-            } catch (err) {
-                console.warn('Firebase boot failed, staying on local data:', err);
-                USING_FIREBASE = false;
-                setCloudStatus('offline');
             }
-        }
 
-        // Start Firebase connection on load
-        bootFirebase().finally(() => stuPwResolve());
+            // Load notes
+            const notesSnap = await FB.get(FB.ref(null, 'notes'));
+            if (notesSnap.exists()) {
+                NOTES = Object.values(notesSnap.val());
+            } else {
+                const localNotes = loadNotesLocal();
+                if (localNotes.length) {
+                    for (const n of localNotes) {
+                        await FB.set(FB.ref(null, 'notes/' + n.id), n);
+                    }
+                }
+                NOTES = localNotes;
+            }
+            renderNotes();
+
+            // Load simulations
+            const simsSnap = await FB.get(FB.ref(null, 'simulations'));
+            if (simsSnap.exists()) {
+                SIMULATIONS = Object.values(simsSnap.val());
+            } else {
+                const localSims = loadSimsLocal();
+                if (localSims.length) {
+                    for (const s of localSims) {
+                        await FB.set(FB.ref(null, 'simulations/' + s.id), s);
+                    }
+                }
+                SIMULATIONS = localSims;
+            }
+            renderSims();
+
+            // Load seating and attendance
+            try { await stLoadCloud(); } catch (err) { console.warn('Seating load failed:', err); }
+            try { await atLoadCloud(); } catch (err) { console.warn('Attendance load failed:', err); }
+
+            // Load layout
+            try {
+                const layoutSnap = await FB.get(FB.ref(null, 'settings/layout'));
+                if (layoutSnap.exists()) {
+                    LAYOUT = mergeLayout(layoutSnap.val());
+                    try { localStorage.setItem(LAYOUT_KEY, JSON.stringify(LAYOUT)); } catch (e) { }
+                    applyLayout(); renderSettings(); renderDashboard();
+                }
+            } catch (err) { console.warn('Layout settings load failed:', err); }
+
+            return true;
+        }
+    } catch (e) {
+        console.warn('MongoDB backend unreachable:', e);
+    }
+    USING_FIREBASE = false;
+    setCloudStatus('offline');
+    return false;
+}
+
+// Module scripts note: classic scripts run first, so no __fbReady polling needed for MongoDB
+
+// Start MongoDB connection on load
+checkMongoDB().finally(() => stuPwResolve());
 
 
         // ---------- Dark / Light Theme Management ----------
