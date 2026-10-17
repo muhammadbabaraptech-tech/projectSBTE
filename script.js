@@ -102,28 +102,28 @@
         }
 
         const POLICY = [
-            { cat: "Class Test (T1â€“T5)", weight: "40%", desc: "Five class tests during the month (T1, T2, T3, T4, T5), marked out of 20 each (100 total). The sum of all five is scaled from /100 up to a /40 weighted contribution â€” the highest-weighted category." },
+            { cat: "Class Test (T1—T5)", weight: "40%", desc: "Five class tests during the month (T1, T2, T3, T4, T5), marked out of 20 each (100 total). The sum of all five is scaled from /100 up to a /40 weighted contribution — the highest-weighted category." },
             { cat: "Presentation", weight: "10%", desc: "One in-class presentation per month, marked out of 100 for content, delivery and clarity, then scaled to a /10 weighted contribution." },
             { cat: "Assignment", weight: "10%", desc: "Assigned coursework for the month, marked out of 100 for completeness and correctness, then scaled to a /10 weighted contribution." },
-            { cat: "Regularity and Punctuality", weight: "20%", desc: "Attendance and on-time arrival across the month, marked out of 100, then scaled to a /20 weighted contribution â€” the single highest-weighted non-academic category." },
+            { cat: "Regularity and Punctuality", weight: "20%", desc: "Attendance and on-time arrival across the month, marked out of 100, then scaled to a /20 weighted contribution — the single highest-weighted non-academic category." },
             { cat: "Event Participation", weight: "10%", desc: "Participation in institute events, workshops, or co-curricular activity, marked out of 100 then scaled to a /10 weighted contribution." },
             { cat: "Social Work", weight: "10%", desc: "Community or campus service undertaken during the month, marked out of 100 then scaled to a /10 weighted contribution." },
         ];
 
         const STANDING_BANDS = [
-            { label: "Excellent", range: "85 â€“ 100", color: "#2E6B4C", note: "Outstanding, well-rounded performance across nearly every category." },
-            { label: "Good", range: "70 â€“ 84.9", color: "#33587A", note: "Solid, consistent performance with only minor gaps." },
-            { label: "Satisfactory", range: "60 â€“ 69.9", color: "#A8701F", note: "Meets the baseline but has clear room to improve in one or more areas." },
-            { label: "Needs Improvement", range: "Below 60", color: "#A13C3C", note: "Flagged for follow-up â€” recommend a check-in with the student." },
+            { label: "Excellent", range: "85 — 100", color: "#2E6B4C", note: "Outstanding, well-rounded performance across nearly every category." },
+            { label: "Good", range: "70 — 84.9", color: "#33587A", note: "Solid, consistent performance with only minor gaps." },
+            { label: "Satisfactory", range: "60 — 69.9", color: "#A8701F", note: "Meets the baseline but has clear room to improve in one or more areas." },
+            { label: "Needs Improvement", range: "Below 60", color: "#A13C3C", note: "Flagged for follow-up — recommend a check-in with the student." },
         ];
 
         const GRADE_BANDS = [
-            { grade: "A+", range: "90 â€“ 100" },
-            { grade: "A", range: "85 â€“ 89.9" },
-            { grade: "B+", range: "80 â€“ 84.9" },
-            { grade: "B", range: "70 â€“ 79.9" },
-            { grade: "C", range: "60 â€“ 69.9" },
-            { grade: "D", range: "50 â€“ 59.9" },
+            { grade: "A+", range: "90 — 100" },
+            { grade: "A", range: "85 — 89.9" },
+            { grade: "B+", range: "80 — 84.9" },
+            { grade: "B", range: "70 — 79.9" },
+            { grade: "C", range: "60 — 69.9" },
+            { grade: "D", range: "50 — 59.9" },
             { grade: "F", range: "Below 50" },
         ];
 
@@ -204,8 +204,17 @@
         function setCloudStatus(state) {
             const el = document.getElementById('cloudStatus');
             if (!el) return;
-            el.textContent = state === 'connected' ? 'Connected' : state === 'connecting' ? 'Connectingâ€¦' : 'Offline (local only)';
+            el.textContent = state === 'connected' ? 'Connected' : state === 'connecting' ? 'Connecting…' : 'Offline (local only)';
             el.className = 'cloud-' + state;
+        }
+
+        // Retry cloud connection when user clicks the Retry button
+        const cloudRetryBtn = document.getElementById('cloudRetryBtn');
+        if (cloudRetryBtn) {
+            cloudRetryBtn.addEventListener('click', () => {
+                setCloudStatus('connecting');
+                window.location.reload();
+            });
         }
 
         function downloadCsv(filename, rows) {
@@ -262,7 +271,7 @@
             const rowH = opts.rowH || (many ? 15 : 22), gap = many ? 4 : 8;
             const fontSize = many ? 9 : 10.5;
             // Size the label gutter to the longest label actually present, instead of
-            // a fixed width â€” short names shouldn't leave a big empty strip on the left.
+            // a fixed width — short names shouldn't leave a big empty strip on the left.
             const labelChars = items.map(it => Math.min(String(it.label).length, 16));
             const maxLabelChars = Math.max(...labelChars, 3);
             const charW = fontSize * 0.56;
@@ -276,7 +285,7 @@
                 const y = padT + i * (rowH + gap);
                 const barW = Math.max(2, (it.value / maxVal) * chartW);
                 rows += `
-      <text x="${padL - 8}" y="${(y + rowH / 2 + 3.5).toFixed(1)}" text-anchor="end" font-size="${fontSize}" font-family="Inter,sans-serif" fill="var(--ink)">${String(it.label).length > 16 ? String(it.label).slice(0, 15) + 'â€¦' : it.label}</text>
+      <text x="${padL - 8}" y="${(y + rowH / 2 + 3.5).toFixed(1)}" text-anchor="end" font-size="${fontSize}" font-family="Inter,sans-serif" fill="var(--ink)">${String(it.label).length > 16 ? String(it.label).slice(0, 15) + '…' : it.label}</text>
       <rect x="${padL}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${rowH}" rx="4" fill="${it.color || '#0284C7'}"/>
       <text x="${(padL + barW + 7).toFixed(1)}" y="${(y + rowH / 2 + 3.5).toFixed(1)}" font-size="${fontSize}" font-family="Inter,sans-serif" font-weight="700" fill="var(--ink)">${it.value}</text>
     `;
@@ -524,11 +533,11 @@
 
             el.innerHTML = `
     <div class="kpi-strip">
-      <div class="kpi-card"><div class="kpi-icon">ðŸ‘¥</div><div class="kpi-label">Students</div><div class="kpi-value">${totalStudents}</div></div>
-      <div class="kpi-card"><div class="kpi-icon">ðŸ—‚ï¸</div><div class="kpi-label">Records On File</div><div class="kpi-value">${totalRecords}</div></div>
-      <div class="kpi-card"><div class="kpi-icon">ðŸ“Š</div><div class="kpi-label">Avg Final Score</div><div class="kpi-value">${avgFinal}</div></div>
-      <div class="kpi-card"><div class="kpi-icon">ðŸŒŸ</div><div class="kpi-label">Excellent Standing</div><div class="kpi-value">${excellentPct}%</div></div>
-      <div class="kpi-card"><div class="kpi-icon">ðŸ†</div><div class="kpi-label">Top Batch</div><div class="kpi-value" style="font-size:calc(15px * var(--fs, 1));">${topBatch ? topBatch.label : 'â€”'}</div><div class="kpi-sub">${topBatch ? topBatch.value + ' avg final' : ''}</div></div>
+      <div class="kpi-card"><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div><div class="kpi-label">Students</div><div class="kpi-value">${totalStudents}</div></div>
+      <div class="kpi-card"><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="3" x2="8" y2="17"></line><line x1="12" y1="3" x2="12" y2="17"></line><line x1="16" y1="3" x2="16" y2="17"></line></svg></div><div class="kpi-label">Records On File</div><div class="kpi-value">${totalRecords}</div></div>
+      <div class="kpi-card"><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="9"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div><div class="kpi-label">Avg Final Score</div><div class="kpi-value">${avgFinal}</div></div>
+      <div class="kpi-card"><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div><div class="kpi-label">Excellent Standing</div><div class="kpi-value">${excellentPct}%</div></div>
+      <div class="kpi-card"><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 9 7 4 10 9"></polyline><polyline points="3 22 10 22 19 16 12 22 16 14 21 8 12 8 3 15 12 22"></polyline></svg></div><div class="kpi-label">Top Batch</div><div class="kpi-value" style="font-size:calc(15px * var(--fs, 1));">${topBatch ? topBatch.label : '—'}</div><div class="kpi-sub">${topBatch ? topBatch.value + ' avg final' : ''}</div></div>
     </div>
     <div class="dash-charts">
       <div class="chart-card cc-dist">
@@ -586,7 +595,7 @@
       <td data-label="Final"><strong>${r.final}</strong></td>
       <td data-label="Standing"><span class="badge ${st.cls}">${st.label}</span></td>
       <td class="admin-only td-action" data-label="Action">
-        <button type="button" class="tbl-del-btn" title="Delete this entry from master sheet" aria-label="Delete entry">ðŸ—‘</button>
+        <button type="button" class="tbl-del-btn" title="Delete this entry from master sheet" aria-label="Delete entry"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
       </td>
     `;
                 tr.addEventListener('click', (e) => {
@@ -759,7 +768,7 @@
       <div class="report-head">
         <div>
           <h3>${r.name}</h3>
-          <div class="rh-sub">${r.month} â€” Monthly Evaluation</div>
+          <div class="rh-sub">${r.month} — Monthly Evaluation</div>
         </div>
         <div class="final-ring" style="--pct:${r.final}; --ring-color:${st.color};">
           <div class="final-stamp" style="color:${st.color};">
@@ -784,7 +793,7 @@
       <div class="metric-row head">
         <div>Category</div><div style="text-align:right;">Raw</div><div style="text-align:right;">Weighted</div><div></div>
       </div>
-      ${metricRow("Class Test (T1â€“T5)", r.testTotal, 100, r.testW, 40)}
+      ${metricRow("Class Test (T1—T5)", r.testTotal, 100, r.testW, 40)}
       ${metricRow("Presentation", r.pres, 100, r.presW, 10)}
       ${metricRow("Assignment", r.assign, 100, r.assignW, 10)}
       ${metricRow("Regularity &amp; punctuality", r.reg, 100, r.regW, 20)}
@@ -799,7 +808,7 @@
         <div class="rb-text">${studentRemark(r, ins)}</div>
       </div>
       <div class="report-foot">
-        <span>Weighted per policy: Class Test 40% Â· Presentation 10% Â· Assignment 10% Â· Regularity 20% Â· Event 10% Â· Social work 10%</span>
+        <span>Weighted per policy: Class Test 40% · Presentation 10% · Assignment 10% · Regularity 20% · Event 10% · Social work 10%</span>
       </div>
     </div>
     </div>
@@ -816,7 +825,7 @@
       <div class="report-head">
         <div>
           <h3>${r.name}</h3>
-          <div class="rh-sub">${r.month} â€” Editing record</div>
+          <div class="rh-sub">${r.month} — Editing record</div>
         </div>
       </div>
       <div class="edit-identity-grid">
@@ -984,7 +993,7 @@
             wrap.addEventListener('click', e => { if (e.target === wrap || e.target.dataset.d === 'cancel') close(); });
             wrap.addEventListener('keydown', e => { if (e.key === 'Escape') close(); if (e.key === 'Enter' && !ok.disabled && e.target !== wrap.querySelector('[data-d="cancel"]')) ok.click(); });
             ok.addEventListener('click', async () => {
-                const label = ok.textContent; ok.disabled = true; ok.textContent = 'Workingâ€¦'; err.textContent = '';
+                const label = ok.textContent; ok.disabled = true; ok.textContent = 'Working…'; err.textContent = '';
                 try { await onConfirm(); close(); }
                 catch (e) {
                     const m = (e && e.message) || String(e);
@@ -1382,9 +1391,9 @@
       <div class="batch-head">
         <div>
           <h3>${b}</h3>
-          <div class="rh-sub" style="font-size:calc(13px * var(--fs, 1));color:var(--ink-soft);">${m} â€” Batch Progress Report</div>
+          <div class="rh-sub" style="font-size:calc(13px * var(--fs, 1));color:var(--ink-soft);">${m} — Batch Progress Report</div>
         </div>
-        <div class="bh-avg" style="color:${st.color};">${finalAvg}<small>avg final score Â· ${st.label}</small></div>
+        <div class="bh-avg" style="color:${st.color};">${finalAvg}<small>avg final score · ${st.label}</small></div>
       </div>
       <div class="batch-highlight-row">
         <div class="bh-card top">
@@ -1538,7 +1547,7 @@
           <span class="note-tag">${n.batch ? escapeHtml(n.batch) : 'All batches'}</span>
         </div>
         ${n.description ? `<div class="note-desc">${escapeHtml(n.description)}</div>` : ''}
-        <div class="note-meta">${escapeHtml(n.fileName)} Â· ${formatBytes(n.fileSize)} Â· uploaded ${new Date(n.uploadedAt).toLocaleDateString()}</div>
+        <div class="note-meta">${escapeHtml(n.fileName)} · ${formatBytes(n.fileSize)} · uploaded ${new Date(n.uploadedAt).toLocaleDateString()}</div>
       </div>
       <div class="note-actions">
         <button class="note-btn" data-action="download" data-id="${n.id}">Download</button>
@@ -1593,7 +1602,7 @@
             if (file.size > NOTE_MAX_BYTES) { alert('That file is larger than 5 MB. Please upload a smaller file.'); return; }
 
             uploadNoteBtn.disabled = true;
-            uploadNoteBtn.textContent = 'Uploadingâ€¦';
+            uploadNoteBtn.textContent = 'Uploading…';
 
             const reader = new FileReader();
             reader.onload = async () => {
@@ -1620,14 +1629,14 @@
                 } catch (err) {
                     console.warn('Note upload failed:', err);
                     NOTES = NOTES.filter(x => x.id !== note.id);
-                    alert('Upload failed â€” please try again.');
+                    alert('Upload failed — please try again.');
                 } finally {
                     uploadNoteBtn.disabled = false;
                     uploadNoteBtn.textContent = 'Upload note';
                 }
             };
             reader.onerror = () => {
-                alert('Could not read that file â€” please try again.');
+                alert('Could not read that file — please try again.');
                 uploadNoteBtn.disabled = false;
                 uploadNoteBtn.textContent = 'Upload note';
             };
@@ -1704,7 +1713,7 @@
           <span class="note-tag">${s.batch ? escapeHtml(s.batch) : 'All batches'}</span>
         </div>
         ${s.description ? `<div class="note-desc">${escapeHtml(s.description)}</div>` : ''}
-        <div class="note-meta">${formatBytes(s.htmlCode.length)} Â· uploaded ${new Date(s.uploadedAt).toLocaleDateString()}</div>
+        <div class="note-meta">${formatBytes(s.htmlCode.length)} · uploaded ${new Date(s.uploadedAt).toLocaleDateString()}</div>
       </div>
       <div class="note-actions">
         <button class="note-btn primary-ish" data-action="open" data-id="${s.id}">Open simulation â†—</button>
@@ -1767,7 +1776,7 @@
             } catch (err) {
                 console.warn('Simulation upload failed:', err);
                 SIMULATIONS = SIMULATIONS.filter(x => x.id !== sim.id);
-                alert('Upload failed â€” please try again.');
+                alert('Upload failed — please try again.');
             } finally {
                 resetSimUploadBtn();
             }
@@ -1787,11 +1796,11 @@
             if (!file && !pastedCode.trim()) { alert('Please upload an .html file, or paste the HTML code.'); return; }
 
             uploadSimBtn.disabled = true;
-            uploadSimBtn.textContent = 'Uploadingâ€¦';
+            uploadSimBtn.textContent = 'Uploading…';
 
             const finish = (htmlCode) => {
                 if (!htmlCode || !htmlCode.trim()) {
-                    alert('That file looks empty â€” please check it and try again.');
+                    alert('That file looks empty — please check it and try again.');
                     resetSimUploadBtn();
                     return;
                 }
@@ -1814,7 +1823,7 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = () => finish(reader.result);
-                reader.onerror = () => { alert('Could not read that file â€” please try again.'); resetSimUploadBtn(); };
+                reader.onerror = () => { alert('Could not read that file — please try again.'); resetSimUploadBtn(); };
                 reader.readAsText(file);
             } else {
                 finish(pastedCode);
@@ -1938,14 +1947,14 @@
                 const rows = students().filter(r => !q || r.name.toLowerCase().includes(q) || String(r.id).includes(q));
                 list.innerHTML = rows.length ? rows.map(r => {
                     const custom = !!STU_PW[String(r.id)];
-                    return `<div class="pw-row"><div><div class="pw-name">${escH(r.name)}</div><div class="pw-sub">ID ${escH(String(r.id))} Â· ${escH(r.batch)}</div></div>
+                    return `<div class="pw-row"><div><div class="pw-name">${escH(r.name)}</div><div class="pw-sub">ID ${escH(String(r.id))} · ${escH(r.batch)}</div></div>
               <span class="pw-tag ${custom ? 'custom' : ''}">${custom ? 'Custom password' : 'Default (name)'}</span>
               <div class="pw-btns"><button type="button" class="note-btn" data-act="set" data-id="${escH(String(r.id))}">Change</button>${custom ? `<button type="button" class="note-btn" data-act="reset" data-id="${escH(String(r.id))}">Reset</button>` : ''}</div></div>`;
                 }).join('') : '<div class="empty-state" style="padding:24px;">No students match.</div>';
             };
             const save = async (rec, pw, msg) => {
                 try { await stuSetPassword(rec, pw); showToast(msg); }
-                catch (e) { showToast('Saved on this device only â€” the cloud database refused the write.'); }
+                catch (e) { showToast('Saved on this device only — the cloud database refused the write.'); }
                 render();
             };
             list.addEventListener('click', e => {
@@ -2123,7 +2132,7 @@
         }
 
         // Moves `el` continuously along a curved (bezier) path from (x0,y0) to (x1,y1),
-        // bowing through control point (cx,cy), updating every animation frame â€” a
+        // bowing through control point (cx,cy), updating every animation frame — a
         // continuous path rather than a straight CSS-transition jump.
         function animateElectronPath(el, x0, y0, cx, cy, x1, y1, duration, opacityAt, onDone) {
             const start = performance.now();
@@ -2226,7 +2235,7 @@
             const mw = [[1000, 'Compact'], [1280, 'Standard'], [1600, 'Wide'], [0, 'Full width']];
             if (editing) {
                 body.innerHTML = `<div class="pop-sec"><div class="pop-title">Editing layout</div>
-          <p class="set-hint"><b>â ¿ tag</b> = move Â· <b>corner</b> = resize width &amp; height Â· <b>double-click corner</b> = reset. On report pages drag the divider. Drag this window by its title bar to move it.</p>
+          <p class="set-hint"><b>â ¿ tag</b> = move · <b>corner</b> = resize width &amp; height · <b>double-click corner</b> = reset. On report pages drag the divider. Drag this window by its title bar to move it.</p>
           <button type="button" class="btn primary" data-act="edit" style="width:100%;margin-top:8px;justify-content:center">âœ” Done editing layout</button>
           <span id="setStatus" class="set-hint" role="status"></span></div>`;
                 return;
@@ -2240,8 +2249,8 @@
         <div class="set-row"><label>Width <select data-act="maxw">${mw.map(([v, t]) => `<option value="${v}" ${L.maxw === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>
           <label>Box spacing <span class="sl"><input type="range" min="6" max="40" step="2" value="${L.gap}" data-act="gap"><output>${L.gap}px</output></span></label></div></div>
       <div class="pop-sec"><div class="pop-title">Layout</div>
-        <button type="button" class="btn ${editing ? 'primary' : ''}" data-act="edit" style="width:100%;margin-top:10px;justify-content:center">${editing ? 'âœ” Done editing layout' : 'ðŸ–± Edit layout with mouse'}</button>
-        <p class="set-hint">Drag a box by its <b>â ¿ tag</b> to move it. Drag its <b>bottom-right corner</b> to resize in <b>both directions</b> (width and height). Graphs are redrawn to the exact shape you drag. Double-click a corner to reset. On Report and Batch pages drag the <b>divider</b> between the columns, or press â‡„ to swap sides. Resizing needs a screen wider than 900&nbsp;px.</p></div>
+        <button type="button" class="btn ${editing ? 'primary' : ''}" data-act="edit" style="width:100%;margin-top:10px;justify-content:center">${editing ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Done editing layout' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6.54-2 10 5.88L22 18.2v-2c0-2.21-3.58-4-8-4-4.42 0-8 1.79-8 4v2c0-2.21-3.58-4-8-4-4.42 0-8 1.79-8 4v2c0-2.21-3.58-4-8-4-4.42 0-8 1.79-8 4v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-1.8c3.46-7.88 10-5.88 10-5.88"></path></svg> Edit layout with mouse'}</button>
+        <p class="set-hint">Drag a box by its <b><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> tag</b> to move it. Drag its <b>bottom-right corner</b> to resize in <b>both directions</b> (width and height). Graphs are redrawn to the exact shape you drag. Double-click a corner to reset. On Report and Batch pages drag the <b>divider</b> between the columns, or press <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 12 16 12"></polyline><path d="M16 12H8M12 8l-4 4 4 4"></path></svg> to swap sides. Resizing needs a screen wider than 900&nbsp;px.</p></div>
       <details class="pop-sec"><summary>Report &amp; Batch pages</summary>
         <div class="set-row"><label>Graph panel <select data-act="side">${[['right', 'Right'], ['left', 'Left'], ['below', 'Below']].map(([v, t]) => `<option value="${v}" ${r.side === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>
           <label>Graph size <span class="sl"><input type="range" min="50" max="100" step="5" value="${r.g}" data-act="g"><output>${r.g}%</output></span></label></div></details>
@@ -2305,7 +2314,7 @@
             const id = b.g + ':' + b.k; let f = ov.querySelector(`.lay-frame[data-id="${id}"]`);
             if (!f) {
                 f = document.createElement('div'); f.className = 'lay-frame lay-' + b.g; f.dataset.id = id; f.dataset.g = b.g; f.dataset.k = b.k;
-                f.innerHTML = (b.g === 'rep' ? '' : `<span class="lay-tag" title="Drag to move">â ¿ ${LBL[b.k]}</span>`) + '<span class="lay-corner" title="Drag to resize (both directions) Â· double-click to reset"></span><span class="lay-info"></span>';
+                f.innerHTML = (b.g === 'rep' ? '' : `<span class="lay-tag" title="Drag to move">â ¿ ${LBL[b.k]}</span>`) + '<span class="lay-corner" title="Drag to resize (both directions) · double-click to reset"></span><span class="lay-info"></span>';
                 ov.appendChild(f);
             }
             return f;
@@ -2366,7 +2375,7 @@
                     const g = clamp(Math.round((op.w0 + dx) / op.pw * 20) * 5, 50, 100), gh = clamp(Math.round((op.h0 + dy / 1.8) / 5) * 5, 50, 250);
                     if (g !== LAYOUT.rep.g) { LAYOUT.rep.g = g; ch = true; }
                     if (gh !== LAYOUT.rep.gh) { LAYOUT.rep.gh = gh; rd = true; }
-                    txt = g + '% wide Â· ' + gh + '% tall';
+                    txt = g + '% wide · ' + gh + '% tall';
                 } else {
                     const W = clamp(Math.round((op.w0 + dx + gap) / (op.pw + gap) * 20) * 5, 20, 100);
                     if (LAYOUT[op.g].w[op.k] !== W) { LAYOUT[op.g].w[op.k] = W; ch = true; }
@@ -2374,14 +2383,14 @@
                     if (op.g === 'charts') {
                         const H = clamp(Math.round((op.sh + dy) / 10) * 10, 100, 900);
                         if (LAYOUT.charts.hp[op.k] !== H) { LAYOUT.charts.hp[op.k] = H; ch = true; }
-                        txt += ' Â· graph ' + H + 'px tall';
+                        txt += ' · graph ' + H + 'px tall';
                     } else if (op.k === 'charts') {
                         (op.starts || []).forEach(([c, h0]) => { const H = clamp(Math.round((h0 + dy) / 10) * 10, 100, 900); if (LAYOUT.charts.hp[c] !== H) { LAYOUT.charts.hp[c] = H; ch = true; } });
-                        txt += ' Â· graphs resized';
+                        txt += ' · graphs resized';
                     } else {
                         const H = clamp(Math.round((op.hpx + dy) / 10) * 10, 60, 2000);
                         if (LAYOUT.dash.h[op.k] !== H) { LAYOUT.dash.h[op.k] = H; ch = true; }
-                        txt += ' Â· ' + H + 'px tall';
+                        txt += ' · ' + H + 'px tall';
                     }
                 }
                 op.f.querySelector('.lay-info').textContent = txt;
@@ -2490,20 +2499,20 @@
             if (!isAdminRole()) return;           // only admins ever write
             try { localStorage.setItem(ST_KEY, JSON.stringify({ labs: ST_LABS, active: ST_ACTIVE })); } catch (e) { }
             if (!USING_FIREBASE || !FB) {
-                stSetStatus('Saved on this device Â· ' + stClock());
+                stSetStatus('Saved on this device · ' + stClock());
                 if (now === true) showToast('Seating saved on this device.');
                 return;
             }
-            stSetStatus('Savingâ€¦');
+            stSetStatus('Saving…');
             clearTimeout(stSaveTimer);
             const run = () =>
                 // stored as one JSON string: Realtime Database silently drops empty arrays (empty tables)
                 FB.set(FB.ref(FB.db, ST_CLOUD_PATH), JSON.stringify(ST_LABS))
-                    .then(() => { setCloudStatus('connected'); stSetStatus('All changes saved Â· ' + stClock()); if (now === true) showToast('Seating saved.'); })
+                    .then(() => { setCloudStatus('connected'); stSetStatus('All changes saved · ' + stClock()); if (now === true) showToast('Seating saved.'); })
                     .catch(err => {
                         console.warn('Seating cloud save failed:', err);
                         stSetStatus('Saved on this device only');
-                        if (now === true || !stWarned) { stWarned = true; showToast('Seating saved on this device only â€” the cloud database refused the write.'); }
+                        if (now === true || !stWarned) { stWarned = true; showToast('Seating saved on this device only — the cloud database refused the write.'); }
                     });
             if (now === true) run(); else stSaveTimer = setTimeout(run, 500);
         }
@@ -2616,7 +2625,7 @@
             const has = lab => lab.left.concat(lab.right).some(t => t.seats.some(s => s.trim().toLowerCase() === me));
             if (has(stCur())) { el.innerHTML = '<strong>Your seat</strong> is highlighted in blue.'; return; }
             const other = ST_LABS.find(has);
-            if (other) el.innerHTML = 'Your seat is in <strong>' + escH(other.name) + '</strong> â€” open that tab below.';
+            if (other) el.innerHTML = 'Your seat is in <strong>' + escH(other.name) + '</strong> — open that tab below.';
         }
 
         function renderSeating() {
@@ -2641,7 +2650,7 @@
             desk.className = 'st-desk side-' + side; desk.style.width = stCur().colW[side] + 'px';
             if (!table.seats.length) {
                 const h = document.createElement('div'); h.className = 'st-empty';
-                h.textContent = admin ? 'Empty table â€“ use "Add seat"' : 'Empty table';
+                h.textContent = admin ? 'Empty table — use "Add seat"' : 'Empty table';
                 desk.appendChild(h);
             }
             table.seats.forEach((name, si) => {
@@ -2778,7 +2787,7 @@
         }
         function stDownloadImage() {
             const btn = document.getElementById('stDownloadBtn'), label = btn.textContent;
-            btn.disabled = true; btn.textContent = 'Preparingâ€¦';
+            btn.disabled = true; btn.textContent = 'Preparing…';
             window.getSelection().removeAllRanges();
             stLoadH2C().then(() => window.html2canvas(document.getElementById('stRoom'), {
                 scale: 2, backgroundColor: '#ffffff',
@@ -2885,7 +2894,7 @@
             const overall = rec && rows.length ? totalP / (rec * rows.length) * 100 : null;
             return { key, days, rows, daily, rec, totalP, totalLate, totalLeave, overall };
         }
-        const atFmt = v => v == null ? 'â€“' : (Math.round(v * 10) / 10) + '%';
+        const atFmt = v => v == null ? '—' : (Math.round(v * 10) / 10) + '%';
         const atTitle = key => { const [y, m] = key.split('-').map(Number); return AT_MONTHS[m - 1] + ' ' + y; };
 
         function atFillSelects() {
@@ -2911,7 +2920,7 @@
             const head = B.days.map(x => `<th class="at-day${x.hol ? ' hol' : ''}${atSelDay === x.d ? ' sel' : ''}" data-day="${x.d}" title="${AT_DOW[x.dow]} ${x.d} ${atTitle(key)}${x.hol ? ' (holiday)' : ''}">${x.d}<small>${AT_DOW[x.dow].slice(0, 2)}</small></th>`).join('');
             const body = B.rows.map(r => `<tr>
           <td class="c1">${r.n}</td><td class="c2">${escH(r.id)}</td><td class="c3 at-name">${escH(r.name)}</td>
-          ${r.cells.map((v, j) => { const x = B.days[j]; return `<td class="at-cell ${x.hol ? 'h' : v === 'P' ? 'p' : v === 'T' ? 't' : v === 'L' ? 'l' : v === 'A' ? 'a' : ''}" data-id="${escH(r.id)}" data-day="${x.d}"${admin && !x.hol ? ' tabindex="0"' : ''}${v === 'T' ? ' title="Present â€“ late arrival"' : v === 'L' ? ' title="Leave"' : ''}>${v === 'T' ? 'P' : v}</td>`; }).join('')}
+          ${r.cells.map((v, j) => { const x = B.days[j]; return `<td class="at-cell ${x.hol ? 'h' : v === 'P' ? 'p' : v === 'T' ? 't' : v === 'L' ? 'l' : v === 'A' ? 'a' : ''}" data-id="${escH(r.id)}" data-day="${x.d}"${admin && !x.hol ? ' tabindex="0"' : ''}${v === 'T' ? ' title="Present — late arrival"' : v === 'L' ? ' title="Leave"' : ''}>${v === 'T' ? 'P' : v}</td>`; }).join('')}
           <td class="tot" data-tot="${escH(r.id)}">${r.total}</td><td class="late">${r.late}</td><td class="late">${r.leave}</td><td class="pct${r.pct != null && r.pct < 75 ? ' at-low' : ''}" data-pct="${escH(r.id)}">${atFmt(r.pct)}</td></tr>`).join('');
             const foot = admin && B.rows.length ? `<tfoot>
           <tr><td class="c1"></td><td class="c2"></td><td class="c3 at-foot-label">Daily attendance</td>${B.daily.map((x, j) => `<td data-fc="${j}">${x.count == null ? '' : x.count}</td>`).join('')}<td>${B.totalP}</td><td>${B.totalLate}</td><td>${B.totalLeave}</td><td>${atFmt(B.overall)}</td></tr>
@@ -2921,7 +2930,7 @@
             wrap.scrollLeft = sx; wrap.scrollTop = sy;
 
             atEl('atSummary').innerHTML = B.rows.length
-                ? (admin ? `<strong>${B.rows.length}</strong> students Â· ` : '') + `<strong>${B.rec}</strong> working day${B.rec === 1 ? '' : 's'} recorded Â· ${admin ? 'overall' : 'your attendance'} <strong>${atFmt(admin ? B.overall : (B.rows[0] && B.rows[0].pct))}</strong>`
+                ? (admin ? `<strong>${B.rows.length}</strong> students · ` : '') + `<strong>${B.rec}</strong> working day${B.rec === 1 ? '' : 's'} recorded · ${admin ? 'overall' : 'your attendance'} <strong>${atFmt(admin ? B.overall : (B.rows[0] && B.rows[0].pct))}</strong>`
                 : '';
             const lbl = atEl('atSelLabel');
             lbl.textContent = atSelDay ? `Selected day: ${AT_DOW[atDow(key, atSelDay)]} ${atSelDay} ${atTitle(key)}` : 'Click a day number in the table to select that day';
@@ -2961,18 +2970,18 @@
         function atSave(now) {
             if (!isAdminRole()) return;
             try { localStorage.setItem(AT_KEY, JSON.stringify(ATT)); } catch (e) { }
-            if (!USING_FIREBASE || !FB) { atSetStatus('Saved on this device Â· ' + atClock()); if (now === true) showToast('Attendance saved on this device.'); return; }
-            atSetStatus('Savingâ€¦');
+            if (!USING_FIREBASE || !FB) { atSetStatus('Saved on this device · ' + atClock()); if (now === true) showToast('Attendance saved on this device.'); return; }
+            atSetStatus('Saving…');
             clearTimeout(atSaveTimer);
             const run = () => {
                 const keys = [...atDirty]; atDirty.clear();
                 return Promise.all(keys.map(k => FB.set(FB.ref(FB.db, AT_CLOUD + '/' + k), JSON.stringify(ATT[k] || { v: 2, holidays: {}, marks: {} }))))
-                    .then(() => { setCloudStatus('connected'); atSetStatus('All changes saved Â· ' + atClock()); if (now === true) showToast('Attendance saved.'); })
+                    .then(() => { setCloudStatus('connected'); atSetStatus('All changes saved · ' + atClock()); if (now === true) showToast('Attendance saved.'); })
                     .catch(err => {
                         console.warn('Attendance cloud save failed:', err);
                         keys.forEach(k => atDirty.add(k));
                         atSetStatus('Saved on this device only');
-                        if (now === true || !atWarned) { atWarned = true; showToast('Attendance saved on this device only â€” the cloud database refused the write.'); }
+                        if (now === true || !atWarned) { atWarned = true; showToast('Attendance saved on this device only — the cloud database refused the write.'); }
                     });
             };
             if (now === true) run(); else atSaveTimer = setTimeout(run, 500);
@@ -3016,7 +3025,7 @@
             const base = 'border:1px solid #9aa5b1;text-align:center;font-family:Calibri,Arial,sans-serif;font-size:11pt;';
             const st = { P: base + 'background:#c6efce;color:#006100;font-weight:bold;', A: base + 'background:#ffc7ce;color:#9c0006;font-weight:bold;', H: base + 'background:#d9d9d9;color:#595959;', T: base + 'background:#a6a6a6;color:#000000;font-weight:bold;', L: base + 'background:#ffeb9c;color:#7f6000;font-weight:bold;', th: base + 'background:#e8edf3;font-weight:bold;', tot: base + 'font-weight:bold;background:#f3f6fa;' };
             let h = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>${e(atTitle(B.key))}</x:Name></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>`;
-            h += `<tr><td colspan="${ncols}" style="font-size:14pt;font-weight:bold;font-family:Calibri,Arial,sans-serif;">Attendance â€” ${e(atTitle(B.key))}${admin && atEl('atBatchSel').value ? ' â€” ' + e(atEl('atBatchSel').value) : ''}</td></tr>`;
+            h += `<tr><td colspan="${ncols}" style="font-size:14pt;font-weight:bold;font-family:Calibri,Arial,sans-serif;">Attendance — ${e(atTitle(B.key))}${admin && atEl('atBatchSel').value ? ' — ' + e(atEl('atBatchSel').value) : ''}</td></tr>`;
             h += '<tr>' + ['#', 'Std ID', 'Name', 'Batch', ...B.days.map(x => atDayLabel(B, x)), 'Total', 'Late', 'Leave', '%'].map(t => `<td style="${st.th}">${e(t)}</td>`).join('') + '</tr>';
             B.rows.forEach(r => {
                 h += `<tr><td style="${base}">${r.n}</td><td style="${base}">${e(r.id)}</td><td style="${base}text-align:left;">${e(r.name)}</td><td style="${base}">${e(r.batch)}</td>`;
@@ -3106,7 +3115,7 @@
         /* ============ Firebase boot: load saved data, or seed it on first run ============ */
 
         // Module scripts (type="module") always execute AFTER classic scripts finish,
-        // even when they appear earlier in the file â€” so window.__fbReady may not be
+        // even when they appear earlier in the file — so window.__fbReady may not be
         // set yet the instant this classic script runs. Poll briefly for it instead
         // of reading it once, or every load falls back to "offline" no matter what.
         async function waitForFirebaseModule(maxWaitMs) {
@@ -3146,7 +3155,7 @@
                 const snap = await fb.get(fb.ref(fb.db, 'records'));
 
                 if (snap.exists()) {
-                    // cloud already has data (e.g. earlier saved edits) â€” use it as the source of truth
+                    // cloud already has data (e.g. earlier saved edits) — use it as the source of truth
                     const val = snap.val();
                     const cloudRecords = Object.values(val).map(rec => ({
                         ...rec,
@@ -3184,7 +3193,7 @@
                         if (savedView) switchView(savedView);
                     }
                 } else {
-                    // first run ever â€” seed the cloud database with the workbook data baked into this page
+                    // first run ever — seed the cloud database with the workbook data baked into this page
                     const seedObj = {};
                     RECORDS.forEach(r => { seedObj[recKey(r)] = r; });
                     await fb.set(fb.ref(fb.db, 'records'), seedObj);

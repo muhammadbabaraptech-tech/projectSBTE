@@ -36,7 +36,7 @@
 
 <script type="module">
 
-        // Firebase â€” loaded as an ES module, bridging into the classic app script via window.__fbReady
+        // Firebase — loaded as an ES module, bridging into the classic app script via window.__fbReady
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import {
             getDatabase, ref, get, set, update, remove
@@ -72,7 +72,7 @@
         <div class="login-theme-bar">
             <button type="button" class="theme-toggle-btn design-btn" id="designBtnLogin"
                 aria-label="Choose website design" title="Choose website design"><span class="design-ico"
-                    aria-hidden="true">ðŸŽ¨</span><span class="theme-toggle-text">Design</span></button>
+                    aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline><polyline points="3 5 10 2 17 5"></polyline></svg></span><span class="theme-toggle-text">Design</span></button>
             <button type="button" class="theme-toggle-btn" id="loginThemeToggleBtn" aria-label="Toggle dark mode"
                 title="Toggle dark mode">
                 <svg class="sun-icon" width="14" height="14" viewBox="0 0 24 24">
@@ -149,7 +149,7 @@
             <span class="role-badge" id="roleBadge"></span>
             <span id="sessionWho"></span>
             <button type="button" class="theme-toggle-btn design-btn" id="designBtn" aria-label="Choose website design"
-                title="Choose website design"><span class="design-ico" aria-hidden="true">ðŸŽ¨</span><span
+                title="Choose website design"><span class="design-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline><polyline points="3 5 10 2 17 5"></polyline></svg></span><span
                     class="theme-toggle-text">Design</span></button>
             <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark mode"
                 title="Toggle dark mode">
@@ -190,7 +190,7 @@
                     </div>
                 </div>
                 <div class="masthead-meta">
-                    <div>Students on record: <strong id="metaCount">â€”</strong> <button type="button"
+                    <div>Students on record: <strong id="metaCount">—</strong> <button type="button"
                             class="gear-btn admin-only" id="gearBtn" aria-label="Website settings"
                             aria-haspopup="dialog" aria-expanded="false" title="Website settings"><svg width="16"
                                 height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -200,8 +200,8 @@
                                     d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
                                 </path>
                             </svg></button></div>
-                    <div>Batches: <strong id="metaBatches">â€”</strong></div>
-                    <div>Cloud sync: <strong id="cloudStatus" class="cloud-connecting">Connectingâ€¦</strong></div>
+                    <div>Batches: <strong id="metaBatches">—</strong></div>
+                    <div>Cloud sync: <strong id="cloudStatus" class="cloud-connecting">Connecting…</strong> <button type="button" id="cloudRetryBtn" style="font-size:11px;padding:2px 8px;margin-left:6px;cursor:pointer;">Retry</button></div>
                 </div>
             </div>
         </header>
@@ -249,8 +249,8 @@
                         <div class="field mobile-sort">
                             <label for="dashSort">Sort by</label>
                             <select id="dashSort">
-                                <option value="name:1">Student (Aâ€“Z)</option>
-                                <option value="name:-1">Student (Zâ€“A)</option>
+                                <option value="name:1">Student (A–Z)</option>
+                                <option value="name:-1">Student (Z–A)</option>
                                 <option value="final:-1">Final score (high â†’ low)</option>
                                 <option value="final:1">Final score (low â†’ high)</option>
                                 <option value="month:1">Month</option>
@@ -266,7 +266,7 @@
                         <button type="button" class="btn primary" id="openNewStudentBtn">âž• Add Student Entry</button>
                         <button class="btn" id="dashDownloadCsv">Download filtered CSV</button>
                         <button class="btn ghost" id="dashDownloadAll">Download full dataset (JSON)</button>
-                        <button type="button" class="btn" id="stuPwBtn">ðŸ”‘ Student passwords</button>
+                        <button type="button" class="btn" id="stuPwBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 0 1 2-2h3.28a1 1 0 0 1 .948.684l1.408 1.408A1 1 0 0 1 7.85 9.61l1.408 1.408a1 1 0 0 1 .684.948V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5z"></path><path d="M7 7v7a2 2 0 0 0 2 2h2"></path></svg> Student passwords</button>
                     </div>
                 </div>
                 <div class="table-wrap">
@@ -355,7 +355,7 @@
                     <div class="nu-grid">
                         <div class="field">
                             <label for="noteTitle">Title</label>
-                            <input type="text" id="noteTitle" placeholder="e.g. Chapter 4 â€” Kinematics Notes">
+                            <input type="text" id="noteTitle" placeholder="e.g. Chapter 4 — Kinematics Notes">
                         </div>
                         <div class="field">
                             <label for="noteBatch">Batch</label>
@@ -498,10 +498,10 @@
 
                 <div class="at-meta">
                     <div class="at-legend">
-                        <span><i class="at-key p"></i> P â€“ present</span>
-                        <span><i class="at-key t"></i> P â€“ late arrival (counts as present)</span>
-                        <span><i class="at-key l"></i> L â€“ leave</span>
-                        <span><i class="at-key a"></i> A â€“ absent</span>
+                        <span><i class="at-key p"></i> P – present</span>
+                        <span><i class="at-key t"></i> P – late arrival (counts as present)</span>
+                        <span><i class="at-key l"></i> L – leave</span>
+                        <span><i class="at-key a"></i> A – absent</span>
                         <span><i class="at-key h"></i> Holiday / Sunday</span>
                         <span class="st-admin-hide" id="atHowTo">Click a cell to cycle P â†’ P (late) â†’ L â†’ A. Keys: P, T
                             (late), L, A</span>
@@ -526,7 +526,7 @@
                     <div class="nu-grid">
                         <div class="field">
                             <label for="simTitle">Title</label>
-                            <input type="text" id="simTitle" placeholder="e.g. Simple Pendulum â€” Practical 3">
+                            <input type="text" id="simTitle" placeholder="e.g. Simple Pendulum — Practical 3">
                         </div>
                         <div class="field">
                             <label for="simBatch">Batch</label>
@@ -544,14 +544,14 @@
                             <input type="file" id="simFile" accept=".html,.htm,text/html">
                         </div>
                         <div class="field" style="flex:1 1 100%;">
-                            <label for="simCode">â€¦or paste HTML code directly</label>
+                            <label for="simCode">…or paste HTML code directly</label>
                             <textarea id="simCode" rows="5"
                                 placeholder="<!DOCTYPE html>&#10;<html>...</html>"></textarea>
                         </div>
                     </div>
                     <div class="nu-foot">
                         <button class="btn primary" id="uploadSimBtn">Upload simulation</button>
-                        <span class="nu-hint">Upload a .html file, or paste the code â€” up to 2&nbsp;MB. If both are
+                        <span class="nu-hint">Upload a .html file, or paste the code — up to 2&nbsp;MB. If both are
                             given, the file
                             is used.</span>
                     </div>
@@ -601,7 +601,7 @@
                             <li><strong>Vs Batch Avg</strong> compares a student's final score to the mean final score
                                 of their batch
                                 for that month.</li>
-                            <li>Admin edits to a record overwrite the previous values directly â€” there is no separate
+                            <li>Admin edits to a record overwrite the previous values directly — there is no separate
                                 revision
                                 history.</li>
                         </ul>
@@ -691,7 +691,7 @@
                     </div>
                 </div>
 
-                <div class="form-section-title">Class Test Scores (5 Tests: T1â€“T5 Â· Max 20 Each Â· 40% Weight)</div>
+                <div class="form-section-title">Class Test Scores (5 Tests: T1–T5 · Max 20 Each · 40% Weight)</div>
                 <div class="tests-grid">
                     <div class="test-field"><label>T1</label><input type="number" id="newTest0" min="0" max="20"
                             step="0.5" value="15"></div>
@@ -703,7 +703,7 @@
                             step="0.5" value="15"></div>
                     <div class="test-field"><label>T5</label><input type="number" id="newTest4" min="0" max="20"
                             step="0.5" value="15"></div>
-                    <div class="test-summary">Class Test Total: <strong id="lblTestTotal">75</strong>/100 Â· Weighted:
+                    <div class="test-summary">Class Test Total: <strong id="lblTestTotal">75</strong>/100 · Weighted:
                         <strong id="lblTestW">30.0</strong>/40</div>
                 </div>
 
@@ -755,7 +755,7 @@
     </div>
 
     <script type="module">
-        // Firebase â€” loaded as an ES module, bridging into the classic app script via window.__fbReady
+        // Firebase — loaded as an ES module, bridging into the classic app script via window.__fbReady
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import {
             getDatabase, ref, get, set, update, remove
