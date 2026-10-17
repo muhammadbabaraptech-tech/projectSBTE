@@ -1,0 +1,791 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>SBTE Student Evaluation Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('sbte_theme');
+                var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var theme = saved ? saved : (sysDark ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+                document.documentElement.setAttribute('data-design', localStorage.getItem('sbte_design') || 'neumorphic');
+
+                // Pre-auth session check to prevent screen flash on refresh
+                var sessionStr = localStorage.getItem('sbte_session_v1');
+                if (sessionStr) {
+                    var u = JSON.parse(sessionStr);
+                    if (u && u.role) {
+                        document.documentElement.classList.add('is-authed');
+                        if (u.role === 'admin') document.documentElement.classList.add('is-role-admin');
+                        else if (u.role === 'student') document.documentElement.classList.add('is-role-student');
+                    }
+                }
+            } catch (e) { }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="style.css">
+
+
+<script type="module">
+
+        // Firebase â€” loaded as an ES module, bridging into the classic app script via window.__fbReady
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import {
+            getDatabase, ref, get, set, update, remove
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA9_Vgowe4f6-i_2SOECkEWmXgMkKB2mvo",
+            authDomain: "sbte-evaluation.firebaseapp.com",
+            databaseURL: "https://sbte-evaluation-default-rtdb.firebaseio.com",
+            projectId: "sbte-evaluation",
+            storageBucket: "sbte-evaluation.firebasestorage.app",
+            messagingSenderId: "910503065646",
+            appId: "1:910503065646:web:b59050662856cbb28947bf"
+        };
+
+        window.__fbReady = (async () => {
+            try {
+                const app = initializeApp(firebaseConfig);
+                const db = getDatabase(app);
+                // cheap connectivity probe so a blocked/offline network fails fast instead of hanging
+                await get(ref(db, 'records'));
+                return { ok: true, db, ref, get, set, update, remove };
+            } catch (err) {
+                console.warn('Firebase unavailable, falling back to local data:', err);
+                return { ok: false, error: err };
+            }
+        })();
+    
+</script>
+</head><body>
+
+    <div id="loginOverlay">
+        <div class="login-theme-bar">
+            <button type="button" class="theme-toggle-btn design-btn" id="designBtnLogin"
+                aria-label="Choose website design" title="Choose website design"><span class="design-ico"
+                    aria-hidden="true">ðŸŽ¨</span><span class="theme-toggle-text">Design</span></button>
+            <button type="button" class="theme-toggle-btn" id="loginThemeToggleBtn" aria-label="Toggle dark mode"
+                title="Toggle dark mode">
+                <svg class="sun-icon" width="14" height="14" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" width="14" height="14" viewBox="0 0 24 24">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <span class="theme-toggle-text">Dark Mode</span>
+            </button>
+        </div>
+        <div class="login-card">
+            <div class="login-card-head">
+                <div class="crest">
+                    <span class="atom-logo">
+                        <span class="nucleus"></span>
+                        <span class="orbit orbit-a"></span>
+                        <span class="orbit orbit-b"></span>
+                        <span class="orbit orbit-c"></span>
+                    </span>
+                </div>
+                <h1>SBTE Evaluation Register</h1>
+                <p>Sign in to continue</p>
+            </div>
+            <div class="role-switch">
+                <button type="button" id="roleTabAdmin" class="active">Admin</button>
+                <button type="button" id="roleTabStudent">Student</button>
+            </div>
+
+            <form class="login-form" id="adminLoginForm">
+                <div class="login-error" id="adminLoginError">Incorrect username or password.</div>
+                <div class="field">
+                    <label for="adminUser">Username</label>
+                    <input type="text" id="adminUser" autocomplete="username" required>
+                </div>
+                <div class="field">
+                    <label for="adminPass">Password</label>
+                    <input type="password" id="adminPass" autocomplete="current-password" required>
+                </div>
+                <button type="button" id="adminLoginBtn" class="submit">Log in as admin</button>
+            </form>
+
+            <form class="login-form" id="studentLoginForm" style="display:none;">
+                <div class="login-error" id="studentLoginError">Incorrect Student ID or password.</div>
+                <div class="field">
+                    <label for="stuId">Student ID</label>
+                    <input type="text" id="stuId" placeholder="e.g. 1534567" autocomplete="username" inputmode="numeric"
+                        required>
+                </div>
+                <div class="field">
+                    <label for="stuPass">Password</label>
+                    <input type="password" id="stuPass" autocomplete="current-password" required>
+                </div>
+                <div class="hint">Your password is your name (as written on your report card), unless your teacher has
+                    given you a new one.
+                </div>
+                <button type="button" id="studentLoginBtn" class="submit">View my report card</button>
+            </form>
+
+        </div>
+    </div>
+
+    <div id="app">
+
+        <div class="session-bar">
+            <span class="role-badge" id="roleBadge"></span>
+            <span id="sessionWho"></span>
+            <button type="button" class="theme-toggle-btn design-btn" id="designBtn" aria-label="Choose website design"
+                title="Choose website design"><span class="design-ico" aria-hidden="true">ðŸŽ¨</span><span
+                    class="theme-toggle-text">Design</span></button>
+            <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark mode"
+                title="Toggle dark mode">
+                <svg class="sun-icon" width="14" height="14" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" width="14" height="14" viewBox="0 0 24 24">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <span class="theme-toggle-text">Dark Mode</span>
+            </button>
+            <button class="logout-btn" id="logoutBtn">Log out</button>
+        </div>
+
+        <header class="masthead">
+            <div class="masthead-top">
+                <div class="masthead-title">
+                    <button type="button" id="mainAtomLogo" class="crest atom-btn" aria-label="Trigger atom animation"
+                        title="Click the atom">
+                        <span class="atom-logo">
+                            <span class="nucleus"></span>
+                            <span class="orbit orbit-a"></span>
+                            <span class="orbit orbit-b"></span>
+                            <span class="orbit orbit-c"></span>
+                        </span>
+                    </button>
+                    <div>
+                        <h1>SBTE Student Evaluation Register</h1>
+                        <div class="masthead-sub">Monthly performance record &amp; assessment ledger</div>
+                    </div>
+                </div>
+                <div class="masthead-meta">
+                    <div>Students on record: <strong id="metaCount">â€”</strong> <button type="button"
+                            class="gear-btn admin-only" id="gearBtn" aria-label="Website settings"
+                            aria-haspopup="dialog" aria-expanded="false" title="Website settings"><svg width="16"
+                                height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path
+                                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                                </path>
+                            </svg></button></div>
+                    <div>Batches: <strong id="metaBatches">â€”</strong></div>
+                    <div>Cloud sync: <strong id="cloudStatus" class="cloud-connecting">Connectingâ€¦</strong></div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="tabs" id="tabs">
+            <button data-view="dashboard" class="active">Register</button>
+            <button data-view="report">Report Card</button>
+            <button data-view="batch">Batch Report</button>
+            <button data-view="notes">Notes</button>
+            <button data-view="simulations">Simulations</button>
+            <button data-view="seating">Seating</button>
+            <button data-view="attendance">Attendance</button>
+            <button data-view="policy">Rubrics &amp; Policy</button>
+        </nav>
+
+        <div class="tab-body">
+
+            <!-- DASHBOARD -->
+            <section class="view active" id="view-dashboard">
+                <div class="view-head">
+                    <h2>Student Register</h2>
+                    <p>Every monthly evaluation on file. Search by name, filter by batch or month, and click any row to
+                        open its
+                        report card.</p>
+                </div>
+                <div id="dashOverview" class="dash-overview"></div>
+                <div class="dash-filters">
+                    <div class="controls">
+                        <div class="field search">
+                            <label for="dashSearch">Search name / ID</label>
+                            <input type="text" id="dashSearch" placeholder="e.g. Yusra or 1534567">
+                        </div>
+                        <div class="field">
+                            <label for="dashBatch">Batch</label>
+                            <select id="dashBatch">
+                                <option value="">All batches</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="dashMonth">Month</label>
+                            <select id="dashMonth">
+                                <option value="">All months</option>
+                            </select>
+                        </div>
+                        <div class="field mobile-sort">
+                            <label for="dashSort">Sort by</label>
+                            <select id="dashSort">
+                                <option value="name:1">Student (Aâ€“Z)</option>
+                                <option value="name:-1">Student (Zâ€“A)</option>
+                                <option value="final:-1">Final score (high â†’ low)</option>
+                                <option value="final:1">Final score (low â†’ high)</option>
+                                <option value="month:1">Month</option>
+                                <option value="batch:1">Batch</option>
+                                <option value="id:1">ID</option>
+                                <option value="testTotal:-1">Class Test (high â†’ low)</option>
+                                <option value="reg:-1">Regularity (high â†’ low)</option>
+                            </select>
+                        </div>
+                        <div class="count-pill" id="dashCount"></div>
+                    </div>
+                    <div class="toolbar admin-only">
+                        <button type="button" class="btn primary" id="openNewStudentBtn">âž• Add Student Entry</button>
+                        <button class="btn" id="dashDownloadCsv">Download filtered CSV</button>
+                        <button class="btn ghost" id="dashDownloadAll">Download full dataset (JSON)</button>
+                        <button type="button" class="btn" id="stuPwBtn">ðŸ”‘ Student passwords</button>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-sort="name">Student <span class="arrow"></span></th>
+                                <th data-sort="id">ID <span class="arrow"></span></th>
+                                <th data-sort="month">Month <span class="arrow"></span></th>
+                                <th data-sort="batch">Batch <span class="arrow"></span></th>
+                                <th data-sort="testTotal">Class Test /100 <span class="arrow"></span></th>
+                                <th data-sort="reg">Regularity <span class="arrow"></span></th>
+                                <th data-sort="final">Final <span class="arrow"></span></th>
+                                <th data-sort="final">Standing <span class="arrow"></span></th>
+                                <th class="admin-only col-action">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashBody"></tbody>
+                    </table>
+                    <div class="empty-state" id="dashEmpty" style="display:none;">No records match those filters.</div>
+                </div>
+            </section>
+
+            <!-- REPORT CARD -->
+            <section class="view" id="view-report">
+                <div class="view-head">
+                    <h2>Student Report Card</h2>
+                    <p>Select a student and a month to view their full category breakdown, exactly as scored against the
+                        evaluation policy.</p>
+                </div>
+                <div class="controls">
+                    <div class="field">
+                        <label for="repStudent">Student</label>
+                        <select id="repStudent"></select>
+                    </div>
+                    <div class="field">
+                        <label for="repMonth">Month</label>
+                        <select id="repMonth"></select>
+                    </div>
+                </div>
+                <div class="toolbar">
+                    <button class="btn" id="printReportBtn">Print / save as PDF</button>
+                    <button class="btn admin-only" id="editReportBtn">Edit scores</button>
+                    <button class="btn primary admin-only" id="saveReportBtn" style="display:none;">Save
+                        changes</button>
+                    <button class="btn ghost admin-only" id="cancelReportBtn" style="display:none;">Cancel</button>
+                    <button class="btn ghost admin-only" id="downloadReportBtn">Download this record (CSV)</button>
+                    <button class="btn ghost danger admin-only" id="deleteStudentBtn">Delete student data</button>
+                </div>
+                <div id="reportOutput"></div>
+            </section>
+
+            <!-- BATCH REPORT -->
+            <section class="view" id="view-batch">
+                <div class="view-head">
+                    <h2>Batch Progress Report</h2>
+                    <p>Class-wide averages for a batch in a given month, computed live from every student on record.</p>
+                </div>
+                <div class="controls">
+                    <div class="field">
+                        <label for="batchSelect">Batch</label>
+                        <select id="batchSelect"></select>
+                    </div>
+                    <div class="field">
+                        <label for="batchMonth">Month</label>
+                        <select id="batchMonth"></select>
+                    </div>
+                </div>
+                <div class="toolbar admin-only">
+                    <button class="btn" id="batchDownloadCsv">Download batch report (CSV)</button>
+                </div>
+                <div id="batchOutput"></div>
+            </section>
+
+            <!-- NOTES -->
+            <section class="view" id="view-notes">
+                <div class="view-head">
+                    <h2>Notes &amp; Study Materials</h2>
+                    <p>Admins upload PDFs, slides, or documents here; students can view and download the ones shared
+                        with their
+                        batch.</p>
+                </div>
+
+                <div class="notes-upload-card admin-only-block">
+                    <div class="nu-title">Upload a new note</div>
+                    <div class="nu-grid">
+                        <div class="field">
+                            <label for="noteTitle">Title</label>
+                            <input type="text" id="noteTitle" placeholder="e.g. Chapter 4 â€” Kinematics Notes">
+                        </div>
+                        <div class="field">
+                            <label for="noteBatch">Batch</label>
+                            <select id="noteBatch">
+                                <option value="">All batches</option>
+                            </select>
+                        </div>
+                        <div class="field" style="flex:1 1 100%;">
+                            <label for="noteDesc">Description (optional)</label>
+                            <input type="text" id="noteDesc" placeholder="Short note about what this covers">
+                        </div>
+                        <div class="field" style="flex:1 1 100%;">
+                            <label for="noteFile">File</label>
+                            <input type="file" id="noteFile"
+                                accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.png,.jpg,.jpeg">
+                        </div>
+                    </div>
+                    <div class="nu-foot">
+                        <button class="btn primary" id="uploadNoteBtn">Upload note</button>
+                        <span class="nu-hint" id="noteUploadHint">PDF, Office docs, or images up to 5&nbsp;MB.</span>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <div class="field admin-only">
+                        <label for="notesFilterBatch">Filter by batch</label>
+                        <select id="notesFilterBatch">
+                            <option value="">All batches</option>
+                        </select>
+                    </div>
+                    <div class="count-pill" id="notesCount"></div>
+                </div>
+
+                <div id="notesList" class="notes-list"></div>
+            </section>
+
+            <!-- SEATING ARRANGEMENT -->
+            <section class="view" id="view-seating">
+                <div class="view-head">
+                    <h2>Seating Arrangement</h2>
+                    <p>Lab seating plans. Admins can add, rename and remove seats, resize the tables and move the door;
+                        students can view the plan, with their own seat highlighted.</p>
+                </div>
+
+                <div class="st-toolbar st-admin">
+                    <div class="st-grp">
+                        <div class="field">
+                            <label for="stTableSel">Table</label>
+                            <select id="stTableSel"></select>
+                        </div>
+                        <div class="field">
+                            <label for="stNewName">Student name</label>
+                            <input type="text" id="stNewName" placeholder="Student name" autocomplete="off">
+                        </div>
+                        <button type="button" class="btn primary" id="stAddBtn">Add seat</button>
+                    </div>
+                    <div class="st-grp">
+                        <div class="field">
+                            <label>Door</label>
+                            <div style="display:flex;gap:6px;">
+                                <button type="button" class="btn" id="stDoorLeft"
+                                    aria-label="Move door left">&#9664;</button>
+                                <button type="button" class="btn" id="stDoorRight"
+                                    aria-label="Move door right">&#9654;</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn" id="stRenameBtn">Rename lab</button>
+                    </div>
+                </div>
+
+                <div class="st-actions">
+                    <div class="st-me-note"><span id="stMeNote"></span><span id="stSaveStatus"></span></div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button type="button" class="btn primary st-admin" id="stSaveBtn">Save</button>
+                        <button type="button" class="btn" id="stDownloadBtn">Download image</button>
+                    </div>
+                </div>
+
+                <div class="st-stage" id="stStage">
+                    <div class="st-roomwrap" id="stRoomWrap">
+                        <div class="st-room" id="stRoom">
+                            <div class="st-lbl-top" id="stLabTitle">Lab 201 (15 ft)</div>
+                            <div class="st-lbl-left">15" width</div>
+                            <div class="st-board">Whiteboard</div>
+                            <div class="st-grid">
+                                <div class="st-col" id="stLeftCol"></div>
+                                <div class="st-col" id="stRightCol"></div>
+                            </div>
+                            <div class="st-door-area" id="stDoorArea"
+                                title="Drag to move the door (double-click to reset)">
+                                <span class="st-door-marker">22</span>
+                                <div class="st-door">Entry door</div>
+                                <span class="st-door-marker">23</span>
+                            </div>
+                            <div class="st-lbl-bottom">x-axis</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="st-tabs" id="stTabs"></div>
+            </section>
+
+            <!-- ATTENDANCE -->
+            <section class="view" id="view-attendance">
+                <div class="view-head">
+                    <h2>Attendance</h2>
+                    <p id="atIntro">Daily attendance register. Admins mark Present / Absent for each student and save
+                        it;
+                        students see their own attendance. Both can download it.</p>
+                </div>
+
+                <div class="at-toolbar">
+                    <div class="field">
+                        <label for="atMonthSel">Month</label>
+                        <select id="atMonthSel"></select>
+                    </div>
+                    <div class="field">
+                        <label for="atYearSel">Year</label>
+                        <select id="atYearSel"></select>
+                    </div>
+                    <div class="field st-admin" style="display:none;">
+                        <label for="atBatchSel">Batch</label>
+                        <select id="atBatchSel"></select>
+                    </div>
+                    <div class="at-spacer"></div>
+                    <button type="button" class="btn primary st-admin" id="atSaveBtn">Save attendance</button>
+                    <button type="button" class="btn" id="atXlsBtn">Download Excel</button>
+                    <button type="button" class="btn" id="atCsvBtn">Download CSV</button>
+                </div>
+
+                <div class="at-daytools st-admin">
+                    <span class="at-sel-label" id="atSelLabel">Click a day number in the table to select that day</span>
+                    <button type="button" class="btn" data-atday="P">All present</button>
+                    <button type="button" class="btn" data-atday="T">All late</button>
+                    <button type="button" class="btn" data-atday="L">All leave</button>
+                    <button type="button" class="btn" data-atday="A">All absent</button>
+                    <button type="button" class="btn ghost" data-atday="">Clear day</button>
+                    <button type="button" class="btn ghost" data-atday="H">Holiday on/off</button>
+                </div>
+
+                <div class="at-meta">
+                    <div class="at-legend">
+                        <span><i class="at-key p"></i> P â€“ present</span>
+                        <span><i class="at-key t"></i> P â€“ late arrival (counts as present)</span>
+                        <span><i class="at-key l"></i> L â€“ leave</span>
+                        <span><i class="at-key a"></i> A â€“ absent</span>
+                        <span><i class="at-key h"></i> Holiday / Sunday</span>
+                        <span class="st-admin-hide" id="atHowTo">Click a cell to cycle P â†’ P (late) â†’ L â†’ A. Keys: P, T
+                            (late), L, A</span>
+                    </div>
+                    <div class="at-status"><span id="atSummary"></span> <span id="atSaveStatus"></span></div>
+                </div>
+
+                <div class="at-wrap" id="atWrap"></div>
+            </section>
+
+            <!-- SIMULATIONS -->
+            <section class="view" id="view-simulations">
+                <div class="view-head">
+                    <h2>Practical Simulations</h2>
+                    <p>Admins upload an HTML simulation for a practical; students open any simulation in a new tab to
+                        run it
+                        themselves.</p>
+                </div>
+
+                <div class="notes-upload-card admin-only-block">
+                    <div class="nu-title">Upload a new simulation</div>
+                    <div class="nu-grid">
+                        <div class="field">
+                            <label for="simTitle">Title</label>
+                            <input type="text" id="simTitle" placeholder="e.g. Simple Pendulum â€” Practical 3">
+                        </div>
+                        <div class="field">
+                            <label for="simBatch">Batch</label>
+                            <select id="simBatch">
+                                <option value="">All batches</option>
+                            </select>
+                        </div>
+                        <div class="field" style="flex:1 1 100%;">
+                            <label for="simDesc">Description (optional)</label>
+                            <input type="text" id="simDesc"
+                                placeholder="Short note about what this simulation demonstrates">
+                        </div>
+                        <div class="field" style="flex:1 1 100%;">
+                            <label for="simFile">HTML file (.html)</label>
+                            <input type="file" id="simFile" accept=".html,.htm,text/html">
+                        </div>
+                        <div class="field" style="flex:1 1 100%;">
+                            <label for="simCode">â€¦or paste HTML code directly</label>
+                            <textarea id="simCode" rows="5"
+                                placeholder="<!DOCTYPE html>&#10;<html>...</html>"></textarea>
+                        </div>
+                    </div>
+                    <div class="nu-foot">
+                        <button class="btn primary" id="uploadSimBtn">Upload simulation</button>
+                        <span class="nu-hint">Upload a .html file, or paste the code â€” up to 2&nbsp;MB. If both are
+                            given, the file
+                            is used.</span>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <div class="field admin-only">
+                        <label for="simsFilterBatch">Filter by batch</label>
+                        <select id="simsFilterBatch">
+                            <option value="">All batches</option>
+                        </select>
+                    </div>
+                    <div class="count-pill" id="simsCount"></div>
+                </div>
+
+                <div id="simsList" class="notes-list"></div>
+            </section>
+
+            <!-- POLICY -->
+            <section class="view" id="view-policy">
+                <div class="view-head">
+                    <h2>Evaluation Policy &amp; Rubrics</h2>
+                    <p>How the final monthly score is weighted across every assessed category, plus the standing and
+                        grade bands
+                        used everywhere else in this app.</p>
+                </div>
+
+                <div class="policy-overview">
+                    <div class="policy-donut-card">
+                        <div class="chart-title">Weight Distribution</div>
+                        <div class="donut-row">
+                            <div id="policyDonut"></div>
+                            <div class="donut-legend" id="policyDonutLegend"></div>
+                        </div>
+                    </div>
+                    <div class="policy-notes-card">
+                        <div class="chart-title">How the final score is built</div>
+                        <ul class="policy-notes-list">
+                            <li>Every category is first marked out of 100, then scaled down to its listed weight and
+                                summed into one
+                                <strong>Final Weighted Monthly Score</strong> out of 100.
+                            </li>
+                            <li>All scores and weighted contributions are rounded to one decimal place for display.</li>
+                            <li>A student's <strong>Class Rank</strong> on their report card is their position by final
+                                score among
+                                every student in the same batch and month.</li>
+                            <li><strong>Vs Batch Avg</strong> compares a student's final score to the mean final score
+                                of their batch
+                                for that month.</li>
+                            <li>Admin edits to a record overwrite the previous values directly â€” there is no separate
+                                revision
+                                history.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="policy-section-title">Category Weightage</div>
+                <div class="table-wrap">
+                    <table class="policy-table">
+                        <thead>
+                            <tr>
+                                <th>Evaluation category</th>
+                                <th>Weightage</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="policyBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="policy-bands-row">
+                    <div class="policy-band-card">
+                        <div class="policy-section-title" style="margin-top:0;">Standing Bands</div>
+                        <table class="band-table" id="standingBandTable"></table>
+                    </div>
+                    <div class="policy-band-card">
+                        <div class="policy-section-title" style="margin-top:0;">Letter Grade Scale</div>
+                        <table class="band-table" id="gradeBandTable"></table>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </div><!-- #app -->
+
+    <div class="settings-pop" id="settingsPop" role="dialog" aria-label="Website settings" hidden>
+        <div class="pop-head"><span>âš™ Website settings</span><button type="button" class="pop-close" id="popClose"
+                aria-label="Close settings">Ã—</button></div>
+        <div id="settingsBody"></div>
+    </div>
+
+    <!-- ============ NEW STUDENT DATA ENTRY MODAL ============ -->
+    <div class="modal-backdrop" id="newStudentModal" role="dialog" aria-modal="true" aria-label="New Student Data Entry"
+        hidden>
+        <div class="modal-card">
+            <div class="modal-head">
+                <div class="modal-title-group">
+                    <span class="modal-badge">Master Sheet Entry</span>
+                    <h3>âž• New Student Data Entry</h3>
+                </div>
+                <button type="button" class="modal-close-btn" id="closeNewStudentModalBtn"
+                    aria-label="Close dialog">Ã—</button>
+            </div>
+            <form id="newStudentForm" class="modal-body" onsubmit="return false;">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="newStuName">Student Name *</label>
+                        <input type="text" id="newStuName" placeholder="e.g. Sarah Ahmed" required autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="newStuId">Student ID *</label>
+                        <input type="number" id="newStuId" placeholder="e.g. 1534625" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStuMonth">Evaluation Month *</label>
+                        <select id="newStuMonth">
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStuBatch">Batch *</label>
+                        <select id="newStuBatch"></select>
+                        <input type="text" id="newStuBatchCustom" placeholder="Type new batch name (e.g. SBTE-202610A)"
+                            style="display:none;margin-top:6px;">
+                    </div>
+                </div>
+
+                <div class="form-section-title">Class Test Scores (5 Tests: T1â€“T5 Â· Max 20 Each Â· 40% Weight)</div>
+                <div class="tests-grid">
+                    <div class="test-field"><label>T1</label><input type="number" id="newTest0" min="0" max="20"
+                            step="0.5" value="15"></div>
+                    <div class="test-field"><label>T2</label><input type="number" id="newTest1" min="0" max="20"
+                            step="0.5" value="15"></div>
+                    <div class="test-field"><label>T3</label><input type="number" id="newTest2" min="0" max="20"
+                            step="0.5" value="15"></div>
+                    <div class="test-field"><label>T4</label><input type="number" id="newTest3" min="0" max="20"
+                            step="0.5" value="15"></div>
+                    <div class="test-field"><label>T5</label><input type="number" id="newTest4" min="0" max="20"
+                            step="0.5" value="15"></div>
+                    <div class="test-summary">Class Test Total: <strong id="lblTestTotal">75</strong>/100 Â· Weighted:
+                        <strong id="lblTestW">30.0</strong>/40</div>
+                </div>
+
+                <div class="form-section-title">Assessments &amp; Conduct (Max 100 Each)</div>
+                <div class="assess-grid">
+                    <div class="assess-field">
+                        <label for="newReg">Regularity &amp; Attendance (20% Wt)</label>
+                        <input type="number" id="newReg" min="0" max="100" step="0.5" value="80">
+                    </div>
+                    <div class="assess-field">
+                        <label for="newPres">Presentation (10% Wt)</label>
+                        <input type="number" id="newPres" min="0" max="100" step="0.5" value="80">
+                    </div>
+                    <div class="assess-field">
+                        <label for="newAssign">Assignment (10% Wt)</label>
+                        <input type="number" id="newAssign" min="0" max="100" step="0.5" value="80">
+                    </div>
+                    <div class="assess-field">
+                        <label for="newEvent">Event Participation (10% Wt)</label>
+                        <input type="number" id="newEvent" min="0" max="100" step="0.5" value="80">
+                    </div>
+                    <div class="assess-field">
+                        <label for="newSw">Soft Skills (10% Wt)</label>
+                        <input type="number" id="newSw" min="0" max="100" step="0.5" value="80">
+                    </div>
+                </div>
+
+                <div class="live-preview-box">
+                    <div class="lp-left">
+                        <span class="lp-label">Computed Final Score</span>
+                        <span class="lp-value" id="lblFinalScore">78.0 <small>/ 100</small></span>
+                    </div>
+                    <div class="lp-right">
+                        <span class="lp-label">Evaluation Standing</span>
+                        <span class="badge good" id="lblStanding">Good</span>
+                    </div>
+                </div>
+
+                <div class="modal-err" id="newStudentErr" role="alert" style="display:none;"></div>
+
+                <div class="modal-foot">
+                    <button type="button" class="btn ghost" id="cancelNewStudentBtn">Cancel</button>
+                    <button type="button" class="btn" id="saveAddAnotherBtn">Save &amp; Add Another</button>
+                    <button type="button" class="btn primary" id="saveNewStudentBtn">âœ” Save Entry to Master
+                        Sheet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase â€” loaded as an ES module, bridging into the classic app script via window.__fbReady
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import {
+            getDatabase, ref, get, set, update, remove
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA9_Vgowe4f6-i_2SOECkEWmXgMkKB2mvo",
+            authDomain: "sbte-evaluation.firebaseapp.com",
+            databaseURL: "https://sbte-evaluation-default-rtdb.firebaseio.com",
+            projectId: "sbte-evaluation",
+            storageBucket: "sbte-evaluation.firebasestorage.app",
+            messagingSenderId: "910503065646",
+            appId: "1:910503065646:web:b59050662856cbb28947bf"
+        };
+
+        window.__fbReady = (async () => {
+            try {
+                const app = initializeApp(firebaseConfig);
+                const db = getDatabase(app);
+                // cheap connectivity probe so a blocked/offline network fails fast instead of hanging
+                await get(ref(db, 'records'));
+                return { ok: true, db, ref, get, set, update, remove };
+            } catch (err) {
+                console.warn('Firebase unavailable, falling back to local data:', err);
+                return { ok: false, error: err };
+            }
+        })();
+    </script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
