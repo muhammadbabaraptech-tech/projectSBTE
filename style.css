@@ -26,6 +26,7 @@
             --red-bg: #FEE2E2;
             --blue: #0284C7;
             --blue-bg: #D3E7F6;
+            --on-accent: #fff;
             --shadow: 0 1px 2px rgba(15, 23, 42, .07), 0 4px 14px rgba(15, 23, 42, .08);
             --radius: 8px;
         }
@@ -65,7 +66,7 @@
 
         ::selection {
             background: var(--sky);
-            color: #fff;
+            color: var(--on-accent);
         }
 
         :focus-visible {
@@ -104,7 +105,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            filter: drop-shadow(0 0 6px rgba(14, 165, 233, .45));
+            filter: drop-shadow(0 0 6px color-mix(in srgb, var(--sky) 45%, transparent));
         }
 
         .masthead-title {
@@ -364,9 +365,15 @@
             color: var(--green);
         }
 
+        /* The "good" standing chip keeps its original blue in every accent: it is a semantic grade colour, not UI chrome */
         .badge.good {
-            background: var(--blue-bg);
-            color: var(--blue);
+            background: #D3E7F6;
+            color: #0284C7;
+        }
+
+        [data-theme="dark"] .badge.good {
+            background: rgba(56, 189, 248, 0.18);
+            color: #38BDF8;
         }
 
         .badge.satisfactory {
@@ -1043,13 +1050,13 @@
 
         .note-btn.primary-ish {
             background: linear-gradient(135deg, var(--sky), var(--sky-dark));
-            color: #fff;
+            color: var(--on-accent);
             border-color: var(--sky-dark);
         }
 
         .note-btn.primary-ish:hover {
             background: linear-gradient(135deg, var(--sky-dark), var(--sky-darker));
-            color: #fff;
+            color: var(--on-accent);
         }
 
         /* ---------- Policy ---------- */
@@ -1336,7 +1343,7 @@
             width: 100%;
             padding: 12px 0;
             background: linear-gradient(135deg, var(--sky), var(--sky-dark));
-            color: #fff;
+            color: var(--on-accent);
             border: none;
             font-family: 'Inter', sans-serif;
             font-size: calc(13.5px * var(--fs, 1));
@@ -1461,14 +1468,14 @@
 
         .btn.primary {
             background: linear-gradient(135deg, var(--sky), var(--sky-dark));
-            color: #fff;
+            color: var(--on-accent);
             border-color: var(--sky-dark);
         }
 
         .btn.primary:hover {
             background: linear-gradient(135deg, var(--sky-dark), var(--sky-darker));
             border-color: var(--sky-darker);
-            color: #fff;
+            color: var(--on-accent);
         }
 
         .btn.ghost {
@@ -1560,7 +1567,7 @@
             margin-left: -3px;
             background: var(--sky-dark);
             border-radius: 50%;
-            box-shadow: 0 0 8px 2px rgba(14, 165, 233, .85);
+            box-shadow: 0 0 8px 2px color-mix(in srgb, var(--sky) 85%, transparent);
         }
 
         .atom-logo .orbit-a {
@@ -1630,15 +1637,15 @@
 
         @keyframes atom-pulse-kf {
             0% {
-                box-shadow: 0 0 0 0 rgba(14, 165, 233, .55);
+                box-shadow: 0 0 0 0 color-mix(in srgb, var(--sky) 55%, transparent);
             }
 
             60% {
-                box-shadow: 0 0 0 22px rgba(14, 165, 233, 0);
+                box-shadow: 0 0 0 22px color-mix(in srgb, var(--sky) 0%, transparent);
             }
 
             100% {
-                box-shadow: 0 0 0 0 rgba(14, 165, 233, 0);
+                box-shadow: 0 0 0 0 color-mix(in srgb, var(--sky) 0%, transparent);
             }
         }
 
@@ -1650,8 +1657,8 @@
             height: 3px;
             margin-top: -1.5px;
             border-radius: 3px;
-            background: linear-gradient(90deg, rgba(14, 165, 233, 0) 0%, var(--sky) 45%, #ffffff 100%);
-            box-shadow: 0 0 12px 2px rgba(14, 165, 233, .75), 0 0 3px 1px rgba(255, 255, 255, .9);
+            background: linear-gradient(90deg, color-mix(in srgb, var(--sky) 0%, transparent) 0%, var(--sky) 45%, #ffffff 100%);
+            box-shadow: 0 0 12px 2px color-mix(in srgb, var(--sky) 75%, transparent), 0 0 3px 1px rgba(255, 255, 255, .9);
             opacity: 0;
             transform-origin: 0% 50%;
             transform: translate(0, 0) rotate(0deg) scaleX(.1);
@@ -3110,7 +3117,7 @@
         }
 
         .lay-frame.lay-dragging {
-            background: rgba(14, 165, 233, .1);
+            background: color-mix(in srgb, var(--sky) 10%, transparent);
         }
 
         .lay-tag {
@@ -3119,7 +3126,7 @@
             left: 0;
             padding: 3px 9px;
             background: var(--sky-dark);
-            color: #fff;
+            color: var(--on-accent);
             font-size: calc(11px * var(--fs, 1));
             font-weight: 700;
             border-radius: 6px 0 8px 0;
@@ -3196,7 +3203,7 @@
             border: none;
             border-radius: 6px;
             background: var(--sky-dark);
-            color: #fff;
+            color: var(--on-accent);
             font-size: calc(14px * var(--fs, 1));
             cursor: pointer;
         }
@@ -3372,7 +3379,7 @@
         .form-group input:focus,
         .form-group select:focus {
             border-color: var(--sky);
-            box-shadow: 0 0 0 2px rgba(14, 165, 233, .2);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--sky) 20%, transparent);
         }
 
         .form-section-title {
@@ -3571,7 +3578,7 @@
         [data-theme="dark"] .nu-grid select:focus,
         [data-theme="dark"] .nu-notes textarea:focus {
             border-color: var(--sky);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--sky) 20%, transparent);
             outline: none;
         }
 
@@ -3591,7 +3598,7 @@
         [data-theme="dark"] .logout-btn:hover {
             background: #233148;
             border-color: var(--sky);
-            color: #38BDF8;
+            color: var(--sky);
         }
 
         [data-theme="dark"] #loginOverlay {
@@ -3659,7 +3666,7 @@
 
         .theme-toggle-btn .moon-icon {
             display: inline-block;
-            stroke: #0284C7;
+            stroke: var(--sky-dark);
         }
 
         [data-theme="dark"] .theme-toggle-btn {
@@ -3669,8 +3676,8 @@
         }
 
         [data-theme="dark"] .theme-toggle-btn:hover {
-            color: #38BDF8;
-            border-color: #38BDF8;
+            color: var(--sky);
+            border-color: var(--sky);
             background: #233148;
         }
 
@@ -5304,7 +5311,7 @@
             html[data-design="neumorphic"] .note-btn.primary-ish {
                 background: var(--sky-dark);
                 border-color: transparent;
-                color: #fff;
+                color: var(--on-accent);
                 border-radius: 12px;
                 box-shadow: var(--nm-raised-sm);
             }
@@ -5596,7 +5603,7 @@
             html[data-design="glass"] .note-btn.primary-ish {
                 background: var(--sky-dark);
                 border-color: transparent;
-                color: #fff;
+                color: var(--on-accent);
                 border-radius: 12px;
             }
 
@@ -6068,21 +6075,21 @@
         }
 
         .dg-t-classic .dg-bar {
-            background: #0EA5E9;
+            background: var(--sky);
         }
 
         .dg-t-classic .dg-row i {
             background: #fff;
-            border-top: 3px solid #0EA5E9;
+            border-top: 3px solid var(--sky);
             box-shadow: 0 2px 5px rgba(15, 23, 42, .15);
         }
 
         .dg-t-classic .dg-chart b {
-            background: #0EA5E9;
+            background: var(--sky);
         }
 
         .dg-t-classic .dg-btn {
-            background: #0284C7;
+            background: var(--sky-dark);
         }
 
         .dg-t-minimal {
@@ -6187,5 +6194,311 @@
         .design-btn .design-ico {
             font-size: 14px;
             line-height: 1;
+        }
+
+        /* ================================================================
+           THEME COLOUR (ACCENT)
+           Six selectable accents stored in localStorage key "sbte_accent"
+           and applied via data-accent on <html>. Blue is the default and
+           has NO override block: with no key saved (or "blue" saved) the
+           page renders byte-for-byte the same accent colours as before
+           this feature existed. Each other accent redefines only the
+           accent tokens, on top of whatever design + dark/light mode is
+           active. The chained selectors keep these rules ahead of every
+           design block without !important:
+
+             html[data-accent="X"][data-design]:not([data-theme="dark"])
+                 (0,3,1) beats html[data-design="Y"]:not(...)  (0,2,1)
+             html[data-accent="X"][data-design][data-theme="dark"]
+                 (0,3,1) beats html[data-design="Y"][data-theme="dark"]
+
+           Wrapped in @media screen so printing keeps the original blue.
+           --on-accent carries the readable text colour for filled accent
+           surfaces: white everywhere except yellow (both modes) and
+           green dark mode, where a near-black ink clears 4.5:1 and
+           white would not.
+        ================================================================ */
+
+        @media screen {
+
+            /* ==================== RED ==================== */
+            html[data-accent="red"][data-design]:not([data-theme="dark"]) {
+                --sky: #E5484D;
+                --sky-dark: #D13438;
+                --sky-darker: #B02A2E;
+                --blue: #D13438;
+                --blue-bg: #FBE3E4;
+                --brass: #D13438;
+                --brass-dark: #B02A2E;
+                --rule-blue: #F3B1B3;
+                --on-accent: #fff;
+            }
+
+            html[data-accent="red"][data-design][data-theme="dark"] {
+                --sky: #F1575C;
+                --sky-dark: #D9363B;
+                --sky-darker: #B0272C;
+                --blue: #D9363B;
+                --blue-bg: rgba(229, 72, 77, .18);
+                --brass: #D9363B;
+                --brass-dark: #B0272C;
+                --rule-blue: #4A1E20;
+                --on-accent: #fff;
+            }
+
+            /* Brutalist keeps its ink rule-lines and #111 button text;
+               only the yellow accents (bru-accent + dark hard shadows)
+               are retinted to a light red so black text stays readable. */
+            html[data-accent="red"][data-design="brutalist"]:not([data-theme="dark"]) {
+                --bru-accent: #FFB3B5;
+                --rule-blue: #111111;
+            }
+
+            html[data-accent="red"][data-design="brutalist"][data-theme="dark"] {
+                --bru-accent: #FFB3B5;
+                --rule-blue: #F2F2F2;
+                --shadow: 4px 4px 0 #FFB3B5;
+                --bru-hard: 4px 4px 0 #FFB3B5;
+                --bru-hard-sm: 2px 2px 0 #FFB3B5;
+            }
+
+            /* ==================== YELLOW ==================== */
+            html[data-accent="yellow"][data-design]:not([data-theme="dark"]) {
+                --sky: #CA8A04;
+                --sky-dark: #A16207;
+                --sky-darker: #854D0E;
+                --blue: #A16207;
+                --blue-bg: #FEF3C7;
+                --brass: #A16207;
+                --brass-dark: #854D0E;
+                --rule-blue: #E6CE8B;
+                --on-accent: #1F1400;
+            }
+
+            html[data-accent="yellow"][data-design][data-theme="dark"] {
+                --sky: #FACC15;
+                --sky-dark: #EAB308;
+                --sky-darker: #CA8A04;
+                --blue: #EAB308;
+                --blue-bg: rgba(234, 179, 8, .18);
+                --brass: #EAB308;
+                --brass-dark: #CA8A04;
+                --rule-blue: #4A3A0E;
+                --on-accent: #1F1400;
+            }
+
+            /* Yellow in light mode: neither white (fails on the bright
+               end) nor black (fails on #A16207) works across the whole
+               sky→sky-dark gradient, so filled primary controls use a
+               light yellow ramp with dark text instead - 10.8:1 to
+               8.4:1. Design-specific rules are outranked by the chained
+               [data-accent] selectors; brutalist is excluded because its
+               buttons already use the light bru-accent tint + #111. */
+            html[data-accent="yellow"][data-design]:not([data-theme="dark"]):not([data-design="brutalist"]) .btn.primary,
+            html[data-accent="yellow"][data-design]:not([data-theme="dark"]):not([data-design="brutalist"]) .login-form button.submit,
+            html[data-accent="yellow"][data-design]:not([data-theme="dark"]):not([data-design="brutalist"]) .note-btn.primary-ish {
+                background: linear-gradient(135deg, #F2C230, #E0A800);
+            }
+
+            html[data-accent="yellow"][data-design]:not([data-theme="dark"]):not([data-design="brutalist"]) .btn.primary:hover,
+            html[data-accent="yellow"][data-design]:not([data-theme="dark"]):not([data-design="brutalist"]) .login-form button.submit:hover,
+            html[data-accent="yellow"][data-design]:not([data-theme="dark"]):not([data-design="brutalist"]) .note-btn.primary-ish:hover {
+                background: linear-gradient(135deg, #E0A800, #C99400);
+            }
+
+            /* Layout-editor drag tags sit on solid --sky-dark; a lighter
+               yellow keeps their dark --on-accent label at 8.4:1. */
+            html[data-accent="yellow"][data-design] .lay-tag,
+            html[data-accent="yellow"][data-design] .lay-swap {
+                background: #E0A800;
+            }
+
+            html[data-accent="yellow"][data-design="brutalist"]:not([data-theme="dark"]) {
+                /* keep the signature yellow */
+                --bru-accent: #FFD23F;
+                --rule-blue: #111111;
+            }
+
+            html[data-accent="yellow"][data-design="brutalist"][data-theme="dark"] {
+                --bru-accent: #FFD23F;
+                --rule-blue: #F2F2F2;
+            }
+
+            /* ==================== GREEN ==================== */
+            html[data-accent="green"][data-design]:not([data-theme="dark"]) {
+                --sky: #2FA36B;
+                --sky-dark: #1B7D51;
+                --sky-darker: #176F46;
+                --blue: #1B7D51;
+                --blue-bg: #DDF3E7;
+                --brass: #1B7D51;
+                --brass-dark: #176F46;
+                --rule-blue: #A5D6BE;
+                --on-accent: #fff;
+            }
+
+            /* Bright greens in dark mode: white text drops below 4.5:1
+               on these fills, so dark ink is used instead (8.2:1 at the
+               light end, 5.7:1 on solid fills). */
+            html[data-accent="green"][data-design][data-theme="dark"] {
+                --sky: #4CC38A;
+                --sky-dark: #2FA36B;
+                --sky-darker: #1F8A57;
+                --blue: #2FA36B;
+                --blue-bg: rgba(47, 163, 107, .18);
+                --brass: #2FA36B;
+                --brass-dark: #1F8A57;
+                --rule-blue: #1A3F2C;
+                --on-accent: #04210E;
+            }
+
+            html[data-accent="green"][data-design="brutalist"]:not([data-theme="dark"]) {
+                --bru-accent: #A8E6C3;
+                --rule-blue: #111111;
+            }
+
+            html[data-accent="green"][data-design="brutalist"][data-theme="dark"] {
+                --bru-accent: #A8E6C3;
+                --rule-blue: #F2F2F2;
+                --shadow: 4px 4px 0 #A8E6C3;
+                --bru-hard: 4px 4px 0 #A8E6C3;
+                --bru-hard-sm: 2px 2px 0 #A8E6C3;
+            }
+
+            /* ==================== PINK ==================== */
+            html[data-accent="pink"][data-design]:not([data-theme="dark"]) {
+                --sky: #EC4899;
+                --sky-dark: #DB2777;
+                --sky-darker: #BE185D;
+                --blue: #DB2777;
+                --blue-bg: #FCE7F3;
+                --brass: #DB2777;
+                --brass-dark: #BE185D;
+                --rule-blue: #F2AFCE;
+                --on-accent: #fff;
+            }
+
+            html[data-accent="pink"][data-design][data-theme="dark"] {
+                --sky: #EE63A8;
+                --sky-dark: #DB2777;
+                --sky-darker: #BE185D;
+                --blue: #DB2777;
+                --blue-bg: rgba(236, 72, 153, .18);
+                --brass: #DB2777;
+                --brass-dark: #BE185D;
+                --rule-blue: #4A1E36;
+                --on-accent: #fff;
+            }
+
+            html[data-accent="pink"][data-design="brutalist"]:not([data-theme="dark"]) {
+                --bru-accent: #FFB3D9;
+                --rule-blue: #111111;
+            }
+
+            html[data-accent="pink"][data-design="brutalist"][data-theme="dark"] {
+                --bru-accent: #FFB3D9;
+                --rule-blue: #F2F2F2;
+                --shadow: 4px 4px 0 #FFB3D9;
+                --bru-hard: 4px 4px 0 #FFB3D9;
+                --bru-hard-sm: 2px 2px 0 #FFB3D9;
+            }
+
+            /* ==================== BROWN ==================== */
+            html[data-accent="brown"][data-design]:not([data-theme="dark"]) {
+                --sky: #A47148;
+                --sky-dark: #8B5A2B;
+                --sky-darker: #6F4522;
+                --blue: #8B5A2B;
+                --blue-bg: #F1E6DA;
+                --brass: #8B5A2B;
+                --brass-dark: #6F4522;
+                --rule-blue: #D9BE9F;
+                --on-accent: #fff;
+            }
+
+            /* Dark-mode tan/brown deepened to #9A6B3F so white labels on
+               solid fills clear 4.6:1. */
+            html[data-accent="brown"][data-design][data-theme="dark"] {
+                --sky: #BE9062;
+                --sky-dark: #9A6B3F;
+                --sky-darker: #7E5330;
+                --blue: #9A6B3F;
+                --blue-bg: rgba(164, 113, 72, .18);
+                --brass: #9A6B3F;
+                --brass-dark: #7E5330;
+                --rule-blue: #3D2C1C;
+                --on-accent: #fff;
+            }
+
+            html[data-accent="brown"][data-design="brutalist"]:not([data-theme="dark"]) {
+                --bru-accent: #E5C9A3;
+                --rule-blue: #111111;
+            }
+
+            html[data-accent="brown"][data-design="brutalist"][data-theme="dark"] {
+                --bru-accent: #E5C9A3;
+                --rule-blue: #F2F2F2;
+                --shadow: 4px 4px 0 #E5C9A3;
+                --bru-hard: 4px 4px 0 #E5C9A3;
+                --bru-hard-sm: 2px 2px 0 #E5C9A3;
+            }
+
+            /* ==================== THEME-COLOUR PICKER (Design dialog) ==== */
+            .ac-section {
+                margin-top: 18px;
+                padding-top: 14px;
+                border-top: 1px solid var(--rule-soft);
+            }
+
+            .ac-title {
+                font-weight: 700;
+                font-size: calc(13px * var(--fs, 1));
+                margin-bottom: 10px;
+            }
+
+            .ac-row {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .ac-swatch {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 2px solid rgba(0, 0, 0, .15);
+                cursor: pointer;
+                position: relative;
+                padding: 0;
+                appearance: none;
+                background: #0EA5E9;
+            }
+
+            .ac-swatch:focus-visible {
+                outline: 2px solid var(--sky-dark);
+                outline-offset: 2px;
+            }
+
+            .ac-swatch[aria-pressed="true"] {
+                box-shadow: 0 0 0 3px var(--card), 0 0 0 5px var(--sky-dark);
+            }
+
+            .ac-check {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                font-weight: 800;
+                color: #fff;
+                opacity: 0;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, .45);
+                pointer-events: none;
+            }
+
+            .ac-swatch[aria-pressed="true"] .ac-check {
+                opacity: 1;
+            }
         }
     

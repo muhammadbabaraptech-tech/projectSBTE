@@ -334,7 +334,7 @@ function recKey(r) {
                 xlabels += `<text x="${(x + barW / 2).toFixed(1)}" y="${(padT + chartH + 18).toFixed(1)}" text-anchor="middle" font-size="9.5" font-family="Inter,sans-serif" fill="var(--ink-soft)">${it.label}</text>`;
             });
             return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="max-height:${h}px;" role="img" aria-label="${opts.aria || 'Bar chart'}">
-    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0EA5E9"/><stop offset="100%" stop-color="#0284C7"/></linearGradient></defs>
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--sky)"/><stop offset="100%" stop-color="var(--sky-dark)"/></linearGradient></defs>
     <line x1="${padL}" y1="${padT + chartH}" x2="${w - padR}" y2="${padT + chartH}" stroke="var(--rule)" stroke-width="1"/>
     ${bars}${vlabels}${xlabels}
   </svg>`;
@@ -361,7 +361,7 @@ function recKey(r) {
                 const barW = Math.max(2, (it.value / maxVal) * chartW);
                 rows += `
       <text x="${padL - 8}" y="${(y + rowH / 2 + 3.5).toFixed(1)}" text-anchor="end" font-size="${fontSize}" font-family="Inter,sans-serif" fill="var(--ink)">${String(it.label).length > 16 ? String(it.label).slice(0, 15) + '…' : it.label}</text>
-      <rect x="${padL}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${rowH}" rx="4" fill="${it.color || '#0284C7'}"/>
+      <rect x="${padL}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${rowH}" rx="4" fill="${it.color || 'var(--sky-dark)'}"/>
       <text x="${(padL + barW + 7).toFixed(1)}" y="${(y + rowH / 2 + 3.5).toFixed(1)}" font-size="${fontSize}" font-family="Inter,sans-serif" font-weight="700" fill="var(--ink)">${it.value}</text>
     `;
             });
@@ -408,13 +408,13 @@ function recKey(r) {
                 const a = angleFor(i);
                 const f = Math.max(0, Math.min(1, it.value / (it.max || 100)));
                 const x = cx + Math.cos(a) * rMax * f, y = cy + Math.sin(a) * rMax * f;
-                return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#fff" stroke="${opts.stroke || '#0284C7'}" stroke-width="2"/>`;
+                return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#fff" stroke="${opts.stroke || 'var(--sky-dark)'}" stroke-width="2"/>`;
             }).join('');
 
             return `<svg viewBox="0 0 ${size} ${size}" width="100%" style="max-height:${size}px;" role="img" aria-label="${opts.aria || 'Radar chart'}">
-    <defs><radialGradient id="${gid}"><stop offset="0%" stop-color="${opts.fill || '#0EA5E9'}" stop-opacity="0.55"/><stop offset="100%" stop-color="${opts.fill || '#0284C7'}" stop-opacity="0.18"/></radialGradient></defs>
+    <defs><radialGradient id="${gid}"><stop offset="0%" stop-color="${opts.fill || 'var(--sky)'}" stop-opacity="0.55"/><stop offset="100%" stop-color="${opts.fill || 'var(--sky-dark)'}" stop-opacity="0.18"/></radialGradient></defs>
     ${rings}${spokes}
-    <polygon points="${shapePts}" fill="url(#${gid})" stroke="${opts.stroke || '#0284C7'}" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="${shapePts}" fill="url(#${gid})" stroke="${opts.stroke || 'var(--sky-dark)'}" stroke-width="2" stroke-linejoin="round"/>
     ${dots}
     ${labels}
   </svg>`;
@@ -428,7 +428,7 @@ function recKey(r) {
             const rOuter = opts.rOuter || size * 0.42;
             const rInner = opts.rInner || rOuter * 0.6;
             const total = items.reduce((s, it) => s + it.value, 0) || 1;
-            const palette = opts.palette || ['#0284C7', '#7DD3FC', '#0F172A', '#33587A', '#A8701F', '#2E6B4C', '#A13C3C'];
+            const palette = opts.palette || ['var(--sky-dark)', 'var(--sky)', '#0F172A', '#33587A', '#A8701F', '#2E6B4C', '#A13C3C'];
 
             let angle = -Math.PI / 2;
             let arcs = '';
@@ -590,7 +590,7 @@ function recKey(r) {
             const batches = uniq(RECORDS.map(r => r.batch)).sort();
             const batchAvgs = batches.map(b => ({ label: b, value: avg(RECORDS.filter(r => r.batch === b).map(r => r.final)) }));
             const topBatch = batchAvgs.slice().sort((a, b) => b.value - a.value)[0];
-            const batchItems = batchAvgs.map(b => ({ ...b, color: topBatch && b.label === topBatch.label ? '#0284C7' : '#7DD3FC' }));
+            const batchItems = batchAvgs.map(b => ({ ...b, color: topBatch && b.label === topBatch.label ? 'var(--sky-dark)' : 'var(--sky)' }));
 
             const buckets = [
                 { label: '0-59', min: 0, max: 59 },
@@ -604,7 +604,7 @@ function recKey(r) {
             const distChartItems = distCounts.map(d => ({ ...d, height: d.value / maxDist * 100 }));
 
             const months = uniq(RECORDS.map(r => r.month)).sort(byMonthOrder);
-            const monthAvgs = months.map(m => ({ label: m.slice(0, 3), value: avg(RECORDS.filter(r => r.month === m).map(r => r.final)), height: avg(RECORDS.filter(r => r.month === m).map(r => r.final)), color: '#0284C7' }));
+            const monthAvgs = months.map(m => ({ label: m.slice(0, 3), value: avg(RECORDS.filter(r => r.month === m).map(r => r.final)), height: avg(RECORDS.filter(r => r.month === m).map(r => r.final)), color: 'var(--sky-dark)' }));
 
             el.innerHTML = `
     <div class="kpi-strip">
@@ -801,7 +801,7 @@ function recKey(r) {
             const studentMonths = RECORDS.filter(x => x.name === r.name).slice().sort((a, b) => byMonthOrder(a.month, b.month));
             let trendBlock = '';
             if (studentMonths.length > 1) {
-                const trendItems = studentMonths.map(m => ({ label: m.month.slice(0, 3), value: m.final, height: m.final, color: m.month === r.month ? '#0284C7' : '#7DD3FC' }));
+                const trendItems = studentMonths.map(m => ({ label: m.month.slice(0, 3), value: m.final, height: m.final, color: m.month === r.month ? 'var(--sky-dark)' : 'var(--sky)' }));
                 trendBlock = `
       <div class="chart-block" style="border-top:1px solid var(--rule-soft);">
         <div class="chart-title">Final Score Trend By Month</div>
@@ -824,7 +824,7 @@ function recKey(r) {
         <div class="donut-row">
           ${svgDonut(donutItems, { size: 170, centerValue: r.final, centerLabel: st.label, aria: 'Final score composition by category' })}
           <div class="donut-legend">
-            ${donutItems.map((d, i) => `<span class="dl-item"><i style="background:${['#0284C7', '#7DD3FC', '#0F172A', '#33587A', '#A8701F', '#2E6B4C', '#A13C3C'][i % 7]}"></i>${d.label} <b>${d.value}</b></span>`).join('')}
+            ${donutItems.map((d, i) => `<span class="dl-item"><i style="background:${['var(--sky-dark)', 'var(--sky)', '#0F172A', '#33587A', '#A8701F', '#2E6B4C', '#A13C3C'][i % 7]}"></i>${d.label} <b>${d.value}</b></span>`).join('')}
           </div>
         </div>
       </div>
@@ -1923,7 +1923,7 @@ function recKey(r) {
         policyBody.appendChild(totalTr);
 
         // Weight-distribution donut, built from the same POLICY data as the table above
-        const policyDonutPalette = ['#0284C7', '#7DD3FC', '#0F172A', '#33587A', '#A8701F', '#2E6B4C', '#A13C3C'];
+        const policyDonutPalette = ['var(--sky-dark)', 'var(--sky)', '#0F172A', '#33587A', '#A8701F', '#2E6B4C', '#A13C3C'];
         const policyDonutItems = POLICY.map((p, i) => ({ label: p.cat.split(':').pop().split('(')[0].trim(), value: parseFloat(p.weight), color: policyDonutPalette[i % policyDonutPalette.length] }));
         const policyDonutEl = document.getElementById('policyDonut');
         if (policyDonutEl) {
@@ -3161,23 +3161,62 @@ function recKey(r) {
             wrap.innerHTML = `<div class="dlg" role="dialog" aria-modal="true" aria-label="Choose website design" tabindex="-1" style="width:min(820px,95vw);max-width:95vw;">
         <h3>Choose a website design</h3>
         <div class="dlg-body">Pick a picture to switch the whole website to that style. It applies straight away and is remembered on this device.
-        <div class="dg-grid">${DESIGNS.map(card).join('')}</div></div>
+        <div class="dg-grid">${DESIGNS.map(card).join('')}</div>
+        <div class="ac-section"><div class="ac-title" id="acTitle">Theme colour</div>
+        <div class="ac-row" role="group" aria-labelledby="acTitle">${ACCENTS.map(a => `<button type="button" class="ac-swatch" data-a="${a.id}" aria-label="${a.name}" aria-pressed="${a.id === currentAccent()}" style="background:${a.swatch}"><span class="ac-check" style="color:${a.check}">✓</span></button>`).join('')}</div></div></div>
         <div class="dlg-btns"><button type="button" class="btn primary" data-close="1">Done</button></div></div>`;
             document.body.appendChild(wrap);
-            const refresh = () => wrap.querySelectorAll('.dg-card').forEach(c => {
-                const on = c.dataset.d === currentDesign();
-                c.classList.toggle('on', on); c.setAttribute('aria-pressed', on);
-                c.querySelector('.dg-tick').textContent = on ? 'âœ“ Selected' : '';
-            });
+            const refresh = () => {
+                wrap.querySelectorAll('.dg-card').forEach(c => {
+                    const on = c.dataset.d === currentDesign();
+                    c.classList.toggle('on', on); c.setAttribute('aria-pressed', on);
+                    c.querySelector('.dg-tick').textContent = on ? 'âœ“ Selected' : '';
+                });
+                wrap.querySelectorAll('.ac-swatch').forEach(s => s.setAttribute('aria-pressed', s.dataset.a === currentAccent()));
+            };
             wrap.addEventListener('click', e => {
                 const c = e.target.closest('.dg-card');
                 if (c) { applyDesign(c.dataset.d); refresh(); return; }
+                const sw = e.target.closest('.ac-swatch');
+                if (sw) { applyAccent(sw.dataset.a); refresh(); return; }
                 if (e.target === wrap || e.target.dataset.close) wrap.remove();
             });
             wrap.addEventListener('keydown', e => { if (e.key === 'Escape') wrap.remove(); });
             const sel = wrap.querySelector('.dg-card.on'); if (sel) sel.focus();
         }
         ['designBtn', 'designBtnLogin'].forEach(id => { const b = document.getElementById(id); if (b) b.addEventListener('click', openDesignPicker); });
+
+        /* ============ THEME COLOUR (ACCENT) ============
+           Six accents, stored per-device in localStorage (no Firebase sync)
+           and applied as data-accent on <html> - the pre-paint script in
+           index.html restores it before first paint so there is no flash.
+           Blue is the default and has no CSS override block at all. */
+        const ACCENT_KEY = 'sbte_accent';
+        const ACCENTS = [
+            { id: 'blue', name: 'Blue', swatch: '#0EA5E9', check: '#fff' },
+            { id: 'red', name: 'Red', swatch: '#E5484D', check: '#fff' },
+            { id: 'yellow', name: 'Yellow', swatch: '#EAB308', check: '#1F1400' },
+            { id: 'green', name: 'Green', swatch: '#2FA36B', check: '#fff' },
+            { id: 'pink', name: 'Pink', swatch: '#EC4899', check: '#fff' },
+            { id: 'brown', name: 'Brown', swatch: '#A47148', check: '#fff' }
+        ];
+        const currentAccent = () => document.documentElement.getAttribute('data-accent') || 'blue';
+        function applyAccent(id) {
+            if (!ACCENTS.some(a => a.id === id)) id = 'blue';
+            document.documentElement.setAttribute('data-accent', id);
+            try { localStorage.setItem(ACCENT_KEY, id); } catch (e) { }
+            refreshAccentViews();
+        }
+        // SVG charts draw with var(--sky*), so most views restyle live;
+        // re-render anyway so anything JS-computed is rebuilt too, and the
+        // resize event lets charts and the seating plan refit.
+        function refreshAccentViews() {
+            try { renderDashboard(); } catch (e) { }
+            try { renderReport(currentReportRecord()); } catch (e) { }
+            try { renderBatch(); } catch (e) { }
+            try { renderAttendance(); } catch (e) { }
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 60);
+        }
 
         /* ============ Auto-restore Session on Page Load ============ */
         (function restoreSessionOnLoad() {

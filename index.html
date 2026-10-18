@@ -16,6 +16,8 @@
                 var theme = saved ? saved : (sysDark ? 'dark' : 'light');
                 document.documentElement.setAttribute('data-theme', theme);
                 document.documentElement.setAttribute('data-design', localStorage.getItem('sbte_design') || 'neumorphic');
+                var accent = localStorage.getItem('sbte_accent');
+                document.documentElement.setAttribute('data-accent', ['blue', 'red', 'yellow', 'green', 'pink', 'brown'].indexOf(accent) >= 0 ? accent : 'blue');
 
                 // Pre-auth session check to prevent screen flash on refresh
                 var sessionStr = localStorage.getItem('sbte_session_v1');
