@@ -6505,7 +6505,7 @@
         /* ================================================================
            LOGIN PAGE — rotating science backdrop
            A maths / physics / chemistry scene fades behind the sign-in
-           card every 5s (driven by script.js; fast 380ms cross-fade).
+           card every 3s (driven by script.js; fast 380ms cross-fade).
            The credential panel is frosted glass, so it picks up whichever
            scene sits behind it: its border, glow and the subject caption
            blend from the scene tint (--sci-tint) while buttons and links
@@ -6589,6 +6589,79 @@
                 width: min(46vw, 540px);
             }
 
+            /* corner diagrams */
+            .s1 {
+                top: 3%;
+                left: 2%;
+                width: min(20vw, 220px);
+            }
+
+            .s2 {
+                top: 7%;
+                right: 3%;
+                width: min(19vw, 210px);
+            }
+
+            .s3 {
+                bottom: 5%;
+                left: 3%;
+                width: min(21vw, 230px);
+            }
+
+            .s4 {
+                bottom: 4%;
+                right: 5%;
+                width: min(20vw, 220px);
+            }
+
+            /* maths keeps the bottom-right corner for its main curve diagram,
+               so the matrix sits in the middle-left of that scene instead */
+            .sci-layer[data-scene="math"] .s4 {
+                top: 31%;
+                left: 2%;
+                right: auto;
+                bottom: auto;
+                width: min(16vw, 168px);
+            }
+
+            .s1,
+            .s2,
+            .s3,
+            .s4 {
+                opacity: .45;
+            }
+
+            /* graph-paper / lattice texture behind each scene, faded away
+               from the middle so the credential panel stays calm */
+            .sci-layer::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                opacity: .5;
+                -webkit-mask-image: radial-gradient(58% 58% at 50% 50%, transparent 26%, #000 76%);
+                mask-image: radial-gradient(58% 58% at 50% 50%, transparent 26%, #000 76%);
+            }
+
+            .sci-layer[data-scene="math"]::before {
+                background-image:
+                    repeating-linear-gradient(to right, color-mix(in srgb, var(--sci-tint) 26%, transparent) 0 1px, transparent 1px 46px),
+                    repeating-linear-gradient(to bottom, color-mix(in srgb, var(--sci-tint) 26%, transparent) 0 1px, transparent 1px 46px);
+            }
+
+            .sci-layer[data-scene="physics"]::before {
+                background-image:
+                    repeating-linear-gradient(to bottom, color-mix(in srgb, var(--sci-tint) 22%, transparent) 0 1px, transparent 1px 34px),
+                    repeating-linear-gradient(to right, color-mix(in srgb, var(--sci-tint) 12%, transparent) 0 1px, transparent 1px 120px);
+            }
+
+            .sci-layer[data-scene="chem"]::before {
+                background-image:
+                    radial-gradient(color-mix(in srgb, var(--sci-tint) 30%, transparent) 1.6px, transparent 1.8px),
+                    radial-gradient(color-mix(in srgb, var(--sci-tint) 20%, transparent) 1.4px, transparent 1.7px);
+                background-size: 30px 30px, 30px 30px;
+                background-position: 0 0, 15px 15px;
+            }
+
             /* travelling charge along the atom orbits */
             .sci-orbit {
                 stroke-dasharray: 22 460;
@@ -6666,35 +6739,41 @@
             }
 
             .p1 {
-                top: 9%;
-                left: 5%;
+                top: 12%;
+                left: 17%;
+                max-width: min(18ch, 17vw);
             }
 
             .p2 {
-                top: 20%;
-                right: 6%;
+                top: 16%;
+                right: 17%;
+                max-width: min(18ch, 17vw);
                 text-align: right;
             }
 
             .p3 {
-                top: 46%;
-                left: 4%;
+                top: 47%;
+                left: 5.5%;
+                max-width: min(28ch, 26vw);
             }
 
             .p4 {
-                bottom: 27%;
-                right: 7%;
+                bottom: 30%;
+                right: 5.5%;
+                max-width: min(28ch, 26vw);
                 text-align: right;
             }
 
             .p5 {
-                bottom: 13%;
-                left: 7%;
+                bottom: 10%;
+                left: 17%;
+                max-width: min(18ch, 17vw);
             }
 
             .p6 {
-                bottom: 33%;
-                right: 15%;
+                bottom: 42%;
+                right: 17%;
+                max-width: min(18ch, 17vw);
                 text-align: right;
             }
 
@@ -6748,8 +6827,8 @@
                 z-index: 3;
                 display: flex;
                 align-items: center;
-                gap: 10px;
-                padding: 7px 15px;
+                gap: 8px;
+                padding: 8px 12px;
                 border-radius: 999px;
                 background: color-mix(in srgb, var(--card) 62%, transparent);
                 border: 1px solid color-mix(in srgb, var(--sci-tint) 34%, var(--rule-soft));
@@ -6793,20 +6872,10 @@
                 outline-offset: 2px;
             }
 
-            .sci-label {
-                min-width: 92px;
-                text-align: center;
-                font-size: 10.5px;
-                font-weight: 700;
-                letter-spacing: .12em;
-                text-transform: uppercase;
-                color: color-mix(in srgb, var(--sci-tint) 80%, var(--ink));
-            }
-
             @media (max-width: 900px) {
                 .sci-item {
                     font-size: clamp(13px, 2.4vw, 18px);
-                    max-width: min(28ch, 46vw);
+                    max-width: min(20ch, 32vw);
                 }
 
                 .sci-item.big {
@@ -6814,6 +6883,11 @@
                 }
 
                 .sci-layer .sci-item:nth-of-type(n + 5) {
+                    display: none;
+                }
+
+                .s3,
+                .s4 {
                     display: none;
                 }
 
@@ -6827,14 +6901,22 @@
                     display: none;
                 }
 
+                .s2 {
+                    display: none;
+                }
+
+                .sci-item {
+                    max-width: min(16ch, 48vw);
+                }
+
                 .p1 {
                     top: 6%;
-                    left: 4%;
+                    left: 6%;
                 }
 
                 .p2 {
                     top: 13%;
-                    right: 5%;
+                    right: 6%;
                 }
 
                 .f-a,
@@ -6844,11 +6926,6 @@
 
                 .sci-nav {
                     bottom: 12px;
-                }
-
-                .sci-label {
-                    min-width: 0;
-                    font-size: 9.5px;
                 }
             }
 

@@ -59,6 +59,7 @@ const snapshot = page => page.evaluate(() => {
     const card = document.querySelector('.login-card');
     const cs = getComputedStyle(card);
     const onLayer = overlay.querySelector('.sci-layer.on');
+    const nav = document.querySelector('.sci-nav');
     return {
         scene: overlay.getAttribute('data-scene'),
         onLayer: onLayer ? onLayer.getAttribute('data-scene') : null,
@@ -66,9 +67,13 @@ const snapshot = page => page.evaluate(() => {
         layerCount: overlay.querySelectorAll('.sci-layer').length,
         itemCount: overlay.querySelectorAll('.sci-item').length,
         figCount: overlay.querySelectorAll('.sci-fig').length,
+        onItems: onLayer ? onLayer.querySelectorAll('.sci-item').length : 0,
+        onFigs: onLayer ? onLayer.querySelectorAll('.sci-fig').length : 0,
+        pattern: onLayer ? getComputedStyle(onLayer, '::before').backgroundImage : '',
         dotCount: overlay.querySelectorAll('.sci-dot').length,
         dots: [...overlay.querySelectorAll('.sci-dot')].map(d => d.getAttribute('aria-pressed')),
-        label: (overlay.querySelector('.sci-label') || {}).textContent,
+        navText: (nav ? nav.textContent : '').replace(/\s+/g, ' ').trim(),
+        labelExists: !!overlay.querySelector('.sci-label'),
         subjects: (document.querySelector('.login-subjects') || {}).textContent,
         cardBg: cs.backgroundColor,
         cardBorder: cs.borderTopColor,
@@ -101,6 +106,22 @@ async function main() {
     });
     const page = await browser.newPage();
     await page.setViewport({ width: 1440, height: 900 });
+
+    // Headless Chromium only advances CSS transitions/animations when a frame
+    // is actually painted, so a 380ms colour transition looks "stuck" while we
+    // poll computed styles, and screenshots catch scenes one step behind.
+    // Neutralise them for the harness so measurements and screenshots show the
+    // settled state a real browser paints right after each switch.
+    await page.evaluateOnNewDocument(() => {
+        const apply = () => {
+            const s = document.createElement('style');
+            s.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';
+            (document.head || document.documentElement).appendChild(s);
+        };
+        if (document.head) apply();
+        else document.addEventListener('DOMContentLoaded', apply);
+    });
+
     const consoleErrors = [];
     page.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text()); });
     page.on('pageerror', e => consoleErrors.push('pageerror: ' + e.message));
@@ -116,7 +137,10 @@ async function main() {
             const tag = `${design}/${mode}`;
             check(tag + ' has 3 science layers', s.layerCount === 3, String(s.layerCount));
             check(tag + ' exactly one layer visible', s.onCount === 1 && s.onLayer === s.scene, JSON.stringify({ on: s.onLayer, scene: s.scene }));
-            check(tag + ' formulas + figures present', s.itemCount >= 6 && s.figCount >= 3, `items=${s.itemCount} figs=${s.figCount}`);
+            check(tag + ' formulas + figures present', s.itemCount >= 18 && s.figCount >= 15, `items=${s.itemCount} figs=${s.figCount}`);
+            check(tag + ' active scene shows at least 5 diagrams', s.onFigs >= 5, String(s.onFigs));
+            check(tag + ' active scene has a background texture', !!s.pattern && s.pattern !== 'none', s.pattern.slice(0, 40));
+            check(tag + ' no subject name at the bottom of the backdrop', !s.labelExists && s.navText === '', JSON.stringify({ label: s.labelExists, navText: s.navText }));
             check(tag + ' card is translucent (blends with backdrop)', alphaOf(s.cardBg) < 0.95, s.cardBg);
             check(tag + ' card is frosted (backdrop blur)', /blur/.test(s.blur), s.blur);
             check(tag + ' scene switch nav visible with 3 dots', s.navVisible && s.dotCount === 3, JSON.stringify({ nav: s.navVisible, dots: s.dotCount }));
@@ -126,11 +150,11 @@ async function main() {
         }
     }
 
-    /* ---------- 2. auto-rotation every 5s ---------- */
-    console.log('== 5s auto-rotation ==');
+    /* ---------- 2. auto-rotation every 3s ---------- */
+    console.log('== 3s auto-rotation ==');
     await setPrefs(page, { design: 'neumorphic', accent: 'blue', mode: 'light' });
     const t0 = await snapshot(page);
-    check('starts on Mathematics', t0.scene === 'math' && t0.label === 'Mathematics', JSON.stringify({ s: t0.scene, l: t0.label }));
+    check('starts on Mathematics', t0.scene === 'math', t0.scene);
     check('dot 1 pressed initially', t0.dots[0] === 'true' && t0.dots[1] === 'false' && t0.dots[2] === 'false');
     check('only the active layer is shown', t0.onCount === 1 && t0.onLayer === 'math', JSON.stringify({ on: t0.onLayer }));
 
@@ -138,26 +162,28 @@ async function main() {
     const changes = [];
     let prevScene = t0.scene;
     const start = Date.now();
-    let physicsShot = false;
     while (Date.now() - start < 17000) {
         await sleep(200);
         const cur = await page.evaluate(() => document.getElementById('loginOverlay').getAttribute('data-scene'));
         if (cur !== prevScene) {
             changes.push({ scene: cur, at: Date.now() - start });
             prevScene = cur;
-            if (cur === 'physics' && !physicsShot) { physicsShot = true; await page.screenshot({ path: shot('rotate_physics_neumorphic_light') }); }
         }
     }
     const seq = changes.map(c => c.scene);
-    check('scene changes roughly every 5s', changes.length >= 3 && changes.every(c => c.at > 4200) && changes.length <= 4,
+    const gaps = changes.slice(1).map((c, i) => c.at - changes[i].at);
+    check('scene advances roughly every 3s',
+        changes.length >= 4 && changes[0].at > 1800 && changes[0].at < 4400 && gaps.every(g => g > 2200 && g < 4400),
         JSON.stringify(changes));
-    check('scene advances without repeats', seq.length >= 3 && seq.every((s, i) => i === 0 || s !== seq[i - 1]), seq.join('>'));
+    check('scene advances without repeats', seq.length >= 4 && seq.every((s, i) => i === 0 || s !== seq[i - 1]), seq.join('>'));
     check('all three scenes appear', ['math', 'physics', 'chem'].every(s => seq.includes(s)), seq.join('>'));
+    await page.evaluate(() => document.querySelector('.sci-dot[data-scene="physics"]').click());
+    await sleep(400);
+    await page.screenshot({ path: shot('rotate_physics_neumorphic_light') });
     const t1 = await snapshot(page);
-    check('label follows the active scene',
-        t1.label === ({ math: 'Mathematics', physics: 'Physics', chem: 'Chemistry' })[t1.scene], t1.label);
     check('pressed dot follows the active scene',
         t1.dots[['math', 'physics', 'chem'].indexOf(t1.scene)] === 'true', JSON.stringify({ scene: t1.scene, dots: t1.dots }));
+    check('no subject label under the dots', !t1.labelExists && t1.navText === '', JSON.stringify({ label: t1.labelExists, navText: t1.navText }));
     await page.evaluate(() => document.querySelector('.sci-dot[data-scene="chem"]').click());
     await sleep(500);
     await page.screenshot({ path: shot('rotate_chem_neumorphic_light') });
@@ -180,6 +206,13 @@ async function main() {
     check('nav pill border changes with the scene',
         perScene.math.navBorder !== perScene.physics.navBorder && perScene.physics.navBorder !== perScene.chem.navBorder,
         JSON.stringify({ math: perScene.math.navBorder, phys: perScene.physics.navBorder, chem: perScene.chem.navBorder }));
+    check('each scene has its own background texture',
+        perScene.math.pattern !== perScene.physics.pattern && perScene.physics.pattern !== perScene.chem.pattern &&
+        perScene.math.pattern !== perScene.chem.pattern,
+        JSON.stringify({ math: perScene.math.pattern.slice(0, 30), phys: perScene.physics.pattern.slice(0, 30), chem: perScene.chem.pattern.slice(0, 30) }));
+    check('each scene carries its own diagrams',
+        perScene.math.onFigs >= 5 && perScene.physics.onFigs >= 5 && perScene.chem.onFigs >= 5,
+        JSON.stringify({ math: perScene.math.onFigs, phys: perScene.physics.onFigs, chem: perScene.chem.onFigs }));
 
     /* ---------- 4. technical-drawing screenshots for eyeballing ---------- */
     console.log('== screenshots ==');
