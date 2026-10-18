@@ -6501,4 +6501,376 @@
                 opacity: 1;
             }
         }
+
+        /* ================================================================
+           LOGIN PAGE — rotating science backdrop
+           A maths / physics / chemistry scene fades behind the sign-in
+           card every 5s (driven by script.js; fast 380ms cross-fade).
+           The credential panel is frosted glass, so it picks up whichever
+           scene sits behind it: its border, glow and the subject caption
+           blend from the scene tint (--sci-tint) while buttons and links
+           keep using the chosen accent colour.
+        ================================================================ */
+        @media screen {
+
+            /* ---------- per-scene tints ---------- */
+            #loginOverlay {
+                --sci-tint: #6366F1;
+                --sci-tint-2: #A855F7;
+            }
+
+            #loginOverlay[data-scene="math"] {
+                --sci-tint: #6366F1;
+                --sci-tint-2: #A855F7;
+            }
+
+            #loginOverlay[data-scene="physics"] {
+                --sci-tint: #0EA5E9;
+                --sci-tint-2: #06B6D4;
+            }
+
+            #loginOverlay[data-scene="chem"] {
+                --sci-tint: #10B981;
+                --sci-tint-2: #14B8A6;
+            }
+
+            /* ---------- backdrop ---------- */
+            .sci-bg {
+                position: absolute;
+                inset: 0;
+                overflow: hidden;
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            .sci-halo {
+                position: absolute;
+                inset: -15% -8%;
+                background:
+                    radial-gradient(46% 40% at 20% 26%, color-mix(in srgb, var(--sci-tint) 32%, transparent), transparent 70%),
+                    radial-gradient(40% 36% at 84% 76%, color-mix(in srgb, var(--sci-tint-2) 26%, transparent), transparent 72%);
+                transition: background .45s ease;
+            }
+
+            .sci-layer {
+                position: absolute;
+                inset: 0;
+                opacity: 0;
+                transition: opacity .38s ease;
+            }
+
+            .sci-layer.on {
+                opacity: 1;
+            }
+
+            .sci-fig {
+                position: absolute;
+                color: color-mix(in srgb, var(--sci-tint) 74%, transparent);
+                opacity: .55;
+            }
+
+            .f-a {
+                right: -4%;
+                bottom: -8%;
+                width: min(48vw, 560px);
+            }
+
+            .f-b {
+                left: 50%;
+                top: 50%;
+                width: min(64vw, 780px);
+                transform: translate(-50%, -50%);
+                opacity: .42;
+            }
+
+            .f-c {
+                left: -5%;
+                top: -7%;
+                width: min(46vw, 540px);
+            }
+
+            /* travelling charge along the atom orbits */
+            .sci-orbit {
+                stroke-dasharray: 22 460;
+                animation: sci-dash 6.5s linear infinite;
+            }
+
+            .o2 {
+                animation-duration: 8.5s;
+                animation-delay: -2s;
+            }
+
+            .o3 {
+                animation-duration: 11s;
+                animation-delay: -5s;
+            }
+
+            @keyframes sci-dash {
+                to {
+                    stroke-dashoffset: -482;
+                }
+            }
+
+            /* ---------- floating formulas ---------- */
+            .sci-item {
+                position: absolute;
+                max-width: min(32ch, 36vw);
+                font-family: 'Cambria Math', 'Times New Roman', Georgia, serif;
+                font-style: italic;
+                font-size: clamp(15px, 1.65vw, 24px);
+                line-height: 1.35;
+                color: color-mix(in srgb, var(--sci-tint) 76%, var(--ink) 24%);
+                opacity: .62;
+                animation: sci-float 15s ease-in-out infinite;
+            }
+
+            .sci-item.big {
+                font-size: clamp(20px, 2.3vw, 33px);
+                opacity: .5;
+            }
+
+            @keyframes sci-float {
+                0%,
+                100% {
+                    transform: translateY(0);
+                }
+
+                50% {
+                    transform: translateY(-13px);
+                }
+            }
+
+            .sci-layer .sci-item:nth-of-type(2) {
+                animation-duration: 18s;
+                animation-delay: -3s;
+            }
+
+            .sci-layer .sci-item:nth-of-type(3) {
+                animation-duration: 21s;
+                animation-delay: -7s;
+            }
+
+            .sci-layer .sci-item:nth-of-type(4) {
+                animation-duration: 16s;
+                animation-delay: -11s;
+            }
+
+            .sci-layer .sci-item:nth-of-type(5) {
+                animation-duration: 19s;
+                animation-delay: -5s;
+            }
+
+            .sci-layer .sci-item:nth-of-type(6) {
+                animation-duration: 22s;
+                animation-delay: -14s;
+            }
+
+            .p1 {
+                top: 9%;
+                left: 5%;
+            }
+
+            .p2 {
+                top: 20%;
+                right: 6%;
+                text-align: right;
+            }
+
+            .p3 {
+                top: 46%;
+                left: 4%;
+            }
+
+            .p4 {
+                bottom: 27%;
+                right: 7%;
+                text-align: right;
+            }
+
+            .p5 {
+                bottom: 13%;
+                left: 7%;
+            }
+
+            .p6 {
+                bottom: 33%;
+                right: 15%;
+                text-align: right;
+            }
+
+            /* ---------- frosted credential panel ----------
+               (0,3,1) + !important + later source order beats the design
+               blocks that pin .login-card to an opaque fill, including
+               neumorphic-dark's [data-design][data-theme] rule. Glass keeps
+               its translucent --card for the composition, so the fill is
+               built from its opaque --glass-solid instead. */
+            html[data-design][data-theme] .login-card {
+                --sci-surface: var(--card);
+                background: color-mix(in srgb, var(--sci-surface) 76%, transparent) !important;
+                -webkit-backdrop-filter: blur(22px) saturate(150%);
+                backdrop-filter: blur(22px) saturate(150%);
+            }
+
+            html[data-design="glass"][data-theme] .login-card {
+                --sci-surface: var(--glass-solid);
+            }
+
+            html[data-design]:not([data-design="brutalist"]) .login-card {
+                border-color: color-mix(in srgb, var(--sci-tint) 45%, var(--rule-blue)) !important;
+                box-shadow: 0 20px 55px rgba(2, 8, 23, .30),
+                    0 0 0 1px color-mix(in srgb, var(--sci-tint) 10%, transparent),
+                    0 26px 80px color-mix(in srgb, var(--sci-tint) 20%, transparent);
+                transition: border-color .38s ease, box-shadow .38s ease;
+            }
+
+            html[data-design]:not([data-design="brutalist"]) .login-card-head {
+                background: color-mix(in srgb, var(--card) 28%, transparent) !important;
+                border-bottom-color: color-mix(in srgb, var(--sci-tint) 28%, var(--rule-soft)) !important;
+                transition: border-color .38s ease;
+            }
+
+            .login-card-head .login-subjects {
+                margin-top: 8px;
+                font-size: calc(10.5px * var(--fs, 1));
+                font-weight: 700;
+                font-style: normal;
+                letter-spacing: .14em;
+                text-transform: uppercase;
+                color: color-mix(in srgb, var(--sci-tint) 78%, var(--ink-soft));
+            }
+
+            /* ---------- scene switch ---------- */
+            .sci-nav {
+                position: absolute;
+                left: 50%;
+                bottom: 22px;
+                transform: translateX(-50%);
+                z-index: 3;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 7px 15px;
+                border-radius: 999px;
+                background: color-mix(in srgb, var(--card) 62%, transparent);
+                border: 1px solid color-mix(in srgb, var(--sci-tint) 34%, var(--rule-soft));
+                -webkit-backdrop-filter: blur(10px);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 24px rgba(2, 8, 23, .18);
+                transition: border-color .38s ease;
+            }
+
+            .sci-dot {
+                width: 20px;
+                height: 20px;
+                padding: 0;
+                border: none;
+                background: transparent;
+                cursor: pointer;
+                display: grid;
+                place-items: center;
+                border-radius: 50%;
+            }
+
+            .sci-dot span {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: color-mix(in srgb, var(--sci-tint) 38%, transparent);
+                transition: background .3s ease, box-shadow .3s ease;
+            }
+
+            .sci-dot:hover span {
+                background: color-mix(in srgb, var(--sci-tint) 65%, transparent);
+            }
+
+            .sci-dot[aria-pressed="true"] span {
+                background: var(--sci-tint);
+                box-shadow: 0 0 0 3px color-mix(in srgb, var(--sci-tint) 22%, transparent);
+            }
+
+            .sci-dot:focus-visible {
+                outline: 2px solid var(--sci-tint);
+                outline-offset: 2px;
+            }
+
+            .sci-label {
+                min-width: 92px;
+                text-align: center;
+                font-size: 10.5px;
+                font-weight: 700;
+                letter-spacing: .12em;
+                text-transform: uppercase;
+                color: color-mix(in srgb, var(--sci-tint) 80%, var(--ink));
+            }
+
+            @media (max-width: 900px) {
+                .sci-item {
+                    font-size: clamp(13px, 2.4vw, 18px);
+                    max-width: min(28ch, 46vw);
+                }
+
+                .sci-item.big {
+                    font-size: clamp(16px, 3vw, 24px);
+                }
+
+                .sci-layer .sci-item:nth-of-type(n + 5) {
+                    display: none;
+                }
+
+                .f-b {
+                    width: 94vw;
+                }
+            }
+
+            @media (max-width: 620px) {
+                .sci-layer .sci-item:nth-of-type(n + 3) {
+                    display: none;
+                }
+
+                .p1 {
+                    top: 6%;
+                    left: 4%;
+                }
+
+                .p2 {
+                    top: 13%;
+                    right: 5%;
+                }
+
+                .f-a,
+                .f-c {
+                    width: 80vw;
+                }
+
+                .sci-nav {
+                    bottom: 12px;
+                }
+
+                .sci-label {
+                    min-width: 0;
+                    font-size: 9.5px;
+                }
+            }
+
+            @media (max-height: 520px) and (orientation: landscape) {
+                .sci-nav {
+                    display: none;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .sci-item,
+                .sci-orbit {
+                    animation: none !important;
+                }
+
+                .sci-layer,
+                .sci-halo,
+                .sci-nav,
+                html[data-design]:not([data-design="brutalist"]) .login-card,
+                html[data-design]:not([data-design="brutalist"]) .login-card-head {
+                    transition: none !important;
+                }
+            }
+        }
     

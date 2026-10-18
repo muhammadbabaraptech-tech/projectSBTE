@@ -39,7 +39,80 @@
 <!-- MongoDB Atlas backend: http://localhost:3000/api -->
 </head><body>
 
-    <div id="loginOverlay">
+    <div id="loginOverlay" data-scene="math">
+        <div class="sci-bg" aria-hidden="true">
+            <div class="sci-halo"></div>
+
+            <!-- MATHEMATICS -->
+            <div class="sci-layer on" data-scene="math">
+                <svg class="sci-fig f-a" viewBox="0 0 520 380" fill="none">
+                    <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M40 330h450" stroke-opacity=".55" stroke-width="1.6" />
+                        <path d="M80 30v320" stroke-opacity=".55" stroke-width="1.6" />
+                        <g stroke-opacity=".2" stroke-width="1" stroke-dasharray="3 9">
+                            <path d="M80 110h410" /><path d="M80 190h410" /><path d="M80 270h410" />
+                            <path d="M180 30v300" /><path d="M280 30v300" /><path d="M380 30v300" />
+                        </g>
+                        <path d="M120 70C170 70 186 300 260 300s92-230 142-230" stroke-width="2.6" stroke-opacity=".9" />
+                        <path d="M90 290c30-46 60-46 90 0s60 46 90 0 60-46 90 0 60 46 90 0" stroke-width="1.9" stroke-opacity=".6" />
+                        <path d="M330 60h110v110" stroke-width="2.2" stroke-opacity=".85" />
+                        <path d="M330 60l110 110" stroke-width="2.2" stroke-opacity=".6" />
+                        <path d="M420 60v18h18" stroke-width="1.5" stroke-opacity=".85" />
+                    </g>
+                </svg>
+                <span class="sci-item p1">∫<sub>0</sub><sup>∞</sup> e<sup>−x²</sup> dx = √π⁄2</span>
+                <span class="sci-item p2">a² + b² = c²</span>
+                <span class="sci-item p3 big">e<sup>iπ</sup> + 1 = 0</span>
+                <span class="sci-item p4">dy⁄dx = lim<sub>h→0</sub> f(x+h) − f(x) ⁄ h</span>
+                <span class="sci-item p5">∑ 1⁄n² = π²⁄6</span>
+                <span class="sci-item p6">lim<sub>x→0</sub> sin x ⁄ x = 1</span>
+            </div>
+
+            <!-- PHYSICS -->
+            <div class="sci-layer" data-scene="physics">
+                <svg class="sci-fig f-b" viewBox="0 0 560 400" fill="none">
+                    <g stroke="currentColor" fill="none">
+                        <ellipse class="sci-orbit o1" cx="280" cy="200" rx="190" ry="72" stroke-width="1.8" stroke-opacity=".6" />
+                        <ellipse class="sci-orbit o2" cx="280" cy="200" rx="190" ry="72" stroke-width="1.8" stroke-opacity=".5" transform="rotate(60 280 200)" />
+                        <ellipse class="sci-orbit o3" cx="280" cy="200" rx="190" ry="72" stroke-width="1.8" stroke-opacity=".4" transform="rotate(-60 280 200)" />
+                        <circle cx="280" cy="200" r="17" stroke-width="2.4" stroke-opacity=".85" fill="currentColor" fill-opacity=".18" />
+                    </g>
+                    <path d="M30 360c34-64 68-64 102 0s68 64 102 0 68-64 102 0 68 64 102 0" stroke="currentColor" stroke-opacity=".45" stroke-width="1.8" />
+                    <path d="M60 90h120" stroke="currentColor" stroke-opacity=".3" stroke-width="1.4" />
+                    <path d="M60 104h70" stroke="currentColor" stroke-opacity=".22" stroke-width="1.4" />
+                </svg>
+                <span class="sci-item p1 big">E = mc²</span>
+                <span class="sci-item p2">F = ma</span>
+                <span class="sci-item p3">λ = h ⁄ p</span>
+                <span class="sci-item p4">F = G m₁m₂ ⁄ r²</span>
+                <span class="sci-item p5">PV = nRT</span>
+                <span class="sci-item p6">v = u + at</span>
+            </div>
+
+            <!-- CHEMISTRY -->
+            <div class="sci-layer" data-scene="chem">
+                <svg class="sci-fig f-c" viewBox="0 0 520 400" fill="none">
+                    <g stroke="currentColor" stroke-linejoin="round" stroke-linecap="round">
+                        <path d="M120 90l60 35v70l-60 35-60-35v-70z" stroke-width="2.4" stroke-opacity=".85" />
+                        <circle cx="120" cy="160" r="34" stroke-width="1.8" stroke-opacity=".5" />
+                        <path d="M400 190l60 35v70l-60 35-60-35v-70z" stroke-width="2.4" stroke-opacity=".75" />
+                        <circle cx="400" cy="260" r="34" stroke-width="1.8" stroke-opacity=".45" />
+                        <path d="M180 125h150" stroke-width="2" stroke-opacity=".5" />
+                        <path d="M360 225l-40-35" stroke-width="1.6" stroke-opacity=".4" />
+                        <path d="M300 340l45 45" stroke-width="1.6" stroke-opacity=".35" />
+                        <path d="M240 40v70l-46 92a30 30 0 0 0 27 44h78a30 30 0 0 0 27-44l-46-92V40" stroke-width="2.2" stroke-opacity=".75" />
+                        <path d="M228 40h64" stroke-width="2.6" stroke-opacity=".85" />
+                        <path d="M212 252h96" stroke-width="1.6" stroke-opacity=".4" />
+                    </g>
+                </svg>
+                <span class="sci-item p1 big">2H₂ + O₂ → 2H₂O</span>
+                <span class="sci-item p2">pH = −log[H⁺]</span>
+                <span class="sci-item p3">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</span>
+                <span class="sci-item p4">CH₃COOH ⇌ CH₃COO⁻ + H⁺</span>
+                <span class="sci-item p5">Na⁺ Cl⁻</span>
+                <span class="sci-item p6">CO₂ + H₂O ⇌ H₂CO₃</span>
+            </div>
+        </div>
         <div class="login-theme-bar">
             <button type="button" class="theme-toggle-btn design-btn" id="designBtnLogin"
                 aria-label="Choose website design" title="Choose website design"><span class="design-ico"
@@ -75,6 +148,7 @@
                 </div>
                 <h1>SBTE Evaluation Register</h1>
                 <p>Sign in to continue</p>
+                <p class="login-subjects">Mathematics · Physics · Chemistry</p>
             </div>
             <div class="role-switch">
                 <button type="button" id="roleTabAdmin" class="active">Admin</button>
@@ -111,6 +185,13 @@
                 <button type="button" id="studentLoginBtn" class="submit">View my report card</button>
             </form>
 
+        </div>
+
+        <div class="sci-nav" role="group" aria-label="Science theme">
+            <button type="button" class="sci-dot" data-scene="math" aria-label="Mathematics" aria-pressed="true"><span></span></button>
+            <button type="button" class="sci-dot" data-scene="physics" aria-label="Physics" aria-pressed="false"><span></span></button>
+            <button type="button" class="sci-dot" data-scene="chem" aria-label="Chemistry" aria-pressed="false"><span></span></button>
+            <span class="sci-label">Mathematics</span>
         </div>
     </div>
 

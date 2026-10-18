@@ -3392,4 +3392,58 @@ checkMongoDB().finally(() => stuPwResolve());
             });
         }
 
+        /* ============ LOGIN SCIENCE BACKDROP ============
+           Fades maths -> physics -> chemistry behind the sign-in card
+           every 5s (380ms cross-fade). Dots let the visitor jump to a
+           scene; the timer pauses on a hidden tab and stops for good once
+           the user is signed in. */
+        (function scienceBackdrop() {
+            const overlay = document.getElementById('loginOverlay');
+            if (!overlay || !overlay.querySelector('.sci-layer')) return;
+
+            const SCENES = [
+                { id: 'math', label: 'Mathematics' },
+                { id: 'physics', label: 'Physics' },
+                { id: 'chem', label: 'Chemistry' }
+            ];
+            const ROTATE_MS = 5000;
+            const layers = [...overlay.querySelectorAll('.sci-layer')];
+            const dots = [...overlay.querySelectorAll('.sci-dot')];
+            const label = overlay.querySelector('.sci-label');
+            const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+            let index = 0, timer = null, stopped = false;
+
+            function show(n) {
+                index = ((n % SCENES.length) + SCENES.length) % SCENES.length;
+                const scene = SCENES[index];
+                overlay.setAttribute('data-scene', scene.id);
+                layers.forEach(l => l.classList.toggle('on', l.getAttribute('data-scene') === scene.id));
+                dots.forEach((d, k) => d.setAttribute('aria-pressed', String(k === index)));
+                if (label) label.textContent = scene.label;
+            }
+
+            function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+            function start() {
+                stop();
+                if (stopped || reduceMotion) return;
+                timer = setInterval(() => show(index + 1), ROTATE_MS);
+            }
+
+            dots.forEach((dot, k) => dot.addEventListener('click', () => { show(k); start(); }));
+
+            // pause while the tab is in the background
+            document.addEventListener('visibilitychange', () => { document.hidden ? stop() : start(); });
+
+            // stop for good once signed in (the overlay is hidden then)
+            const isAuthed = () => document.documentElement.classList.contains('is-authed');
+            stopped = isAuthed();
+            new MutationObserver(() => {
+                if (isAuthed()) { stopped = true; stop(); }
+            }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+            show(0);
+            start();
+        })();
+
     
