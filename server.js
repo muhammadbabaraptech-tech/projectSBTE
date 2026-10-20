@@ -24,6 +24,14 @@ async function connectDB() {
 
 connectDB().catch(console.error);
 
+// Export the Express app for Vercel serverless functions
+module.exports = app;
+
+// Only listen on a port when running locally (not on Vercel serverless)
+if (process.env.VERCEL !== '1') {
+    app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+}
+
 // Helper: convert MongoDB _id to frontend-friendly id (keep original id field intact)
 function formatDoc(doc) {
     if (!doc) return null;
@@ -159,4 +167,5 @@ app.post('/api/settings/seating', async (req, res) => {
     res.json({ ok: true });
 });
 
-app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+// Listening is handled conditionally above for local dev.
+// On Vercel, the app is exported as a serverless function handler.

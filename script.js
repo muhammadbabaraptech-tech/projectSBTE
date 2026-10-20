@@ -196,7 +196,7 @@
         }
 
 /* ============ MongoDB Atlas sync state (via backend API) ============ */
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = '/api';
 let USING_FIREBASE = false;
 let FB = null;
 
