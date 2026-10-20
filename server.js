@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
@@ -6,9 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const PORT = process.env.PORT || 3000;
 // Your MongoDB Atlas connection string
-const MONGO_URI = 'mongodb+srv://muhammadbabaraptech_db_user:OAGwDZq6sPP9ssGp@cluster0.rftioms.mongodb.net/';
-const DB_NAME = 'sbte_evaluation';
+const MONGO_URI = process.env.MONGO_URI;
+const DB_NAME = process.env.DB_NAME || 'sbte_evaluation';
 
 let db;
 
@@ -156,4 +159,4 @@ app.post('/api/settings/seating', async (req, res) => {
     res.json({ ok: true });
 });
 
-app.listen(3000, () => console.log('🚀 Server running on http://localhost:3000'));
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

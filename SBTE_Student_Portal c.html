@@ -16,6 +16,8 @@
                 var theme = saved ? saved : (sysDark ? 'dark' : 'light');
                 document.documentElement.setAttribute('data-theme', theme);
                 document.documentElement.setAttribute('data-design', localStorage.getItem('sbte_design') || 'neumorphic');
+                document.documentElement.setAttribute('data-accent', localStorage.getItem('sbte_accent') || 'blue');
+                try { if (sessionStorage.getItem('sbte_fx_in')) document.documentElement.classList.add('fx-cover'); } catch (e) { }
 
                 // Pre-auth session check to prevent screen flash on refresh
                 var sessionStr = localStorage.getItem('sbte_session_v1');
@@ -36,6 +38,9 @@
             --sky: #0EA5E9;
             --sky-dark: #0284C7;
             --sky-darker: #026DA6;
+            --accent-soft: #7DD3FC;
+            --sky-rgb: 14, 165, 233;
+            --sky-dark-rgb: 2, 132, 199;
             --navy: #0F172A;
             --navy-2: #0B132B;
             --page: #D5DFE9;
@@ -137,7 +142,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            filter: drop-shadow(0 0 6px rgba(14, 165, 233, .45));
+            filter: drop-shadow(0 0 6px rgba(var(--sky-rgb), .45));
         }
 
         .masthead-title {
@@ -390,6 +395,16 @@
             font-size: calc(11.5px * var(--fs, 1));
             font-weight: 600;
             font-family: 'Inter', sans-serif;
+        }
+
+        .badge.pending {
+            background: var(--bg-tint);
+            color: var(--ink-soft);
+            border: 1px solid var(--rule);
+        }
+
+        .pending-row td {
+            color: var(--ink-soft);
         }
 
         .badge.excellent {
@@ -1593,7 +1608,7 @@
             margin-left: -3px;
             background: var(--sky-dark);
             border-radius: 50%;
-            box-shadow: 0 0 8px 2px rgba(14, 165, 233, .85);
+            box-shadow: 0 0 8px 2px rgba(var(--sky-rgb), .85);
         }
 
         .atom-logo .orbit-a {
@@ -1663,15 +1678,15 @@
 
         @keyframes atom-pulse-kf {
             0% {
-                box-shadow: 0 0 0 0 rgba(14, 165, 233, .55);
+                box-shadow: 0 0 0 0 rgba(var(--sky-rgb), .55);
             }
 
             60% {
-                box-shadow: 0 0 0 22px rgba(14, 165, 233, 0);
+                box-shadow: 0 0 0 22px rgba(var(--sky-rgb), 0);
             }
 
             100% {
-                box-shadow: 0 0 0 0 rgba(14, 165, 233, 0);
+                box-shadow: 0 0 0 0 rgba(var(--sky-rgb), 0);
             }
         }
 
@@ -1683,8 +1698,8 @@
             height: 3px;
             margin-top: -1.5px;
             border-radius: 3px;
-            background: linear-gradient(90deg, rgba(14, 165, 233, 0) 0%, var(--sky) 45%, #ffffff 100%);
-            box-shadow: 0 0 12px 2px rgba(14, 165, 233, .75), 0 0 3px 1px rgba(255, 255, 255, .9);
+            background: linear-gradient(90deg, rgba(var(--sky-rgb), 0) 0%, var(--sky) 45%, #ffffff 100%);
+            box-shadow: 0 0 12px 2px rgba(var(--sky-rgb), .75), 0 0 3px 1px rgba(255, 255, 255, .9);
             opacity: 0;
             transform-origin: 0% 50%;
             transform: translate(0, 0) rotate(0deg) scaleX(.1);
@@ -3143,7 +3158,7 @@
         }
 
         .lay-frame.lay-dragging {
-            background: rgba(14, 165, 233, .1);
+            background: rgba(var(--sky-rgb), .1);
         }
 
         .lay-tag {
@@ -3405,7 +3420,7 @@
         .form-group input:focus,
         .form-group select:focus {
             border-color: var(--sky);
-            box-shadow: 0 0 0 2px rgba(14, 165, 233, .2);
+            box-shadow: 0 0 0 2px rgba(var(--sky-rgb), .2);
         }
 
         .form-section-title {
@@ -3551,6 +3566,9 @@
             --sky: #38BDF8;
             --sky-dark: #0EA5E9;
             --sky-darker: #0284C7;
+            --accent-soft: #7DD3FC;
+            --sky-rgb: 56, 189, 248;
+            --sky-dark-rgb: 14, 165, 233;
             --navy: #F8FAFC;
             --navy-2: #F1F5F9;
             --bg: #0B1120;
@@ -3572,7 +3590,7 @@
             --red: #F87171;
             --red-bg: rgba(248, 113, 113, 0.18);
             --blue: #38BDF8;
-            --blue-bg: rgba(56, 189, 248, 0.18);
+            --blue-bg: rgba(var(--sky-rgb), 0.18);
             --shadow: 0 1px 3px rgba(0, 0, 0, .4), 0 6px 20px rgba(0, 0, 0, .5);
         }
 
@@ -3604,7 +3622,7 @@
         [data-theme="dark"] .nu-grid select:focus,
         [data-theme="dark"] .nu-notes textarea:focus {
             border-color: var(--sky);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+            box-shadow: 0 0 0 3px rgba(var(--sky-rgb), 0.2);
             outline: none;
         }
 
@@ -3624,7 +3642,7 @@
         [data-theme="dark"] .logout-btn:hover {
             background: #233148;
             border-color: var(--sky);
-            color: #38BDF8;
+            color: var(--sky);
         }
 
         [data-theme="dark"] #loginOverlay {
@@ -3692,7 +3710,7 @@
 
         .theme-toggle-btn .moon-icon {
             display: inline-block;
-            stroke: #0284C7;
+            stroke: var(--sky-dark);
         }
 
         [data-theme="dark"] .theme-toggle-btn {
@@ -3702,8 +3720,8 @@
         }
 
         [data-theme="dark"] .theme-toggle-btn:hover {
-            color: #38BDF8;
-            border-color: #38BDF8;
+            color: var(--sky);
+            border-color: var(--sky);
             background: #233148;
         }
 
@@ -5266,7 +5284,7 @@
             html[data-design="neumorphic"] .nu-grid textarea:focus,
             html[data-design="neumorphic"][data-theme="dark"] .field input:focus,
             html[data-design="neumorphic"][data-theme="dark"] .field select:focus {
-                box-shadow: var(--nm-inset-sm), 0 0 0 2px rgba(58, 128, 168, .35);
+                box-shadow: var(--nm-inset-sm), 0 0 0 2px rgba(var(--sky-dark-rgb), .35);
                 outline: none;
             }
 
@@ -6221,6 +6239,674 @@
             font-size: 14px;
             line-height: 1;
         }
+
+        /* ============ THEME COLOURS ============
+           data-accent on <html> re-colours the accent variables for every design, in light and dark mode.
+           Blue is the default and uses the values already defined above. These blocks come after the design blocks on purpose. */
+        @media screen {
+            html[data-accent="red"]:not([data-theme="dark"]) {
+                --sky: #E5484D;
+                --sky-dark: #D13438;
+                --sky-darker: #B02A2E;
+                --brass: #D13438;
+                --brass-dark: #B02A2E;
+                --blue: #D13438;
+                --blue-bg: #FBE3E4;
+                --accent-soft: #F5A3A6;
+                --sky-rgb: 229, 72, 77;
+                --sky-dark-rgb: 209, 52, 56;
+            }
+
+            html[data-accent="red"][data-theme="dark"] {
+                --sky: #FF6B6F;
+                --sky-dark: #E5484D;
+                --sky-darker: #C73438;
+                --brass: #FF6B6F;
+                --brass-dark: #E5484D;
+                --blue: #FF6B6F;
+                --blue-bg: rgba(255, 107, 111, .18);
+                --accent-soft: #FF9A9D;
+                --sky-rgb: 255, 107, 111;
+                --sky-dark-rgb: 229, 72, 77;
+            }
+
+            html[data-design="classic"][data-accent="red"]:not([data-theme="dark"]) {
+                --rule-blue: #F3C0C2;
+            }
+
+            html[data-design="classic"][data-accent="red"][data-theme="dark"] {
+                --rule-blue: #5A2326;
+            }
+
+            html[data-design="brutalist"][data-accent="red"] {
+                --bru-accent: #FF8A80;
+            }
+
+            html[data-accent="yellow"]:not([data-theme="dark"]) {
+                --sky: #EAB308;
+                --sky-dark: #A16207;
+                --sky-darker: #854D0E;
+                --brass: #A16207;
+                --brass-dark: #854D0E;
+                --blue: #A16207;
+                --blue-bg: #FEF3C7;
+                --accent-soft: #FDE047;
+                --sky-rgb: 234, 179, 8;
+                --sky-dark-rgb: 161, 98, 7;
+            }
+
+            html[data-accent="yellow"][data-theme="dark"] {
+                --sky: #FACC15;
+                --sky-dark: #EAB308;
+                --sky-darker: #CA8A04;
+                --brass: #FACC15;
+                --brass-dark: #EAB308;
+                --blue: #FACC15;
+                --blue-bg: rgba(250, 204, 21, .16);
+                --accent-soft: #FDE68A;
+                --sky-rgb: 250, 204, 21;
+                --sky-dark-rgb: 234, 179, 8;
+            }
+
+            html[data-design="classic"][data-accent="yellow"]:not([data-theme="dark"]) {
+                --rule-blue: #F3DE96;
+            }
+
+            html[data-design="classic"][data-accent="yellow"][data-theme="dark"] {
+                --rule-blue: #5A4A12;
+            }
+
+            html[data-accent="green"]:not([data-theme="dark"]) {
+                --sky: #2FA36B;
+                --sky-dark: #1F8A57;
+                --sky-darker: #176F46;
+                --brass: #1F8A57;
+                --brass-dark: #176F46;
+                --blue: #1F8A57;
+                --blue-bg: #DDF3E7;
+                --accent-soft: #86D9AE;
+                --sky-rgb: 47, 163, 107;
+                --sky-dark-rgb: 31, 138, 87;
+            }
+
+            html[data-accent="green"][data-theme="dark"] {
+                --sky: #4CC38A;
+                --sky-dark: #2FA36B;
+                --sky-darker: #1F8A57;
+                --brass: #4CC38A;
+                --brass-dark: #2FA36B;
+                --blue: #4CC38A;
+                --blue-bg: rgba(76, 195, 138, .18);
+                --accent-soft: #8FE0B8;
+                --sky-rgb: 76, 195, 138;
+                --sky-dark-rgb: 47, 163, 107;
+            }
+
+            html[data-design="classic"][data-accent="green"]:not([data-theme="dark"]) {
+                --rule-blue: #B5E2C9;
+            }
+
+            html[data-design="classic"][data-accent="green"][data-theme="dark"] {
+                --rule-blue: #1E4D37;
+            }
+
+            html[data-design="brutalist"][data-accent="green"] {
+                --bru-accent: #7FE0A8;
+            }
+
+            html[data-accent="pink"]:not([data-theme="dark"]) {
+                --sky: #EC4899;
+                --sky-dark: #DB2777;
+                --sky-darker: #BE185D;
+                --brass: #DB2777;
+                --brass-dark: #BE185D;
+                --blue: #DB2777;
+                --blue-bg: #FCE7F3;
+                --accent-soft: #F9A8D4;
+                --sky-rgb: 236, 72, 153;
+                --sky-dark-rgb: 219, 39, 119;
+            }
+
+            html[data-accent="pink"][data-theme="dark"] {
+                --sky: #F472B6;
+                --sky-dark: #EC4899;
+                --sky-darker: #DB2777;
+                --brass: #F472B6;
+                --brass-dark: #EC4899;
+                --blue: #F472B6;
+                --blue-bg: rgba(244, 114, 182, .18);
+                --accent-soft: #F9A8D4;
+                --sky-rgb: 244, 114, 182;
+                --sky-dark-rgb: 236, 72, 153;
+            }
+
+            html[data-design="classic"][data-accent="pink"]:not([data-theme="dark"]) {
+                --rule-blue: #F5BAD7;
+            }
+
+            html[data-design="classic"][data-accent="pink"][data-theme="dark"] {
+                --rule-blue: #5A2442;
+            }
+
+            html[data-design="brutalist"][data-accent="pink"] {
+                --bru-accent: #FF9CCB;
+            }
+
+            html[data-accent="brown"]:not([data-theme="dark"]) {
+                --sky: #A47148;
+                --sky-dark: #8B5A2B;
+                --sky-darker: #6F4522;
+                --brass: #8B5A2B;
+                --brass-dark: #6F4522;
+                --blue: #8B5A2B;
+                --blue-bg: #F1E6DA;
+                --accent-soft: #D2B08C;
+                --sky-rgb: 164, 113, 72;
+                --sky-dark-rgb: 139, 90, 43;
+            }
+
+            html[data-accent="brown"][data-theme="dark"] {
+                --sky: #C69C6D;
+                --sky-dark: #A47148;
+                --sky-darker: #8B5A2B;
+                --brass: #C69C6D;
+                --brass-dark: #A47148;
+                --blue: #C69C6D;
+                --blue-bg: rgba(198, 156, 109, .18);
+                --accent-soft: #D9B992;
+                --sky-rgb: 198, 156, 109;
+                --sky-dark-rgb: 164, 113, 72;
+            }
+
+            html[data-design="classic"][data-accent="brown"]:not([data-theme="dark"]) {
+                --rule-blue: #DDC7AE;
+            }
+
+            html[data-design="classic"][data-accent="brown"][data-theme="dark"] {
+                --rule-blue: #4A3622;
+            }
+
+            html[data-design="brutalist"][data-accent="brown"] {
+                --bru-accent: #D9B38C;
+            }
+
+            /* glass keeps its translucent white highlight in light mode */
+            html[data-design="glass"][data-accent]:not([data-theme="dark"]) {
+                --blue-bg: rgba(255, 255, 255, .6);
+            }
+
+            /* yellow in dark mode is bright: use dark text on solid accent buttons */
+            html[data-accent="yellow"][data-theme="dark"] :is(.btn.primary, .login-form button.submit, .note-btn.primary-ish) {
+                color: #1B1400;
+            }
+        }
+
+        /* ============ HEADINGS IN CAPITALS (all designs, light and dark) ============ */
+        @media screen {
+            html[data-design] :is(h1, h2, h3, h4, .masthead-title, .chart-title, .form-section-title, .nu-title, .policy-section-title, .sd-title, .pop-title) {
+                text-transform: uppercase;
+                letter-spacing: .04em;
+                overflow-wrap: break-word;
+            }
+        }
+
+        /* colour swatches in the design picker */
+        .ac-title {
+            margin: 20px 0 10px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .ac-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .ac-sw {
+            appearance: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 1;
+            box-shadow: 0 0 0 1px var(--rule);
+        }
+
+        .ac-sw:hover {
+            transform: scale(1.08);
+        }
+
+        .ac-sw.on {
+            border-color: var(--card);
+            box-shadow: 0 0 0 3px var(--ink);
+        }
+
+        .ac-sw[data-a="yellow"] {
+            color: #1B1400;
+        }
+
+        .ac-note {
+            font-size: calc(12.5px * var(--fs, 1));
+            color: var(--ink-soft);
+            margin-top: 8px;
+        }
+
+        /* ============ LOGIN PAGE: science backdrop (maths, physics, chemistry) ============ */
+        #loginOverlay {
+            overflow: hidden;
+            background: #0b1226;
+            isolation: isolate;
+        }
+
+        .lg-scenes {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .lg-scene {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity .4s ease;
+        }
+
+        .lg-scene.on {
+            opacity: 1;
+        }
+
+        .lg-scene:not(.on) * {
+            animation-play-state: paused;
+        }
+
+        .lg-s1 {
+            background: linear-gradient(135deg, #0a1a45 0%, #1e3a8a 55%, #1d4ed8 100%);
+        }
+
+        /* maths: royal blue */
+        .lg-s2 {
+            background: radial-gradient(1200px 700px at 75% 30%, #3b2a8c 0%, #1b1b4b 45%, #0a0f2c 100%);
+        }
+
+        /* physics: night indigo */
+        .lg-s3 {
+            background: linear-gradient(135deg, #052e2b 0%, #0f766e 60%, #14b8a6 120%);
+        }
+
+        /* chemistry: teal */
+        .lg-s4 {
+            background: linear-gradient(135deg, #1e0b4a 0%, #4c1d95 55%, #7c3aed 120%);
+        }
+
+        /* maths: violet */
+        .lg-s5 {
+            background: radial-gradient(900px 600px at 70% 40%, #1f2937 0%, #0f141c 60%, #070a10 100%);
+        }
+
+        /* physics: charcoal */
+        .lg-s6 {
+            background: linear-gradient(135deg, #0f1f0a 0%, #365314 55%, #65a30d 125%);
+        }
+
+        /* chemistry: lime green */
+        .lg-s7 {
+            background: linear-gradient(135deg, #3b0a24 0%, #9d174d 58%, #e11d74 125%);
+        }
+
+        /* maths: rose */
+        .lg-s8 {
+            background: linear-gradient(135deg, #1f1206 0%, #78350f 55%, #d97706 125%);
+        }
+
+        /* physics: amber */
+        .lg-s9 {
+            background: linear-gradient(135deg, #06222f 0%, #0e5f7e 58%, #22d3ee 130%);
+        }
+
+        /* chemistry: ocean cyan */
+        .lg-art {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .lg-shade {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(6, 10, 30, .8) 0%, rgba(6, 10, 30, .66) 36%, rgba(6, 10, 30, .18) 62%, rgba(6, 10, 30, .06) 100%);
+        }
+
+        html[data-design] .lg-shell .login-card {
+            background: rgba(244, 247, 250, .76) !important;
+            border: 1px solid rgba(255, 255, 255, .3) !important;
+            --ink-soft: #4B5565;
+            -webkit-backdrop-filter: blur(18px) saturate(150%);
+            backdrop-filter: blur(18px) saturate(150%);
+        }
+
+        html[data-design][data-theme="dark"] .lg-shell .login-card {
+            background: rgba(20, 24, 32, .70) !important;
+            border-color: rgba(255, 255, 255, .14) !important;
+            --ink-soft: #AEB8C8;
+        }
+
+        html[data-design]:not([data-design="brutalist"]) .lg-shell .login-card {
+            box-shadow: 0 28px 70px rgba(0, 0, 0, .45);
+        }
+
+        .lg-f {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .lg-serif {
+            font-family: 'Cambria Math', 'Latin Modern Math', 'STIX Two Math', 'Times New Roman', serif;
+            font-style: italic;
+        }
+
+        @keyframes lg-float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        @keyframes lg-rot {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes lg-sw {
+            from {
+                transform: rotate(-24deg);
+            }
+
+            to {
+                transform: rotate(24deg);
+            }
+        }
+
+        @keyframes lg-rise {
+            0% {
+                transform: translateY(0);
+                opacity: .5;
+            }
+
+            100% {
+                transform: translateY(-70px);
+                opacity: 0;
+            }
+        }
+
+        .lg-float-a {
+            animation: lg-float 7s ease-in-out infinite;
+        }
+
+        .lg-float-b {
+            animation: lg-float 9s ease-in-out infinite reverse;
+        }
+
+        .lg-spin {
+            animation: lg-rot 22s linear infinite;
+            transform-box: view-box;
+            transform-origin: 0 0;
+        }
+
+        .lg-spin2 {
+            animation: lg-rot 30s linear infinite reverse;
+            transform-box: view-box;
+            transform-origin: 0 0;
+        }
+
+        .lg-swing {
+            animation: lg-sw 2.6s ease-in-out infinite alternate;
+            transform-box: view-box;
+            transform-origin: 0 0;
+        }
+
+        .lg-bub {
+            animation: lg-rise 3.2s ease-in infinite;
+        }
+
+        .lg-shell {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1180px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 400px);
+            gap: 64px;
+            align-items: center;
+        }
+
+        .lg-shell .login-card {
+            justify-self: end;
+        }
+
+        .lg-hero {
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 26px;
+        }
+
+        .lg-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            letter-spacing: .1em;
+            font-size: 12.5px;
+            text-transform: uppercase;
+            opacity: .92;
+        }
+
+        .lg-brand-mark {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, .22);
+        }
+
+        .lg-caps {
+            position: relative;
+            min-height: 270px;
+        }
+
+        .lg-cap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            max-width: 580px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity .3s ease, transform .3s ease;
+            pointer-events: none;
+        }
+
+        .lg-cap.on {
+            opacity: 1;
+            transform: none;
+            pointer-events: auto;
+        }
+
+        .lg-kicker {
+            font-size: 13px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .lg-cap[data-k="math"] .lg-kicker {
+            color: #93c5fd;
+        }
+
+        .lg-cap[data-k="phys"] .lg-kicker {
+            color: #67e8f9;
+        }
+
+        .lg-cap[data-k="chem"] .lg-kicker {
+            color: #99f6e4;
+        }
+
+        html[data-design] .lg-hero .lg-title {
+            text-transform: none;
+            letter-spacing: -.015em;
+            font-size: clamp(32px, 4.2vw, 52px);
+            line-height: 1.08;
+            font-weight: 800;
+            color: #fff;
+            margin: 0 0 16px;
+            text-shadow: 0 2px 18px rgba(0, 0, 0, .35);
+        }
+
+        .lg-text {
+            font-size: 17px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, .9);
+            margin: 0 0 20px;
+            max-width: 520px;
+        }
+
+        .lg-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .lg-chips span {
+            padding: 8px 15px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .13);
+            border: 1px solid rgba(255, 255, 255, .3);
+            font-family: 'Cambria Math', 'STIX Two Math', 'Times New Roman', serif;
+            font-style: italic;
+            font-size: 17px;
+            color: #fff;
+            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
+        }
+
+        .lg-chips sup {
+            font-size: .65em;
+        }
+
+        .lg-foot {
+            font-size: 13.5px;
+            color: rgba(255, 255, 255, .75);
+            max-width: 460px;
+            line-height: 1.5;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .lg-scene,
+            .lg-cap {
+                transition: none;
+            }
+
+            .lg-float-a,
+            .lg-float-b,
+            .lg-spin,
+            .lg-spin2,
+            .lg-swing,
+            .lg-bub {
+                animation: none;
+            }
+        }
+
+        /* after a logout the page reloads behind a white flash; this cover fades away to reveal the login page */
+        html.fx-cover::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 20000;
+            background: #fff;
+            opacity: 1;
+            pointer-events: none;
+            transition: opacity .55s ease;
+        }
+
+        html.fx-cover.fx-out::before {
+            opacity: 0;
+        }
+
+        /* login / logout transition */
+        #loginFx {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        .lg-fx-core {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 16px;
+            height: 16px;
+            margin: -8px 0 0 -8px;
+            border-radius: 50%;
+            pointer-events: none;
+            will-change: transform, opacity;
+            background: radial-gradient(circle, #fff 0 40%, rgba(var(--sky-rgb), .95) 58%, rgba(var(--sky-rgb), 0) 76%);
+            box-shadow: 0 0 18px 6px rgba(var(--sky-rgb), .6);
+        }
+
+        @media (max-width: 980px) {
+            .lg-shell {
+                grid-template-columns: 1fr;
+                gap: 26px;
+                max-width: 460px;
+                padding-top: 44px;
+            }
+
+            .lg-shell .login-card {
+                justify-self: stretch;
+            }
+
+            .lg-hero {
+                gap: 16px;
+            }
+
+            .lg-caps {
+                min-height: 118px;
+            }
+
+            .lg-text,
+            .lg-chips,
+            .lg-foot {
+                display: none;
+            }
+
+            html[data-design] .lg-hero .lg-title {
+                font-size: 28px;
+                margin-bottom: 0;
+            }
+
+            .lg-shade {
+                background: rgba(6, 10, 30, .5);
+            }
+        }
     </style>
 
 </head>
@@ -6228,77 +6914,854 @@
 <body>
 
     <div id="loginOverlay">
-        <div class="login-theme-bar">
-            <button type="button" class="theme-toggle-btn design-btn" id="designBtnLogin"
-                aria-label="Choose website design" title="Choose website design"><span class="design-ico"
-                    aria-hidden="true">🎨</span><span class="theme-toggle-text">Design</span></button>
-            <button type="button" class="theme-toggle-btn" id="loginThemeToggleBtn" aria-label="Toggle dark mode"
-                title="Toggle dark mode">
-                <svg class="sun-icon" width="14" height="14" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                </svg>
-                <svg class="moon-icon" width="14" height="14" viewBox="0 0 24 24">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-                <span class="theme-toggle-text">Dark Mode</span>
-            </button>
+        <div class="lg-scenes" aria-hidden="true">
+            <div class="lg-scene lg-s1 on"><svg class="lg-art" viewBox="0 0 1200 800"
+                    preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                    <defs>
+                        <pattern id="gm" width="60" height="60" patternUnits="userSpaceOnUse">
+                            <path d="M60 0H0V60" fill="none" stroke="#fff" stroke-opacity=".07" stroke-width="1" />
+                        </pattern>
+                    </defs>
+                    <rect width="1200" height="800" fill="url(#gm)" />
+                    <g class="lg-float-a" fill="none" stroke-width="3">
+                        <path
+                            d="M330.0,690.0 L334.8,686.4 L339.6,682.8 L344.4,679.4 L349.2,676.0 L354.0,672.7 L358.8,669.7 L363.6,666.8 L368.4,664.2 L373.2,661.8 L378.0,659.7 L382.8,657.9 L387.6,656.4 L392.4,655.3 L397.2,654.5 L402.0,654.1 L406.8,654.0 L411.6,654.3 L416.4,654.9 L421.2,655.9 L426.0,657.3 L430.8,658.9 L435.6,660.9 L440.4,663.2 L445.2,665.7 L450.0,668.5 L454.8,671.4 L459.6,674.6 L464.4,677.9 L469.2,681.4 L474.0,684.9 L478.8,688.5 L483.6,692.1 L488.4,695.7 L493.2,699.2 L498.0,702.6 L502.8,705.9 L507.6,709.1 L512.4,712.0 L517.2,714.8 L522.0,717.2 L526.8,719.5 L531.6,721.4 L536.4,723.0 L541.2,724.3 L546.0,725.2 L550.8,725.8 L555.6,726.0 L560.4,725.9 L565.2,725.4 L570.0,724.5 L574.8,723.3 L579.6,721.8 L584.4,720.0 L589.2,717.8 L594.0,715.4 L598.8,712.7 L603.6,709.8 L608.4,706.7 L613.2,703.5 L618.0,700.1 L622.8,696.6 L627.6,693.0 L632.4,689.4 L637.2,685.8 L642.0,682.3 L646.8,678.8 L651.6,675.4 L656.4,672.2 L661.2,669.2 L666.0,666.3 L670.8,663.8 L675.6,661.4 L680.4,659.4 L685.2,657.6 L690.0,656.2 L694.8,655.2 L699.6,654.4 L704.4,654.1 L709.2,654.0 L714.0,654.4 L718.8,655.1 L723.6,656.1 L728.4,657.5 L733.2,659.2 L738.0,661.3 L742.8,663.6 L747.6,666.1 L752.4,668.9 L757.2,672.0 L762.0,675.2 L766.8,678.5 L771.6,682.0 L776.4,685.5 L781.2,689.1 L786.0,692.7 L790.8,696.3 L795.6,699.8 L800.4,703.2 L805.2,706.5 L810.0,709.6 L814.8,712.5 L819.6,715.2 L824.4,717.6 L829.2,719.8 L834.0,721.7 L838.8,723.2 L843.6,724.4 L848.4,725.3 L853.2,725.8 L858.0,726.0 L862.8,725.8 L867.6,725.3 L872.4,724.3 L877.2,723.1 L882.0,721.5 L886.8,719.6 L891.6,717.4 L896.4,715.0 L901.2,712.3 L906.0,709.3 L910.8,706.2 L915.6,702.9 L920.4,699.5 L925.2,696.0 L930.0,692.4 L934.8,688.8 L939.6,685.2 L944.4,681.7 L949.2,678.2 L954.0,674.9 L958.8,671.7 L963.6,668.7 L968.4,665.9 L973.2,663.3 L978.0,661.1 L982.8,659.1 L987.6,657.4 L992.4,656.0 L997.2,655.0 L1002.0,654.3 L1006.8,654.0 L1011.6,654.1 L1016.4,654.5 L1021.2,655.2 L1026.0,656.3 L1030.8,657.8 L1035.6,659.6 L1040.4,661.6 L1045.2,664.0 L1050.0,666.6 L1054.8,669.4 L1059.6,672.5 L1064.4,675.7 L1069.2,679.1 L1074.0,682.6 L1078.8,686.1 L1083.6,689.7 L1088.4,693.3 L1093.2,696.9 L1098.0,700.4 L1102.8,703.8 L1107.6,707.0 L1112.4,710.1"
+                            stroke="#93c5fd" stroke-opacity=".8" />
+                        <path
+                            d="M330.0,654.0 L334.8,654.2 L339.6,654.7 L344.4,655.6 L349.2,656.8 L354.0,658.4 L358.8,660.3 L363.6,662.5 L368.4,664.9 L373.2,667.6 L378.0,670.5 L382.8,673.7 L387.6,677.0 L392.4,680.4 L397.2,683.9 L402.0,687.5 L406.8,691.1 L411.6,694.6 L416.4,698.2 L421.2,701.6 L426.0,705.0 L430.8,708.2 L435.6,711.2 L440.4,714.0 L445.2,716.5 L450.0,718.8 L454.8,720.8 L459.6,722.5 L464.4,723.9 L469.2,725.0 L474.0,725.6 L478.8,726.0 L483.6,725.9 L488.4,725.5 L493.2,724.8 L498.0,723.7 L502.8,722.3 L507.6,720.5 L512.4,718.5 L517.2,716.1 L522.0,713.5 L526.8,710.7 L531.6,707.6 L536.4,704.4 L541.2,701.1 L546.0,697.6 L550.8,694.0 L555.6,690.4 L560.4,686.9 L565.2,683.3 L570.0,679.8 L574.8,676.4 L579.6,673.1 L584.4,670.0 L589.2,667.2 L594.0,664.5 L598.8,662.1 L603.6,660.0 L608.4,658.1 L613.2,656.6 L618.0,655.4 L622.8,654.6 L627.6,654.1 L632.4,654.0 L637.2,654.2 L642.0,654.8 L646.8,655.8 L651.6,657.1 L656.4,658.7 L661.2,660.6 L666.0,662.9 L670.8,665.4 L675.6,668.1 L680.4,671.1 L685.2,674.2 L690.0,677.5 L694.8,681.0 L699.6,684.5 L704.4,688.1 L709.2,691.7 L714.0,695.2 L718.8,698.8 L723.6,702.2 L728.4,705.5 L733.2,708.7 L738.0,711.7 L742.8,714.4 L747.6,717.0 L752.4,719.2 L757.2,721.2 L762.0,722.8 L766.8,724.1 L771.6,725.1 L776.4,725.7 L781.2,726.0 L786.0,725.9 L790.8,725.4 L795.6,724.6 L800.4,723.5 L805.2,722.0 L810.0,720.2 L814.8,718.1 L819.6,715.7 L824.4,713.1 L829.2,710.2 L834.0,707.1 L838.8,703.9 L843.6,700.5 L848.4,697.0 L853.2,693.4 L858.0,689.8 L862.8,686.2 L867.6,682.7 L872.4,679.2 L877.2,675.8 L882.0,672.6 L886.8,669.5 L891.6,666.7 L896.4,664.1 L901.2,661.7 L906.0,659.6 L910.8,657.8 L915.6,656.4 L920.4,655.3 L925.2,654.5 L930.0,654.1 L934.8,654.0 L939.6,654.3 L944.4,655.0 L949.2,656.0 L954.0,657.3 L958.8,659.0 L963.6,661.0 L968.4,663.3 L973.2,665.8 L978.0,668.6 L982.8,671.6 L987.6,674.8 L992.4,678.1 L997.2,681.5 L1002.0,685.1 L1006.8,688.7 L1011.6,692.3 L1016.4,695.8 L1021.2,699.4 L1026.0,702.8 L1030.8,706.1 L1035.6,709.2 L1040.4,712.2 L1045.2,714.9 L1050.0,717.3 L1054.8,719.5 L1059.6,721.5 L1064.4,723.0 L1069.2,724.3 L1074.0,725.2 L1078.8,725.8 L1083.6,726.0 L1088.4,725.8 L1093.2,725.3 L1098.0,724.5 L1102.8,723.3 L1107.6,721.7 L1112.4,719.9"
+                            stroke="#fde68a" stroke-opacity=".65" stroke-dasharray="8 7" />
+                    </g>
+                    <g transform="translate(675 330)">
+                        <g class="lg-float-b" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2">
+                            <path d="M-100 0H100M0 -100V100" stroke-opacity=".3" />
+                            <circle r="85" />
+                            <path d="M0 0L60 -60" stroke="#fde68a" stroke-opacity=".95" stroke-width="3" />
+                            <path d="M60 -60V0H0" stroke-dasharray="6 6" />
+                            <path d="M26 0A26 26 0 0 0 18 -18" stroke="#93c5fd" stroke-width="3" />
+                            <circle cx="60" cy="-60" r="5" fill="#fff" stroke="none" />
+                        </g>
+                    </g><text x="715" y="300" font-size="26" fill="#fff" fill-opacity="0.8" text-anchor="start"
+                        class="lg-f lg-serif">θ</text><text x="1010" y="330" font-size="280" fill="#fff"
+                        fill-opacity="0.07" text-anchor="start" class="lg-f lg-serif">π</text><text x="60" y="740"
+                        font-size="230" fill="#fff" fill-opacity="0.07" text-anchor="start"
+                        class="lg-f lg-serif">Σ</text><text x="1060" y="640" font-size="260" fill="#fff"
+                        fill-opacity="0.07" text-anchor="start" class="lg-f lg-serif">∫</text><text x="560" y="560"
+                        font-size="190" fill="#fff" fill-opacity="0.06" text-anchor="start"
+                        class="lg-f lg-serif">√</text><text x="470" y="230" font-size="150" fill="#fff"
+                        fill-opacity="0.06" text-anchor="start" class="lg-f lg-serif">∞</text>
+                    <g class="lg-float-a lg-serif"><text x="70" y="95" font-size="40" fill="#fff" fill-opacity="0.62"
+                            text-anchor="start" class="lg-f lg-serif">a² + b² = c²</text><text x="430" y="95"
+                            font-size="40" fill="#fff" fill-opacity="0.55" text-anchor="start" class="lg-f lg-serif">e
+                            <tspan dy="-14" font-size="24">iπ</tspan>
+                            <tspan dy="14"> + 1 = 0</tspan>
+                        </text><text x="830" y="95" font-size="32" fill="#fff" fill-opacity="0.5" text-anchor="start"
+                            class="lg-f lg-serif">Σ n = n(n+1)/2</text><text x="70" y="745" font-size="32" fill="#fff"
+                            fill-opacity="0.5" text-anchor="start" class="lg-f lg-serif">∫ x² dx = x³/3 + C</text><text
+                            x="780" y="740" font-size="32" fill="#fff" fill-opacity="0.5" text-anchor="start"
+                            class="lg-f lg-serif">sin²θ + cos²θ = 1</text></g>
+                </svg></div>
+            <div class="lg-scene lg-s2"><svg class="lg-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"
+                    aria-hidden="true">
+                    <circle cx="673" cy="164" r="1.8" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="158" cy="558" r="1" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="128" cy="529" r="1" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="186" cy="454" r="1.8" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="502" cy="102" r="2.2" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="131" cy="589" r="1" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="136" cy="600" r="2.2" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="111" cy="236" r="1" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="603" cy="439" r="1" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="1179" cy="325" r="2.2" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="221" cy="605" r="2.2" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="772" cy="109" r="2.2" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="1165" cy="71" r="2.2" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="1026" cy="706" r="2.2" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="653" cy="486" r="2.2" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="750" cy="316" r="1" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="509" cy="93" r="2.2" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="1085" cy="516" r="1.4" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="599" cy="633" r="1" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="1058" cy="438" r="1" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="321" cy="510" r="1.8" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="168" cy="581" r="2.2" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="706" cy="721" r="1.4" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="944" cy="80" r="1" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="980" cy="723" r="1" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="644" cy="672" r="2.2" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="592" cy="743" r="1.8" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="56" cy="482" r="1.4" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="249" cy="515" r="1" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="598" cy="142" r="1" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="810" cy="518" r="1" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="929" cy="421" r="2.2" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="290" cy="450" r="2.2" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="860" cy="377" r="1.8" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="319" cy="94" r="1" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="485" cy="684" r="1" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="1003" cy="613" r="1" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="587" cy="14" r="1" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="1104" cy="388" r="2.2" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="267" cy="717" r="2.2" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="945" cy="706" r="2.2" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="825" cy="418" r="1.8" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="996" cy="659" r="1.8" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="400" cy="78" r="1" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="342" cy="122" r="1.4" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="219" cy="10" r="2.2" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="1108" cy="113" r="1.4" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="154" cy="222" r="2.2" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="314" cy="659" r="1.4" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="755" cy="495" r="1" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="1009" cy="487" r="1.8" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="648" cy="97" r="1" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="711" cy="768" r="1.4" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="340" cy="538" r="1" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="1091" cy="380" r="1" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="1091" cy="315" r="1" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="1071" cy="385" r="1" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="466" cy="555" r="2.2" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="466" cy="637" r="1" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="830" cy="767" r="1" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="1070" cy="514" r="1.4" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="67" cy="296" r="1.8" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="406" cy="719" r="2.2" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="925" cy="750" r="1.4" fill="#fff" fill-opacity="0.6" />
+                    <circle cx="174" cy="235" r="1" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="972" cy="211" r="1.4" fill="#fff" fill-opacity="0.4" />
+                    <circle cx="998" cy="649" r="2.2" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="991" cy="678" r="1.4" fill="#fff" fill-opacity="0.25" />
+                    <circle cx="255" cy="407" r="1" fill="#fff" fill-opacity="0.8" />
+                    <circle cx="375" cy="454" r="1.4" fill="#fff" fill-opacity="0.25" />
+                    <g transform="translate(672 335) scale(.62)">
+                        <g class="lg-spin">
+                            <ellipse rx="150" ry="55" transform="rotate(0)" fill="none" stroke="#67e8f9"
+                                stroke-opacity=".6" stroke-width="3" />
+                            <ellipse rx="150" ry="55" transform="rotate(60)" fill="none" stroke="#67e8f9"
+                                stroke-opacity=".6" stroke-width="3" />
+                            <ellipse rx="150" ry="55" transform="rotate(120)" fill="none" stroke="#67e8f9"
+                                stroke-opacity=".6" stroke-width="3" />
+                            <g fill="#fde68a">
+                                <circle cx="150" cy="0" r="9" />
+                                <circle cx="-75" cy="-48" r="9" transform="rotate(60)" />
+                                <circle cx="-75" cy="48" r="9" transform="rotate(120)" />
+                            </g>
+                        </g>
+                        <circle r="24" fill="#f472b6" fill-opacity=".9" />
+                        <circle r="12" cx="-6" cy="-5" fill="#fff" fill-opacity=".35" />
+                        <circle r="10" cx="10" cy="9" fill="#67e8f9" fill-opacity=".9" />
+                    </g>
+                    <path class="lg-float-b"
+                        d="M380.0,670.0 L383.6,666.2 L387.2,662.5 L390.8,658.8 L394.4,655.2 L398.0,651.8 L401.6,648.5 L405.2,645.5 L408.8,642.7 L412.4,640.2 L416.0,638.0 L419.6,636.1 L423.2,634.6 L426.8,633.4 L430.4,632.6 L434.0,632.1 L437.6,632.0 L441.2,632.3 L444.8,633.0 L448.4,634.0 L452.0,635.4 L455.6,637.2 L459.2,639.3 L462.8,641.7 L466.4,644.3 L470.0,647.3 L473.6,650.4 L477.2,653.8 L480.8,657.3 L484.4,660.9 L488.0,664.6 L491.6,668.4 L495.2,672.2 L498.8,676.0 L502.4,679.7 L506.0,683.3 L509.6,686.8 L513.2,690.1 L516.8,693.3 L520.4,696.1 L524.0,698.8 L527.6,701.1 L531.2,703.1 L534.8,704.8 L538.4,706.2 L542.0,707.1 L545.6,707.8 L549.2,708.0 L552.8,707.9 L556.4,707.3 L560.0,706.4 L563.6,705.2 L567.2,703.6 L570.8,701.6 L574.4,699.4 L578.0,696.8 L581.6,694.0 L585.2,690.9 L588.8,687.7 L592.4,684.2 L596.0,680.6 L599.6,676.9 L603.2,673.2 L606.8,669.4 L610.4,665.6 L614.0,661.8 L617.6,658.2 L621.2,654.6 L624.8,651.2 L628.4,648.0 L632.0,645.0 L635.6,642.3 L639.2,639.8 L642.8,637.7 L646.4,635.8 L650.0,634.4 L653.6,633.2 L657.2,632.4 L660.8,632.1 L664.4,632.0 L668.0,632.4 L671.6,633.1 L675.2,634.3 L678.8,635.7 L682.4,637.5 L686.0,639.7 L689.6,642.1 L693.2,644.8 L696.8,647.8 L700.4,651.0 L704.0,654.3 L707.6,657.9 L711.2,661.5 L714.8,665.3 L718.4,669.1 L722.0,672.9 L725.6,676.6 L729.2,680.3 L732.8,683.9 L736.4,687.4 L740.0,690.7 L743.6,693.8 L747.2,696.6 L750.8,699.2 L754.4,701.5 L758.0,703.4 L761.6,705.1 L765.2,706.4 L768.8,707.3 L772.4,707.8 L776.0,708.0 L779.6,707.8 L783.2,707.2 L786.8,706.3 L790.4,704.9 L794.0,703.3 L797.6,701.3 L801.2,699.0 L804.8,696.4 L808.4,693.5 L812.0,690.4 L815.6,687.1 L819.2,683.6 L822.8,680.0 L826.4,676.3 L830.0,672.5 L833.6,668.7 L837.2,664.9 L840.8,661.2 L844.4,657.6 L848.0,654.0 L851.6,650.7 L855.2,647.5 L858.8,644.6 L862.4,641.9 L866.0,639.5 L869.6,637.4 L873.2,635.6 L876.8,634.1"
+                        fill="none" stroke="#67e8f9" stroke-opacity=".7" stroke-width="3" />
+                    <path class="lg-float-a"
+                        d="M380.0,715.0 L383.6,711.5 L387.2,708.1 L390.8,704.8 L394.4,701.9 L398.0,699.2 L401.6,697.0 L405.2,695.2 L408.8,693.9 L412.4,693.2 L416.0,693.0 L419.6,693.4 L423.2,694.3 L426.8,695.8 L430.4,697.7 L434.0,700.1 L437.6,702.9 L441.2,706.0 L444.8,709.3 L448.4,712.8 L452.0,716.3 L455.6,719.8 L459.2,723.1 L462.8,726.3 L466.4,729.1 L470.0,731.6 L473.6,733.7 L477.2,735.3 L480.8,736.4 L484.4,736.9 L488.0,736.9 L491.6,736.3 L495.2,735.2 L498.8,733.6 L502.4,731.4 L506.0,728.9 L509.6,726.0 L513.2,722.8 L516.8,719.4 L520.4,715.9 L524.0,712.4 L527.6,709.0 L531.2,705.7 L534.8,702.6 L538.4,699.9 L542.0,697.5 L545.6,695.6 L549.2,694.2 L552.8,693.3 L556.4,693.0 L560.0,693.2 L563.6,694.0 L567.2,695.3 L570.8,697.2 L574.4,699.5 L578.0,702.1 L581.6,705.1 L585.2,708.4 L588.8,711.8 L592.4,715.3 L596.0,718.8 L599.6,722.2 L603.2,725.5 L606.8,728.4 L610.4,731.0 L614.0,733.2 L617.6,734.9 L621.2,736.2 L624.8,736.9 L628.4,737.0 L632.0,736.5 L635.6,735.6 L639.2,734.0 L642.8,732.0 L646.4,729.6 L650.0,726.8 L653.6,723.7 L657.2,720.4 L660.8,716.9 L664.4,713.4 L668.0,709.9 L671.6,706.6 L675.2,703.4 L678.8,700.6 L682.4,698.1 L686.0,696.1 L689.6,694.5 L693.2,693.5 L696.8,693.0 L700.4,693.1 L704.0,693.8 L707.6,694.9 L711.2,696.6 L714.8,698.8 L718.4,701.4 L722.0,704.3 L725.6,707.5 L729.2,710.9 L732.8,714.4 L736.4,717.9 L740.0,721.3 L743.6,724.6 L747.2,727.6 L750.8,730.3 L754.4,732.7 L758.0,734.5 L761.6,735.9 L765.2,736.7 L768.8,737.0 L772.4,736.7 L776.0,735.9 L779.6,734.5 L783.2,732.6 L786.8,730.3 L790.4,727.6 L794.0,724.6 L797.6,721.3 L801.2,717.8 L804.8,714.3 L808.4,710.8 L812.0,707.4 L815.6,704.3 L819.2,701.3 L822.8,698.8 L826.4,696.6 L830.0,694.9 L833.6,693.7 L837.2,693.1 L840.8,693.0 L844.4,693.5 L848.0,694.6 L851.6,696.1 L855.2,698.2 L858.8,700.6 L862.4,703.5 L866.0,706.6 L869.6,710.0 L873.2,713.4 L876.8,717.0"
+                        fill="none" stroke="#c4b5fd" stroke-opacity=".6" stroke-width="2.5" />
+                    <g transform="translate(1150 40)">
+                        <g class="lg-swing">
+                            <line x1="0" y1="0" x2="0" y2="120" stroke="#fff" stroke-opacity=".6" stroke-width="2" />
+                            <circle cx="0" cy="134" r="16" fill="#fde68a" fill-opacity=".9" />
+                        </g>
+                        <rect x="-50" y="-8" width="100" height="8" rx="4" fill="#fff" fill-opacity=".5" />
+                    </g>
+                    <g fill="none" stroke="#fff" stroke-opacity=".28" stroke-dasharray="6 8">
+                        <ellipse cx="1030" cy="665" rx="150" ry="46" transform="rotate(-12 1030 665)" />
+                        <ellipse cx="1030" cy="665" rx="92" ry="28" transform="rotate(-12 1030 665)" />
+                    </g>
+                    <circle cx="1030" cy="665" r="11" fill="#fbbf24" />
+                    <circle cx="1150" cy="650" r="6" fill="#93c5fd" />
+                    <circle cx="938" cy="685" r="5" fill="#f9a8d4" /><text x="60" y="330" font-size="250" fill="#fff"
+                        fill-opacity="0.06" text-anchor="start" class="lg-f lg-serif">ψ</text><text x="930" y="300"
+                        font-size="230" fill="#fff" fill-opacity="0.06" text-anchor="start"
+                        class="lg-f lg-serif">λ</text><text x="540" y="590" font-size="170" fill="#fff"
+                        fill-opacity="0.06" text-anchor="start" class="lg-f lg-serif">Ω</text>
+                    <g class="lg-float-a lg-serif"><text x="70" y="95" font-size="62" fill="#fff" fill-opacity="0.65"
+                            text-anchor="start" class="lg-f lg-serif">E = mc²</text><text x="470" y="95" font-size="44"
+                            fill="#fff" fill-opacity="0.55" text-anchor="start" class="lg-f lg-serif">F = ma</text><text
+                            x="760" y="95" font-size="38" fill="#fff" fill-opacity="0.5" text-anchor="start"
+                            class="lg-f lg-serif">v = λ f</text><text x="70" y="705" font-size="38" fill="#fff"
+                            fill-opacity="0.5" text-anchor="start" class="lg-f lg-serif">V = I R</text><text x="70"
+                            y="750" font-size="30" fill="#fff" fill-opacity="0.45" text-anchor="start"
+                            class="lg-f lg-serif">Δx Δp ≥ ħ / 2</text><text x="940" y="130" font-size="30" fill="#fff"
+                            fill-opacity="0.45" text-anchor="start" class="lg-f lg-serif">p = mv</text></g>
+                </svg></div>
+            <div class="lg-scene lg-s3"><svg class="lg-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"
+                    aria-hidden="true">
+                    <defs>
+                        <pattern id="gc" width="60" height="60" patternUnits="userSpaceOnUse">
+                            <path d="M60 0H0V60" fill="none" stroke="#fff" stroke-opacity=".07" stroke-width="1" />
+                        </pattern>
+                    </defs>
+                    <rect width="1200" height="800" fill="url(#gc)" />
+                    <g transform="translate(1040 105) scale(.5)">
+                        <g class="lg-float-b" fill="none" stroke="#fff" stroke-width="4" stroke-opacity=".75">
+                            <polygon points="95.0,0.0 47.5,82.3 -47.5,82.3 -95.0,0.0 -47.5,-82.3 47.5,-82.3" />
+                            <polygon points="62.0,0.0 31.0,53.7 -31.0,53.7 -62.0,0.0 -31.0,-53.7 31.0,-53.7"
+                                stroke-opacity=".5" stroke-dasharray="4 6" />
+                            <line x1="95.0" y1="0.0" x2="140.0" y2="0.0" stroke-opacity=".5" />
+                            <circle cx="150.0" cy="0.0" r="11" fill="#fff" fill-opacity=".85" stroke="none" />
+                            <line x1="47.5" y1="82.3" x2="70.0" y2="121.2" stroke-opacity=".5" />
+                            <circle cx="75.0" cy="129.9" r="11" fill="#fff" fill-opacity=".85" stroke="none" />
+                            <line x1="-47.5" y1="82.3" x2="-70.0" y2="121.2" stroke-opacity=".5" />
+                            <circle cx="-75.0" cy="129.9" r="11" fill="#fff" fill-opacity=".85" stroke="none" />
+                            <line x1="-95.0" y1="0.0" x2="-140.0" y2="0.0" stroke-opacity=".5" />
+                            <circle cx="-150.0" cy="0.0" r="11" fill="#fff" fill-opacity=".85" stroke="none" />
+                            <line x1="-47.5" y1="-82.3" x2="-70.0" y2="-121.2" stroke-opacity=".5" />
+                            <circle cx="-75.0" cy="-129.9" r="11" fill="#fff" fill-opacity=".85" stroke="none" />
+                            <line x1="47.5" y1="-82.3" x2="70.0" y2="-121.2" stroke-opacity=".5" />
+                            <circle cx="75.0" cy="-129.9" r="11" fill="#fff" fill-opacity=".85" stroke="none" />
+                        </g>
+                    </g>
+                    <g transform="translate(480 100) scale(.8)">
+                        <g class="lg-float-a">
+                            <line x1="0" y1="0" x2="-70" y2="62" stroke="#fff" stroke-opacity=".7" stroke-width="5" />
+                            <line x1="0" y1="0" x2="70" y2="62" stroke="#fff" stroke-opacity=".7" stroke-width="5" />
+                            <circle r="30" fill="#fb7185" />
+                            <circle cx="-70" cy="62" r="18" fill="#fff" />
+                            <circle cx="70" cy="62" r="18" fill="#fff" />
+                        </g>
+                    </g>
+                    <g transform="translate(110 650) scale(.8)">
+                        <g class="lg-float-b">
+                            <g stroke="#fff" stroke-opacity=".7" stroke-width="4">
+                                <line x1="0" y1="0" x2="-65" y2="-55" />
+                                <line x1="0" y1="0" x2="70" y2="-50" />
+                                <line x1="0" y1="0" x2="-55" y2="65" />
+                                <line x1="0" y1="0" x2="62" y2="60" />
+                            </g>
+                            <circle r="28" fill="#94a3b8" />
+                            <g fill="#fff">
+                                <circle cx="-65" cy="-55" r="15" />
+                                <circle cx="70" cy="-50" r="15" />
+                                <circle cx="-55" cy="65" r="15" />
+                                <circle cx="62" cy="60" r="15" />
+                            </g>
+                        </g>
+                    </g>
+                    <g transform="translate(672 590) scale(.7)">
+                        <path d="M-30 -230H30V-120L120 40Q140 80 100 90H-100Q-140 80 -120 40L-30 -120Z" fill="#fff"
+                            fill-opacity=".08" stroke="#fff" stroke-opacity=".75" stroke-width="4"
+                            stroke-linejoin="round" />
+                        <path d="M-98 10L-120 40Q-140 80 -100 90H100Q140 80 120 40L98 10Z" fill="#5eead4"
+                            fill-opacity=".55" />
+                        <rect x="-38" y="-240" width="76" height="14" rx="5" fill="#fff" fill-opacity=".6" />
+                    </g>
+                    <circle class="lg-bub" style="animation-delay:0.0s" cx="650" cy="400" r="6" fill="#fff"
+                        fill-opacity=".35" />
+                    <circle class="lg-bub" style="animation-delay:0.7s" cx="690" cy="372" r="4" fill="#fff"
+                        fill-opacity=".35" />
+                    <circle class="lg-bub" style="animation-delay:1.4s" cx="668" cy="350" r="5" fill="#fff"
+                        fill-opacity=".35" />
+                    <circle class="lg-bub" style="animation-delay:2.1s" cx="700" cy="330" r="4" fill="#fff"
+                        fill-opacity=".35" />
+                    <g>
+                        <rect x="770" y="650" width="74" height="78" rx="10" fill="#fff" fill-opacity=".1" stroke="#fff"
+                            stroke-opacity=".45" /><text x="779" y="670" font-size="13" fill="#fff" fill-opacity=".7"
+                            class="lg-f">1</text><text x="807" y="708" font-size="30" font-weight="700" fill="#fff"
+                            fill-opacity=".9" text-anchor="middle" class="lg-f">H</text>
+                    </g>
+                    <g>
+                        <rect x="854" y="650" width="74" height="78" rx="10" fill="#fff" fill-opacity=".1" stroke="#fff"
+                            stroke-opacity=".45" /><text x="863" y="670" font-size="13" fill="#fff" fill-opacity=".7"
+                            class="lg-f">6</text><text x="891" y="708" font-size="30" font-weight="700" fill="#fff"
+                            fill-opacity=".9" text-anchor="middle" class="lg-f">C</text>
+                    </g>
+                    <g>
+                        <rect x="938" y="650" width="74" height="78" rx="10" fill="#fff" fill-opacity=".1" stroke="#fff"
+                            stroke-opacity=".45" /><text x="947" y="670" font-size="13" fill="#fff" fill-opacity=".7"
+                            class="lg-f">7</text><text x="975" y="708" font-size="30" font-weight="700" fill="#fff"
+                            fill-opacity=".9" text-anchor="middle" class="lg-f">N</text>
+                    </g>
+                    <g>
+                        <rect x="1022" y="650" width="74" height="78" rx="10" fill="#fff" fill-opacity=".1"
+                            stroke="#fff" stroke-opacity=".45" /><text x="1031" y="670" font-size="13" fill="#fff"
+                            fill-opacity=".7" class="lg-f">8</text><text x="1059" y="708" font-size="30"
+                            font-weight="700" fill="#fff" fill-opacity=".9" text-anchor="middle" class="lg-f">O</text>
+                    </g>
+                    <g>
+                        <rect x="1106" y="650" width="74" height="78" rx="10" fill="#fff" fill-opacity=".1"
+                            stroke="#fff" stroke-opacity=".45" /><text x="1115" y="670" font-size="13" fill="#fff"
+                            fill-opacity=".7" class="lg-f">26</text><text x="1143" y="708" font-size="30"
+                            font-weight="700" fill="#fff" fill-opacity=".9" text-anchor="middle" class="lg-f">Fe</text>
+                    </g><text x="60" y="150" font-size="60" fill="#fff" fill-opacity="0.5" text-anchor="start"
+                        class="lg-f lg-serif">H₂O</text><text x="300" y="745" font-size="28" fill="#fff"
+                        fill-opacity="0.45" text-anchor="start" class="lg-f lg-serif">CH₄ + 2O₂ → CO₂ + 2H₂O</text><text
+                        x="640" y="95" font-size="38" fill="#fff" fill-opacity="0.55" text-anchor="start"
+                        class="lg-f lg-serif">2H₂ + O₂ → 2H₂O</text><text x="790" y="150" font-size="30" fill="#fff"
+                        fill-opacity="0.5" text-anchor="start" class="lg-f lg-serif">pH = −log[H⁺]</text><text x="300"
+                        y="690" font-size="38" fill="#fff" fill-opacity="0.5" text-anchor="start"
+                        class="lg-f lg-serif">C₆H₁₂O₆</text>
+                </svg></div>
+            <div class="lg-scene lg-s4"><svg class="lg-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"
+                    aria-hidden="true">
+                    <defs>
+                        <pattern id="gg" width="60" height="60" patternUnits="userSpaceOnUse">
+                            <path d="M60 0H0V60" fill="none" stroke="#fff" stroke-opacity=".07" stroke-width="1" />
+                        </pattern>
+                    </defs>
+                    <rect width="1200" height="800" fill="url(#gg)" />
+                    <g transform="translate(672 335)">
+                        <g class="lg-float-b" fill="none" stroke="#fff" stroke-width="2.5">
+                            <circle r="92" stroke-opacity=".6" />
+                            <polygon points="0.0,-92.0 79.7,46.0 -79.7,46.0" stroke="#fde68a" stroke-opacity=".9" />
+                            <polygon points="0.0,46.0 -39.8,-23.0 39.8,-23.0" stroke="#f9a8d4" stroke-opacity=".85" />
+                            <circle r="46" stroke-opacity=".5" />
+                            <polygon points="0.0,-92.0 79.7,-46.0 79.7,46.0 0.0,92.0 -79.7,46.0 -79.7,-46.0"
+                                stroke-opacity=".35" stroke-dasharray="5 6" />
+                        </g>
+                    </g>
+                    <polygon points="430.0,656.0 461.2,710.0 398.8,710.0" fill="none" stroke="#fff" stroke-opacity=".5"
+                        stroke-width="2.5" />
+                    <polygon points="570.0,656.0 606.0,692.0 570.0,728.0 534.0,692.0" fill="none" stroke="#fff"
+                        stroke-opacity=".5" stroke-width="2.5" />
+                    <polygon points="710.0,656.0 744.2,680.9 731.2,721.1 688.8,721.1 675.8,680.9" fill="none"
+                        stroke="#fff" stroke-opacity=".5" stroke-width="2.5" />
+                    <polygon points="850.0,656.0 881.2,674.0 881.2,710.0 850.0,728.0 818.8,710.0 818.8,674.0"
+                        fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.5" />
+                    <polygon
+                        points="990.0,656.0 1018.1,669.6 1025.1,700.0 1005.6,724.4 974.4,724.4 954.9,700.0 961.9,669.6"
+                        fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.5" />
+                    <polygon
+                        points="1130.0,656.0 1155.5,666.5 1166.0,692.0 1155.5,717.5 1130.0,728.0 1104.5,717.5 1094.0,692.0 1104.5,666.5"
+                        fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.5" />
+                    <g class="lg-float-a" transform="translate(1085 112)" fill="none" stroke="#fff" stroke-opacity=".6"
+                        stroke-width="2">
+                        <path d="M0 -38L33 -19V19L0 38L-33 19V-19Z" />
+                        <path d="M0 0L33 -19M0 0L0 38M0 0L-33 -19" stroke-opacity=".45" />
+                    </g><text x="1000" y="330" font-size="260" fill="#fff" fill-opacity="0.07" text-anchor="start"
+                        class="lg-f lg-serif">△</text><text x="60" y="740" font-size="220" fill="#fff"
+                        fill-opacity="0.07" text-anchor="start" class="lg-f lg-serif">∠</text><text x="560" y="570"
+                        font-size="170" fill="#fff" fill-opacity="0.06" text-anchor="start"
+                        class="lg-f lg-serif">⊥</text><text x="470" y="235" font-size="150" fill="#fff"
+                        fill-opacity="0.06" text-anchor="start" class="lg-f lg-serif">π</text>
+                    <g class="lg-float-a lg-serif"><text x="70" y="95" font-size="44" fill="#fff" fill-opacity="0.62"
+                            text-anchor="start" class="lg-f lg-serif">A = πr²</text><text x="380" y="95" font-size="40"
+                            fill="#fff" fill-opacity="0.55" text-anchor="start" class="lg-f lg-serif">V = ⅓ π r²
+                            h</text><text x="760" y="95" font-size="36" fill="#fff" fill-opacity="0.5"
+                            text-anchor="start" class="lg-f lg-serif">φ = (1 + √5) / 2</text><text x="70" y="745"
+                            font-size="30" fill="#fff" fill-opacity="0.5" text-anchor="start" class="lg-f lg-serif">c² =
+                            a² + b² − 2ab cos C</text><text x="840" y="745" font-size="32" fill="#fff"
+                            fill-opacity="0.5" text-anchor="start" class="lg-f lg-serif">S = 4 π r²</text></g>
+                </svg></div>
+            <div class="lg-scene lg-s5"><svg class="lg-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"
+                    aria-hidden="true">
+                    <circle cx="936" cy="583" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="963" cy="472" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="1050" cy="611" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="398" cy="199" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="1058" cy="497" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="391" cy="106" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="924" cy="320" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="300" cy="102" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="1113" cy="720" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="95" cy="619" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="821" cy="473" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="332" cy="648" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="40" cy="551" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="139" cy="70" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="83" cy="204" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="505" cy="624" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="71" cy="485" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="678" cy="461" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="410" cy="541" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="488" cy="665" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="612" cy="521" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="19" cy="688" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="184" cy="478" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="579" cy="426" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="1138" cy="95" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="530" cy="332" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="480" cy="535" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="601" cy="40" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="153" cy="586" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="231" cy="420" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="230" cy="307" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="801" cy="78" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="44" cy="711" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="11" cy="228" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="439" cy="63" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="972" cy="394" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="823" cy="439" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="159" cy="589" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="416" cy="701" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <circle cx="562" cy="354" r="1.3" fill="#fff" fill-opacity=".25" />
+                    <g transform="translate(672 335)">
+                        <g class="lg-float-b">
+                            <polygon points="0,-62 60,42 -60,42" fill="#fff" fill-opacity=".08" stroke="#fff"
+                                stroke-opacity=".75" stroke-width="3" stroke-linejoin="round" />
+                            <line x1="-120" y1="14" x2="-30" y2="-10" stroke="#fff" stroke-width="4"
+                                stroke-opacity=".95" />
+                            <line x1="-30" y1="-10" x2="41.5" y2="10" stroke="#fff" stroke-width="2.5"
+                                stroke-opacity=".55" />
+                            <line x1="41.5" y1="10" x2="98" y2="-26" stroke="#ef4444" stroke-width="3"
+                                stroke-opacity=".9" />
+                            <line x1="41.5" y1="10" x2="98" y2="-15" stroke="#f97316" stroke-width="3"
+                                stroke-opacity=".9" />
+                            <line x1="41.5" y1="10" x2="98" y2="-4" stroke="#facc15" stroke-width="3"
+                                stroke-opacity=".9" />
+                            <line x1="41.5" y1="10" x2="98" y2="7" stroke="#22c55e" stroke-width="3"
+                                stroke-opacity=".9" />
+                            <line x1="41.5" y1="10" x2="98" y2="18" stroke="#3b82f6" stroke-width="3"
+                                stroke-opacity=".9" />
+                            <line x1="41.5" y1="10" x2="98" y2="29" stroke="#a855f7" stroke-width="3"
+                                stroke-opacity=".9" />
+                        </g>
+                    </g>
+                    <g class="lg-float-a">
+                        <ellipse cx="600" cy="690" rx="15" ry="54" fill="#fff" fill-opacity=".12" stroke="#fff"
+                            stroke-opacity=".7" stroke-width="2.5" />
+                        <g stroke="#fde68a" stroke-opacity=".75" stroke-width="2">
+                            <path d="M440 650L600 650L760 690" />
+                            <path d="M440 690L760 690" />
+                            <path d="M440 730L600 730L760 690" />
+                        </g>
+                        <circle cx="760" cy="690" r="5" fill="#fde68a" />
+                    </g>
+                    <circle cx="980" cy="705" r="20" fill="none" stroke="#fff" stroke-opacity=".22" />
+                    <circle cx="980" cy="705" r="40" fill="none" stroke="#fff" stroke-opacity=".22" />
+                    <circle cx="980" cy="705" r="60" fill="none" stroke="#fff" stroke-opacity=".22" />
+                    <circle cx="980" cy="705" r="80" fill="none" stroke="#fff" stroke-opacity=".22" />
+                    <circle cx="1070" cy="705" r="20" fill="none" stroke="#fff" stroke-opacity=".22" />
+                    <circle cx="1070" cy="705" r="40" fill="none" stroke="#fff" stroke-opacity=".22" />
+                    <circle cx="1070" cy="705" r="60" fill="none" stroke="#fff" stroke-opacity=".22" />
+                    <circle cx="1070" cy="705" r="80" fill="none" stroke="#fff" stroke-opacity=".22" /><text x="1010"
+                        y="330" font-size="260" fill="#fff" fill-opacity="0.06" text-anchor="start"
+                        class="lg-f lg-serif">λ</text><text x="60" y="330" font-size="230" fill="#fff"
+                        fill-opacity="0.06" text-anchor="start" class="lg-f lg-serif">n</text>
+                    <g class="lg-float-a lg-serif"><text x="70" y="95" font-size="34" fill="#fff" fill-opacity="0.6"
+                            text-anchor="start" class="lg-f lg-serif">n₁ sin θ₁ = n₂ sin θ₂</text><text x="500" y="95"
+                            font-size="36" fill="#fff" fill-opacity="0.55" text-anchor="start" class="lg-f lg-serif">1/f
+                            = 1/dₒ + 1/dᵢ</text><text x="900" y="150" font-size="34" fill="#fff" fill-opacity="0.5"
+                            text-anchor="start" class="lg-f lg-serif">c = λ f</text><text x="70" y="745" font-size="36"
+                            fill="#fff" fill-opacity="0.5" text-anchor="start" class="lg-f lg-serif">E = h f</text><text
+                            x="300" y="745" font-size="34" fill="#fff" fill-opacity="0.5" text-anchor="start"
+                            class="lg-f lg-serif">λ = h / p</text></g>
+                </svg></div>
+            <div class="lg-scene lg-s6"><svg class="lg-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"
+                    aria-hidden="true">
+                    <defs>
+                        <pattern id="gb" width="60" height="60" patternUnits="userSpaceOnUse">
+                            <path d="M60 0H0V60" fill="none" stroke="#fff" stroke-opacity=".07" stroke-width="1" />
+                        </pattern>
+                    </defs>
+                    <rect width="1200" height="800" fill="url(#gb)" />
+                    <g transform="translate(672 335)">
+                        <circle r="34" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" />
+                        <circle r="58" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" />
+                        <circle r="84" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" />
+                        <g class="lg-spin2">
+                            <circle cx="34.0" cy="0.0" r="5" fill="#fde68a" />
+                            <circle cx="-34.0" cy="0.0" r="5" fill="#fde68a" />
+                        </g>
+                        <g class="lg-spin">
+                            <circle cx="57.1" cy="10.1" r="5" fill="#fde68a" />
+                            <circle cx="33.3" cy="47.5" r="5" fill="#fde68a" />
+                            <circle cx="-10.1" cy="57.1" r="5" fill="#fde68a" />
+                            <circle cx="-47.5" cy="33.3" r="5" fill="#fde68a" />
+                            <circle cx="-57.1" cy="-10.1" r="5" fill="#fde68a" />
+                            <circle cx="-33.3" cy="-47.5" r="5" fill="#fde68a" />
+                            <circle cx="10.1" cy="-57.1" r="5" fill="#fde68a" />
+                            <circle cx="47.5" cy="-33.3" r="5" fill="#fde68a" />
+                        </g>
+                        <g class="lg-spin2">
+                            <circle cx="78.9" cy="28.7" r="5" fill="#fde68a" />
+                            <circle cx="26.8" cy="79.6" r="5" fill="#fde68a" />
+                            <circle cx="-45.6" cy="70.6" r="5" fill="#fde68a" />
+                            <circle cx="-83.6" cy="8.4" r="5" fill="#fde68a" />
+                            <circle cx="-58.7" cy="-60.1" r="5" fill="#fde68a" />
+                            <circle cx="10.4" cy="-83.3" r="5" fill="#fde68a" />
+                            <circle cx="71.7" cy="-43.8" r="5" fill="#fde68a" />
+                        </g>
+                        <circle r="15" fill="#bef264" /><text y="4" font-size="11" font-weight="800" fill="#1a2e05"
+                            text-anchor="middle" class="lg-f">17p</text>
+                    </g>
+                    <g class="lg-float-b">
+                        <polygon points="144.0,650.0 127.0,679.4 93.0,679.4 76.0,650.0 93.0,620.6 127.0,620.6"
+                            fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.5" />
+                        <polygon points="195.0,679.5 178.0,708.9 144.0,708.9 127.0,679.5 144.0,650.0 178.0,650.0"
+                            fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.5" />
+                        <polygon points="144.0,708.9 127.0,738.3 93.0,738.3 76.0,708.9 93.0,679.5 127.0,679.5"
+                            fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.5" />
+                        <polygon points="93.0,679.5 76.0,708.9 42.0,708.9 25.0,679.5 42.0,650.0 76.0,650.0" fill="none"
+                            stroke="#fff" stroke-opacity=".55" stroke-width="2.5" />
+                        <polygon points="93.0,620.5 76.0,650.0 42.0,650.0 25.0,620.5 42.0,591.1 76.0,591.1" fill="none"
+                            stroke="#fff" stroke-opacity=".55" stroke-width="2.5" />
+                        <polygon points="144.0,591.1 127.0,620.5 93.0,620.5 76.0,591.1 93.0,561.7 127.0,561.7"
+                            fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.5" />
+                        <polygon points="195.0,620.5 178.0,650.0 144.0,650.0 127.0,620.5 144.0,591.1 178.0,591.1"
+                            fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.5" />
+                    </g>
+                    <g>
+                        <rect x="770" y="650" width="74" height="78" rx="10" fill="#fff" fill-opacity=".1" stroke="#fff"
+                            stroke-opacity=".45" /><text x="779" y="670" font-size="13" fill="#fff" fill-opacity=".7"
+                            class="lg-f">3</text><text x="807" y="708" font-size="28" font-weight="700" fill="#fff"
+                            fill-opacity=".9" text-anchor="middle" class="lg-f">Li</text>
+                    </g>
+                    <g>
+                        <rect x="854" y="650" width="74" height="78" rx="10" fill="#fff" fill-opacity=".1" stroke="#fff"
+                            stroke-opacity=".45" /><text x="863" y="670" font-size="13" fill="#fff" fill-opacity=".7"
+                            class="lg-f">11</text><text x="891" y="708" font-size="28" font-weight="700" fill="#fff"
+                            fill-opacity=".9" text-anchor="middle" class="lg-f">Na</text>
+                    </g>
+                    <g>
+                        <rect x="938" y="650" width="74" height="78" rx="10" fill="#fff" fill-opacity=".1" stroke="#fff"
+                            stroke-opacity=".45" /><text x="947" y="670" font-size="13" fill="#fff" fill-opacity=".7"
+                            class="lg-f">19</text><text x="975" y="708" font-size="28" font-weight="700" fill="#fff"
+                            fill-opacity=".9" text-anchor="middle" class="lg-f">K</text>
+                    </g>
+                    <g>
+                        <rect x="1022" y="650" width="74" height="78" rx="10" fill="#fff" fill-opacity=".1"
+                            stroke="#fff" stroke-opacity=".45" /><text x="1031" y="670" font-size="13" fill="#fff"
+                            fill-opacity=".7" class="lg-f">37</text><text x="1059" y="708" font-size="28"
+                            font-weight="700" fill="#fff" fill-opacity=".9" text-anchor="middle" class="lg-f">Rb</text>
+                    </g>
+                    <g>
+                        <rect x="1106" y="650" width="74" height="78" rx="10" fill="#fff" fill-opacity=".1"
+                            stroke="#fff" stroke-opacity=".45" /><text x="1115" y="670" font-size="13" fill="#fff"
+                            fill-opacity=".7" class="lg-f">55</text><text x="1143" y="708" font-size="28"
+                            font-weight="700" fill="#fff" fill-opacity=".9" text-anchor="middle" class="lg-f">Cs</text>
+                    </g><text x="770" y="640" font-size="16" fill="#fff" fill-opacity="0.7" text-anchor="start"
+                        class="lg-f">Group 1: alkali metals</text><text x="1010" y="330" font-size="260" fill="#fff"
+                        fill-opacity="0.07" text-anchor="start" class="lg-f lg-serif">Z</text><text x="540" y="590"
+                        font-size="180" fill="#fff" fill-opacity="0.06" text-anchor="start"
+                        class="lg-f lg-serif">e⁻</text>
+                    <g class="lg-float-a lg-serif"><text x="70" y="95" font-size="38" fill="#fff" fill-opacity="0.6"
+                            text-anchor="start" class="lg-f lg-serif">2Na + Cl₂ → 2NaCl</text><text x="540" y="95"
+                            font-size="36" fill="#fff" fill-opacity="0.55" text-anchor="start" class="lg-f lg-serif">E =
+                            −13.6 eV / n²</text><text x="860" y="150" font-size="26" fill="#fff" fill-opacity="0.5"
+                            text-anchor="start" class="lg-f lg-serif">1s² 2s² 2p⁶ 3s² 3p⁵</text><text x="300" y="700"
+                            font-size="34" fill="#fff" fill-opacity="0.5" text-anchor="start" class="lg-f lg-serif">Z =
+                            17</text><text x="300" y="745" font-size="28" fill="#fff" fill-opacity="0.45"
+                            text-anchor="start" class="lg-f lg-serif">Mg + 2HCl → MgCl₂ + H₂</text></g>
+                </svg></div>
+            <div class="lg-scene lg-s7"><svg class="lg-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"
+                    aria-hidden="true">
+                    <defs>
+                        <pattern id="gk" width="60" height="60" patternUnits="userSpaceOnUse">
+                            <path d="M60 0H0V60" fill="none" stroke="#fff" stroke-opacity=".07" stroke-width="1" />
+                        </pattern>
+                    </defs>
+                    <rect width="1200" height="800" fill="url(#gk)" />
+                    <g transform="translate(672 420)">
+                        <g class="lg-float-b">
+                            <path
+                                d="M-96.0,-1.3 L-92.8,-1.8 L-89.6,-2.4 L-86.4,-3.1 L-83.2,-4.1 L-80.0,-5.3 L-76.8,-6.7 L-73.6,-8.5 L-70.4,-10.7 L-67.2,-13.2 L-64.0,-16.2 L-60.8,-19.7 L-57.6,-23.7 L-54.4,-28.3 L-51.2,-33.4 L-48.0,-39.0 L-44.8,-45.0 L-41.6,-51.5 L-38.4,-58.4 L-35.2,-65.5 L-32.0,-72.8 L-28.8,-80.0 L-25.6,-87.1 L-22.4,-93.9 L-19.2,-100.2 L-16.0,-105.9 L-12.8,-110.8 L-9.6,-114.7 L-6.4,-117.6 L-3.2,-119.4 L0.0,-120.0 L3.2,-119.4 L6.4,-117.6 L9.6,-114.7 L12.8,-110.8 L16.0,-105.9 L19.2,-100.2 L22.4,-93.9 L25.6,-87.1 L28.8,-80.0 L32.0,-72.8 L35.2,-65.5 L38.4,-58.4 L41.6,-51.5 L44.8,-45.0 L48.0,-39.0 L51.2,-33.4 L54.4,-28.3 L57.6,-23.7 L60.8,-19.7 L64.0,-16.2 L67.2,-13.2 L70.4,-10.7 L73.6,-8.5 L76.8,-6.7 L80.0,-5.3 L83.2,-4.1 L86.4,-3.1 L89.6,-2.4 L92.8,-1.8 L96.0,-1.3 L96,0 L-96,0 Z"
+                                fill="#fff" fill-opacity=".13" />
+                            <path
+                                d="M-96.0,-1.3 L-92.8,-1.8 L-89.6,-2.4 L-86.4,-3.1 L-83.2,-4.1 L-80.0,-5.3 L-76.8,-6.7 L-73.6,-8.5 L-70.4,-10.7 L-67.2,-13.2 L-64.0,-16.2 L-60.8,-19.7 L-57.6,-23.7 L-54.4,-28.3 L-51.2,-33.4 L-48.0,-39.0 L-44.8,-45.0 L-41.6,-51.5 L-38.4,-58.4 L-35.2,-65.5 L-32.0,-72.8 L-28.8,-80.0 L-25.6,-87.1 L-22.4,-93.9 L-19.2,-100.2 L-16.0,-105.9 L-12.8,-110.8 L-9.6,-114.7 L-6.4,-117.6 L-3.2,-119.4 L0.0,-120.0 L3.2,-119.4 L6.4,-117.6 L9.6,-114.7 L12.8,-110.8 L16.0,-105.9 L19.2,-100.2 L22.4,-93.9 L25.6,-87.1 L28.8,-80.0 L32.0,-72.8 L35.2,-65.5 L38.4,-58.4 L41.6,-51.5 L44.8,-45.0 L48.0,-39.0 L51.2,-33.4 L54.4,-28.3 L57.6,-23.7 L60.8,-19.7 L64.0,-16.2 L67.2,-13.2 L70.4,-10.7 L73.6,-8.5 L76.8,-6.7 L80.0,-5.3 L83.2,-4.1 L86.4,-3.1 L89.6,-2.4 L92.8,-1.8 L96.0,-1.3"
+                                fill="none" stroke="#fde68a" stroke-width="3" stroke-opacity=".9" />
+                            <path d="M-112 0H112" stroke="#fff" stroke-opacity=".5" stroke-width="2" />
+                            <g stroke="#fff" stroke-opacity=".55" stroke-dasharray="5 6" stroke-width="2">
+                                <path d="M0 0V-124" />
+                                <path d="M-32 0V-73" />
+                                <path d="M32 0V-73" />
+                            </g><text x="0" y="24" font-size="24" fill="#fff" fill-opacity="0.8" text-anchor="middle"
+                                class="lg-f lg-serif">μ</text><text x="32" y="24" font-size="20" fill="#fff"
+                                fill-opacity="0.7" text-anchor="middle" class="lg-f lg-serif">+σ</text><text x="-32"
+                                y="24" font-size="20" fill="#fff" fill-opacity="0.7" text-anchor="middle"
+                                class="lg-f lg-serif">−σ</text>
+                        </g>
+                    </g>
+                    <rect x="400" y="679" width="46" height="21" rx="4" fill="#fff" fill-opacity="0.28" />
+                    <rect x="464" y="657" width="46" height="43" rx="4" fill="#fff" fill-opacity="0.33" />
+                    <rect x="528" y="628" width="46" height="72" rx="4" fill="#fff" fill-opacity="0.38" />
+                    <rect x="592" y="601" width="46" height="99" rx="4" fill="#fff" fill-opacity="0.28" />
+                    <rect x="656" y="590" width="46" height="110" rx="4" fill="#fff" fill-opacity="0.33" />
+                    <rect x="720" y="601" width="46" height="99" rx="4" fill="#fff" fill-opacity="0.38" />
+                    <rect x="784" y="628" width="46" height="72" rx="4" fill="#fff" fill-opacity="0.28" />
+                    <rect x="848" y="657" width="46" height="43" rx="4" fill="#fff" fill-opacity="0.33" />
+                    <rect x="912" y="679" width="46" height="21" rx="4" fill="#fff" fill-opacity="0.38" /><text x="1010"
+                        y="330" font-size="280" fill="#fff" fill-opacity="0.07" text-anchor="start"
+                        class="lg-f lg-serif">∫</text><text x="60" y="745" font-size="220" fill="#fff"
+                        fill-opacity="0.07" text-anchor="start" class="lg-f lg-serif">Σ</text><text x="1090" y="640"
+                        font-size="200" fill="#fff" fill-opacity="0.06" text-anchor="start"
+                        class="lg-f lg-serif">%</text><text x="470" y="240" font-size="150" fill="#fff"
+                        fill-opacity="0.06" text-anchor="start" class="lg-f lg-serif">σ</text>
+                    <g class="lg-float-a lg-serif"><text x="70" y="95" font-size="32" fill="#fff" fill-opacity="0.58"
+                            text-anchor="start" class="lg-f lg-serif">f(x) = e<tspan dy="-12" font-size="20">−(x−μ)²/2σ²
+                            </tspan>
+                            <tspan dy="12"> / σ√2π</tspan>
+                        </text><text x="660" y="95" font-size="36" fill="#fff" fill-opacity="0.55" text-anchor="start"
+                            class="lg-f lg-serif">d/dx xⁿ = n xⁿ⁻¹</text><text x="880" y="150" font-size="28"
+                            fill="#fff" fill-opacity="0.45" text-anchor="start" class="lg-f lg-serif">det = ad −
+                            bc</text><text x="70" y="745" font-size="30" fill="#fff" fill-opacity="0.5"
+                            text-anchor="start" class="lg-f lg-serif">∫ₐᵇ f(x) dx = F(b) − F(a)</text><text x="640"
+                            y="745" font-size="26" fill="#fff" fill-opacity="0.45" text-anchor="start"
+                            class="lg-f lg-serif">P(A∪B) = P(A) + P(B) − P(A∩B)</text></g>
+                </svg></div>
+            <div class="lg-scene lg-s8"><svg class="lg-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"
+                    aria-hidden="true">
+                    <circle cx="188" cy="328" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="691" cy="25" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="849" cy="786" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="251" cy="147" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="514" cy="733" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="216" cy="21" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="132" cy="486" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="1007" cy="191" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="1155" cy="202" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="926" cy="531" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="400" cy="759" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="278" cy="439" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="795" cy="129" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="818" cy="440" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="445" cy="10" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="562" cy="616" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="632" cy="30" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="441" cy="201" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="817" cy="626" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="215" cy="53" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="309" cy="228" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="914" cy="274" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="29" cy="634" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="683" cy="313" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="800" cy="85" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="162" cy="102" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="437" cy="606" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="507" cy="25" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="765" cy="390" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="938" cy="140" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="1000" cy="598" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="287" cy="405" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="384" cy="652" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="325" cy="328" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="477" cy="635" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="520" cy="752" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="398" cy="172" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="1144" cy="211" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="805" cy="504" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <circle cx="170" cy="441" r="1.4" fill="#fde68a" fill-opacity=".25" />
+                    <g transform="translate(672 335)">
+                        <g class="lg-float-b">
+                            <ellipse rx="104" ry="56" fill="none" stroke="#fff" stroke-opacity="0.4" stroke-width="2"
+                                stroke-dasharray="7 7" />
+                            <ellipse rx="138" ry="86" fill="none" stroke="#fff" stroke-opacity="0.3" stroke-width="2"
+                                stroke-dasharray="7 7" />
+                            <ellipse rx="172" ry="116" fill="none" stroke="#fff" stroke-opacity="0.19999999999999996"
+                                stroke-width="2" stroke-dasharray="7 7" />
+                            <rect x="-62" y="-20" width="62" height="40" rx="4" fill="#ef4444" />
+                            <rect x="0" y="-20" width="62" height="40" rx="4" fill="#3b82f6" /><text x="-31" y="8"
+                                font-size="22" font-weight="800" fill="#fff" text-anchor="middle"
+                                class="lg-f">N</text><text x="31" y="8" font-size="22" font-weight="800" fill="#fff"
+                                text-anchor="middle" class="lg-f">S</text>
+                        </g>
+                    </g>
+                    <g class="lg-float-a" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3"
+                        stroke-linejoin="round">
+                        <path d="M400 655H560" />
+                        <polyline points="560,655 572,640 584,670 596,640 608,670 620,640 632,670 644,640 656,655" />
+                        <path d="M656 655H1100V692" />
+                        <path d="M1100 732V735H400V722" />
+                        <path d="M400 700V655" />
+                        <path d="M385 700H415" stroke-width="4" />
+                        <path d="M392 712H408" stroke-width="3" />
+                        <circle cx="1100" cy="712" r="20" stroke="#fde68a" />
+                        <path d="M1086 698L1114 726M1114 698L1086 726" stroke="#fde68a" stroke-width="2.5" />
+                    </g><text x="1010" y="330" font-size="260" fill="#fff" fill-opacity="0.07" text-anchor="start"
+                        class="lg-f lg-serif">Φ</text><text x="60" y="330" font-size="230" fill="#fff"
+                        fill-opacity="0.07" text-anchor="start" class="lg-f lg-serif">B</text><text x="540" y="580"
+                        font-size="170" fill="#fff" fill-opacity="0.06" text-anchor="start"
+                        class="lg-f lg-serif">Ω</text>
+                    <g class="lg-float-a lg-serif"><text x="70" y="95" font-size="44" fill="#fff" fill-opacity="0.6"
+                            text-anchor="start" class="lg-f lg-serif">∇ · B = 0</text><text x="360" y="95"
+                            font-size="38" fill="#fff" fill-opacity="0.55" text-anchor="start" class="lg-f lg-serif">F =
+                            q v B sin θ</text><text x="740" y="95" font-size="38" fill="#fff" fill-opacity="0.5"
+                            text-anchor="start" class="lg-f lg-serif">ε = −dΦ / dt</text><text x="960" y="150"
+                            font-size="32" fill="#fff" fill-opacity="0.45" text-anchor="start" class="lg-f lg-serif">P =
+                            I V</text><text x="70" y="745" font-size="36" fill="#fff" fill-opacity="0.5"
+                            text-anchor="start" class="lg-f lg-serif">V = I R</text><text x="300" y="745" font-size="32"
+                            fill="#fff" fill-opacity="0.45" text-anchor="start" class="lg-f lg-serif">B = μ₀ I / 2π
+                            r</text></g>
+                </svg></div>
+            <div class="lg-scene lg-s9"><svg class="lg-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"
+                    aria-hidden="true">
+                    <defs>
+                        <pattern id="gt" width="60" height="60" patternUnits="userSpaceOnUse">
+                            <path d="M60 0H0V60" fill="none" stroke="#fff" stroke-opacity=".07" stroke-width="1" />
+                        </pattern>
+                    </defs>
+                    <rect width="1200" height="800" fill="url(#gt)" />
+                    <g transform="translate(672 345)">
+                        <g class="lg-float-a">
+                            <g transform="translate(-54 0)">
+                                <path d="M-14 -72V50Q-14 66 0 66Q14 66 14 50V-72" fill="#fff" fill-opacity=".08"
+                                    stroke="#fff" stroke-opacity=".8" stroke-width="3" />
+                                <path d="M-14 -8H14V50Q14 66 0 66Q-14 66 -14 50Z" fill="#fb7185" fill-opacity=".75" />
+                                <rect x="-18" y="-78" width="36" height="8" rx="3" fill="#fff" fill-opacity=".6" />
+                                <circle class="lg-bub" cx="-3" cy="30" r="3" fill="#fff" fill-opacity=".6" />
+                            </g>
+                            <g transform="translate(0 0)">
+                                <path d="M-14 -72V50Q-14 66 0 66Q14 66 14 50V-72" fill="#fff" fill-opacity=".08"
+                                    stroke="#fff" stroke-opacity=".8" stroke-width="3" />
+                                <path d="M-14 -8H14V50Q14 66 0 66Q-14 66 -14 50Z" fill="#fde047" fill-opacity=".75" />
+                                <rect x="-18" y="-78" width="36" height="8" rx="3" fill="#fff" fill-opacity=".6" />
+                                <circle class="lg-bub" cx="-3" cy="30" r="3" fill="#fff" fill-opacity=".6" />
+                            </g>
+                            <g transform="translate(54 0)">
+                                <path d="M-14 -72V50Q-14 66 0 66Q14 66 14 50V-72" fill="#fff" fill-opacity=".08"
+                                    stroke="#fff" stroke-opacity=".8" stroke-width="3" />
+                                <path d="M-14 -8H14V50Q14 66 0 66Q-14 66 -14 50Z" fill="#4ade80" fill-opacity=".75" />
+                                <rect x="-18" y="-78" width="36" height="8" rx="3" fill="#fff" fill-opacity=".6" />
+                                <circle class="lg-bub" cx="-3" cy="30" r="3" fill="#fff" fill-opacity=".6" />
+                            </g>
+                            <rect x="-92" y="66" width="184" height="11" rx="5" fill="#fff" fill-opacity=".55" />
+                        </g>
+                    </g>
+                    <g class="lg-float-b" transform="translate(930 700)">
+                        <path d="M-56 -100V4Q-56 22 -38 22H38Q56 22 56 4V-100" fill="#fff" fill-opacity=".07"
+                            stroke="#fff" stroke-opacity=".8" stroke-width="3" />
+                        <path d="M-55 -40H55V4Q55 21 38 21H-38Q-55 21 -55 4Z" fill="#22d3ee" fill-opacity=".55" />
+                        <g stroke="#fff" stroke-opacity=".7" stroke-width="2">
+                            <path d="M-56 -80H-40M-56 -60H-46M-56 -40H-40M-56 -20H-46" />
+                        </g>
+                        <rect x="-62" y="-108" width="124" height="8" rx="4" fill="#fff" fill-opacity=".55" />
+                    </g>
+                    <g fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2">
+                        <path d="M440 650V735H770" />
+                    </g>
+                    <path d="M445 722C560 720 570 724 600 700S650 664 765 658" fill="none" stroke="#fde68a"
+                        stroke-width="3.5" stroke-opacity=".9" /><text x="452" y="666" font-size="18" fill="#fff"
+                        fill-opacity="0.75" text-anchor="start" class="lg-f">pH</text><text x="766" y="756"
+                        font-size="16" fill="#fff" fill-opacity="0.7" text-anchor="end" class="lg-f">V (mL)</text><text
+                        x="1010" y="330" font-size="250" fill="#fff" fill-opacity="0.07" text-anchor="start"
+                        class="lg-f">⚗</text><text x="60" y="330" font-size="200" fill="#fff" fill-opacity="0.06"
+                        text-anchor="start" class="lg-f lg-serif">mol</text><text x="540" y="590" font-size="170"
+                        fill="#fff" fill-opacity="0.06" text-anchor="start" class="lg-f lg-serif">M</text>
+                    <g class="lg-float-a lg-serif"><text x="70" y="95" font-size="44" fill="#fff" fill-opacity="0.6"
+                            text-anchor="start" class="lg-f lg-serif">M₁V₁ = M₂V₂</text><text x="480" y="95"
+                            font-size="42" fill="#fff" fill-opacity="0.55" text-anchor="start" class="lg-f lg-serif">PV
+                            = nRT</text><text x="790" y="150" font-size="32" fill="#fff" fill-opacity="0.5"
+                            text-anchor="start" class="lg-f lg-serif">ΔG = ΔH − TΔS</text><text x="70" y="700"
+                            font-size="34" fill="#fff" fill-opacity="0.5" text-anchor="start" class="lg-f lg-serif">pH +
+                            pOH = 14</text><text x="70" y="745" font-size="34" fill="#fff" fill-opacity="0.5"
+                            text-anchor="start" class="lg-f lg-serif">n = m / M</text></g>
+                </svg></div>
+            <div class="lg-shade"></div>
         </div>
-        <div class="login-card">
-            <div class="login-card-head">
-                <div class="crest">
-                    <span class="atom-logo">
-                        <span class="nucleus"></span>
-                        <span class="orbit orbit-a"></span>
-                        <span class="orbit orbit-b"></span>
-                        <span class="orbit orbit-c"></span>
-                    </span>
+        <div class="lg-shell">
+            <section class="lg-hero" aria-label="About this portal">
+                <div class="lg-brand"><span class="lg-brand-mark"></span>SBTE &middot; Student Evaluation Register</div>
+                <div class="lg-caps">
+                    <div class="lg-cap on" data-k="math">
+                        <div class="lg-kicker">Mathematics</div>
+                        <h2 class="lg-title">Precision, logic and patterns</h2>
+                        <p class="lg-text">From algebra to calculus, mathematics gives students the language to
+                            describe, model and solve real-world problems.</p>
+                        <div class="lg-chips"><span>a² + b² = c²</span><span>∫ f(x) dx</span><span>e<sup>iπ</sup> + 1 =
+                                0</span></div>
+                    </div>
+                    <div class="lg-cap" data-k="phys">
+                        <div class="lg-kicker">Physics</div>
+                        <h2 class="lg-title">How the universe moves</h2>
+                        <p class="lg-text">Forces, energy, waves and atoms: physics explains everything from a swinging
+                            pendulum to the stars above us.</p>
+                        <div class="lg-chips"><span>E = mc²</span><span>F = ma</span><span>v = λf</span></div>
+                    </div>
+                    <div class="lg-cap" data-k="chem">
+                        <div class="lg-kicker">Chemistry</div>
+                        <h2 class="lg-title">The science of matter</h2>
+                        <p class="lg-text">Atoms bond, reactions release energy and new materials are born. Chemistry
+                            connects everything around us.</p>
+                        <div class="lg-chips"><span>H₂O</span><span>2H₂ + O₂ → 2H₂O</span><span>pH = −log[H⁺]</span>
+                        </div>
+                    </div>
+                    <div class="lg-cap" data-k="math">
+                        <div class="lg-kicker">Mathematics</div>
+                        <h2 class="lg-title">Shapes that build the world</h2>
+                        <p class="lg-text">Geometry links angles, areas and volumes, from ancient buildings to the
+                            screens we use every day.</p>
+                        <div class="lg-chips"><span>A = πr²</span><span>φ = (1 + √5) / 2</span><span>V = ⅓πr²h</span>
+                        </div>
+                    </div>
+                    <div class="lg-cap" data-k="phys">
+                        <div class="lg-kicker">Physics</div>
+                        <h2 class="lg-title">Light, colour and vision</h2>
+                        <p class="lg-text">Reflection, refraction and diffraction show how light bends, splits into
+                            colours and lets us see the world.</p>
+                        <div class="lg-chips"><span>n₁ sin θ₁ = n₂ sin θ₂</span><span>c = λf</span><span>E = hf</span>
+                        </div>
+                    </div>
+                    <div class="lg-cap" data-k="chem">
+                        <div class="lg-kicker">Chemistry</div>
+                        <h2 class="lg-title">Order inside every atom</h2>
+                        <p class="lg-text">Electrons fill shells in a pattern that explains the periodic table and why
+                            elements behave the way they do.</p>
+                        <div class="lg-chips"><span>2, 8, 7</span><span>Z = 17</span><span>E = −13.6 eV / n²</span>
+                        </div>
+                    </div>
+                    <div class="lg-cap" data-k="math">
+                        <div class="lg-kicker">Mathematics</div>
+                        <h2 class="lg-title">Data, change and chance</h2>
+                        <p class="lg-text">Calculus describes change and statistics reveals the story behind the
+                            numbers, two tools every scientist relies on.</p>
+                        <div class="lg-chips"><span>d/dx xⁿ = nxⁿ⁻¹</span><span>μ ± σ</span><span>P(A∪B)</span></div>
+                    </div>
+                    <div class="lg-cap" data-k="phys">
+                        <div class="lg-kicker">Physics</div>
+                        <h2 class="lg-title">Fields, charge and current</h2>
+                        <p class="lg-text">Electric and magnetic fields power motors, generators and every circuit, from
+                            a torch to a power station.</p>
+                        <div class="lg-chips"><span>F = qvB</span><span>ε = −dΦ/dt</span><span>P = IV</span></div>
+                    </div>
+                    <div class="lg-cap" data-k="chem">
+                        <div class="lg-kicker">Chemistry</div>
+                        <h2 class="lg-title">Experiments that answer questions</h2>
+                        <p class="lg-text">Titrations, reactions and careful measurements turn ideas into evidence,
+                            which is how chemists test every theory.</p>
+                        <div class="lg-chips"><span>PV = nRT</span><span>M₁V₁ = M₂V₂</span><span>pH + pOH = 14</span>
+                        </div>
+                    </div>
                 </div>
-                <h1>SBTE Evaluation Register</h1>
-                <p>Sign in to continue</p>
+                <div class="lg-foot">Monthly performance records, attendance and study material, all in one place.</div>
+            </section>
+            <div class="login-card">
+                <div class="login-card-head">
+                    <div class="crest">
+                        <span class="atom-logo">
+                            <span class="nucleus"></span>
+                            <span class="orbit orbit-a"></span>
+                            <span class="orbit orbit-b"></span>
+                            <span class="orbit orbit-c"></span>
+                        </span>
+                    </div>
+                    <h1>SBTE Evaluation Register</h1>
+                    <p>Sign in to continue</p>
+                </div>
+                <div class="role-switch">
+                    <button type="button" id="roleTabAdmin" class="active">Admin</button>
+                    <button type="button" id="roleTabStudent">Student</button>
+                </div>
+
+                <form class="login-form" id="adminLoginForm">
+                    <div class="login-error" id="adminLoginError">Incorrect username or password.</div>
+                    <div class="field">
+                        <label for="adminUser">Username</label>
+                        <input type="text" id="adminUser" autocomplete="username" required>
+                    </div>
+                    <div class="field">
+                        <label for="adminPass">Password</label>
+                        <input type="password" id="adminPass" autocomplete="current-password" required>
+                    </div>
+                    <button type="button" id="adminLoginBtn" class="submit">Log in as admin</button>
+                </form>
+
+                <form class="login-form" id="studentLoginForm" style="display:none;">
+                    <div class="login-error" id="studentLoginError">Incorrect Student ID or password.</div>
+                    <div class="field">
+                        <label for="stuId">Student ID</label>
+                        <input type="text" id="stuId" placeholder="e.g. 1534567" autocomplete="username"
+                            inputmode="numeric" required>
+                    </div>
+                    <div class="field">
+                        <label for="stuPass">Password</label>
+                        <input type="password" id="stuPass" autocomplete="current-password" required>
+                    </div>
+                    <div class="hint">Your password is your name (as written on your report card), unless your teacher
+                        has given you a new one.
+                    </div>
+                    <button type="button" id="studentLoginBtn" class="submit">View my report card</button>
+                </form>
+
             </div>
-            <div class="role-switch">
-                <button type="button" id="roleTabAdmin" class="active">Admin</button>
-                <button type="button" id="roleTabStudent">Student</button>
-            </div>
-
-            <form class="login-form" id="adminLoginForm">
-                <div class="login-error" id="adminLoginError">Incorrect username or password.</div>
-                <div class="field">
-                    <label for="adminUser">Username</label>
-                    <input type="text" id="adminUser" autocomplete="username" required>
-                </div>
-                <div class="field">
-                    <label for="adminPass">Password</label>
-                    <input type="password" id="adminPass" autocomplete="current-password" required>
-                </div>
-                <button type="button" id="adminLoginBtn" class="submit">Log in as admin</button>
-            </form>
-
-            <form class="login-form" id="studentLoginForm" style="display:none;">
-                <div class="login-error" id="studentLoginError">Incorrect Student ID or password.</div>
-                <div class="field">
-                    <label for="stuId">Student ID</label>
-                    <input type="text" id="stuId" placeholder="e.g. 1534567" autocomplete="username" inputmode="numeric"
-                        required>
-                </div>
-                <div class="field">
-                    <label for="stuPass">Password</label>
-                    <input type="password" id="stuPass" autocomplete="current-password" required>
-                </div>
-                <div class="hint">Your password is your name (as written on your report card), unless your teacher has
-                    given you a new one.
-                </div>
-                <button type="button" id="studentLoginBtn" class="submit">View my report card</button>
-            </form>
-
         </div>
     </div>
 
@@ -6850,7 +8313,7 @@
                     </div>
                 </div>
 
-                <div class="form-section-title">Class Test Scores (5 Tests: T1–T5 · Max 20 Each · 40% Weight)</div>
+                <div class="form-section-title">Class Test Scores (5 Tests: T1–T5 · Max 20 Each · 20% Weight)</div>
                 <div class="tests-grid">
                     <div class="test-field"><label>T1</label><input type="number" id="newTest0" min="0" max="20"
                             step="0.5" value="15"></div>
@@ -6863,13 +8326,13 @@
                     <div class="test-field"><label>T5</label><input type="number" id="newTest4" min="0" max="20"
                             step="0.5" value="15"></div>
                     <div class="test-summary">Class Test Total: <strong id="lblTestTotal">75</strong>/100 · Weighted:
-                        <strong id="lblTestW">30.0</strong>/40</div>
+                        <strong id="lblTestW">15.0</strong>/20</div>
                 </div>
 
                 <div class="form-section-title">Assessments &amp; Conduct (Max 100 Each)</div>
                 <div class="assess-grid">
                     <div class="assess-field">
-                        <label for="newReg">Regularity &amp; Attendance (20% Wt)</label>
+                        <label for="newReg">Regularity &amp; Attendance (40% Wt)</label>
                         <input type="number" id="newReg" min="0" max="100" step="0.5" value="80">
                     </div>
                     <div class="assess-field">
@@ -7026,9 +8489,9 @@
         document.addEventListener('click', e => { if (e.target.closest && e.target.closest('nav.tabs button')) setTimeout(scheduleFit, 60); });
         applyLayout();
         /* ============ DATA (baked in from the uploaded workbook) ============ */
-        const RECORDS = [{ "id": 1534567, "name": "Yusra", "month": "September", "batch": "SBTE-202606C", "test": [14.5, 15.0, 13.5, 14.5, 13.5], "testTotal": 71.0, "testW": 28.4, "pres": 88.0, "presW": 8.8, "assign": 75.0, "assignW": 7.5, "reg": 66.0, "regW": 13.2, "event": 90.0, "eventW": 9.0, "sw": 92.0, "swW": 9.2, "final": 76.1 }, { "id": 1534568, "name": "Zunaira", "month": "September", "batch": "SBTE-202602E", "test": [12.5, 12.0, 11.5, 16.5, 12.5], "testTotal": 65.0, "testW": 26.0, "pres": 93.0, "presW": 9.3, "assign": 86.0, "assignW": 8.6, "reg": 73.0, "regW": 14.6, "event": 99.0, "eventW": 9.9, "sw": 78.0, "swW": 7.8, "final": 76.2 }, { "id": 1534569, "name": "Mukarram", "month": "September", "batch": "SBTE-202606C", "test": [15.0, 12.0, 16.5, 13.0, 18.5], "testTotal": 75.0, "testW": 30.0, "pres": 99.0, "presW": 9.9, "assign": 93.0, "assignW": 9.3, "reg": 61.0, "regW": 12.2, "event": 92.0, "eventW": 9.2, "sw": 78.0, "swW": 7.8, "final": 78.4 }, { "id": 1534570, "name": "Danish", "month": "September", "batch": "SBTE-202602E", "test": [14.5, 15.5, 14.5, 11.5, 16.0], "testTotal": 72.0, "testW": 28.8, "pres": 88.0, "presW": 8.8, "assign": 83.0, "assignW": 8.3, "reg": 85.0, "regW": 17.0, "event": 98.0, "eventW": 9.8, "sw": 62.0, "swW": 6.2, "final": 78.9 }, { "id": 1534571, "name": "Kabeer", "month": "September", "batch": "SBTE-202602E", "test": [15.0, 13.0, 14.0, 14.5, 20.0], "testTotal": 76.5, "testW": 30.6, "pres": 90.0, "presW": 9.0, "assign": 73.0, "assignW": 7.3, "reg": 91.0, "regW": 18.2, "event": 64.0, "eventW": 6.4, "sw": 64.0, "swW": 6.4, "final": 77.9 }, { "id": 1534572, "name": "Ibrahim", "month": "September", "batch": "SBTE-202606C", "test": [11.0, 17.0, 20.0, 15.5, 17.0], "testTotal": 80.5, "testW": 32.2, "pres": 80.0, "presW": 8.0, "assign": 96.0, "assignW": 9.6, "reg": 100.0, "regW": 20.0, "event": 63.0, "eventW": 6.3, "sw": 94.0, "swW": 9.4, "final": 85.5 }, { "id": 1534573, "name": "Riya", "month": "September", "batch": "SBTE-202602E", "test": [16.5, 15.0, 13.0, 15.0, 16.5], "testTotal": 76.0, "testW": 30.4, "pres": 100.0, "presW": 10.0, "assign": 74.0, "assignW": 7.4, "reg": 63.0, "regW": 12.6, "event": 96.0, "eventW": 9.6, "sw": 76.0, "swW": 7.6, "final": 77.6 }, { "id": 1534574, "name": "Ahmed", "month": "September", "batch": "SBTE-202602E", "test": [16.5, 11.0, 13.0, 13.0, 10.0], "testTotal": 63.5, "testW": 25.4, "pres": 82.0, "presW": 8.2, "assign": 65.0, "assignW": 6.5, "reg": 74.0, "regW": 14.8, "event": 77.0, "eventW": 7.7, "sw": 66.0, "swW": 6.6, "final": 69.2 }, { "id": 1534575, "name": "Hammad", "month": "September", "batch": "SBTE-202602E", "test": [12.0, 15.5, 13.5, 17.5, 15.0], "testTotal": 73.5, "testW": 29.4, "pres": 72.0, "presW": 7.2, "assign": 69.0, "assignW": 6.9, "reg": 96.0, "regW": 19.2, "event": 99.0, "eventW": 9.9, "sw": 83.0, "swW": 8.3, "final": 80.9 }, { "id": 1534576, "name": "Omer", "month": "September", "batch": "SBTE-202602E", "test": [16.5, 18.0, 13.5, 13.5, 16.0], "testTotal": 77.5, "testW": 31.0, "pres": 80.0, "presW": 8.0, "assign": 61.0, "assignW": 6.1, "reg": 77.0, "regW": 15.4, "event": 74.0, "eventW": 7.4, "sw": 83.0, "swW": 8.3, "final": 76.2 }, { "id": 1534577, "name": "Anas", "month": "September", "batch": "SBTE-202606C", "test": [17.0, 17.0, 13.5, 10.5, 13.0], "testTotal": 71.0, "testW": 28.4, "pres": 69.0, "presW": 6.9, "assign": 70.0, "assignW": 7.0, "reg": 90.0, "regW": 18.0, "event": 72.0, "eventW": 7.2, "sw": 95.0, "swW": 9.5, "final": 77.0 }, { "id": 1534578, "name": "Astle", "month": "September", "batch": "SBTE-202602E", "test": [14.5, 12.5, 15.5, 18.0, 18.5], "testTotal": 79.0, "testW": 31.6, "pres": 82.0, "presW": 8.2, "assign": 94.0, "assignW": 9.4, "reg": 92.0, "regW": 18.4, "event": 73.0, "eventW": 7.3, "sw": 93.0, "swW": 9.3, "final": 84.2 }, { "id": 1534579, "name": "Sarib", "month": "September", "batch": "SBTE-202602E", "test": [13.0, 15.0, 16.5, 12.0, 14.5], "testTotal": 71.0, "testW": 28.4, "pres": 61.0, "presW": 6.1, "assign": 69.0, "assignW": 6.9, "reg": 88.0, "regW": 17.6, "event": 64.0, "eventW": 6.4, "sw": 67.0, "swW": 6.7, "final": 72.1 }, { "id": 1534580, "name": "Khizar", "month": "September", "batch": "SBTE-202602E", "test": [16.0, 15.0, 13.5, 14.0, 15.0], "testTotal": 73.5, "testW": 29.4, "pres": 91.0, "presW": 9.1, "assign": 93.0, "assignW": 9.3, "reg": 82.0, "regW": 16.4, "event": 99.0, "eventW": 9.9, "sw": 73.0, "swW": 7.3, "final": 81.4 }, { "id": 1534581, "name": "Himesh", "month": "September", "batch": "SBTE-202606C", "test": [16.5, 15.0, 15.0, 13.5, 14.0], "testTotal": 74.0, "testW": 29.6, "pres": 74.0, "presW": 7.4, "assign": 72.0, "assignW": 7.2, "reg": 78.0, "regW": 15.6, "event": 94.0, "eventW": 9.4, "sw": 100.0, "swW": 10.0, "final": 79.2 }, { "id": 1534582, "name": "Abdul Wasay", "month": "September", "batch": "SBTE-202606C", "test": [12.5, 17.0, 16.0, 19.5, 15.0], "testTotal": 80.0, "testW": 32.0, "pres": 68.0, "presW": 6.8, "assign": 97.0, "assignW": 9.7, "reg": 61.0, "regW": 12.2, "event": 79.0, "eventW": 7.9, "sw": 64.0, "swW": 6.4, "final": 75.0 }, { "id": 1534583, "name": "Harmain", "month": "September", "batch": "SBTE-202602E", "test": [14.0, 18.0, 19.5, 18.5, 15.5], "testTotal": 85.5, "testW": 34.2, "pres": 80.0, "presW": 8.0, "assign": 75.0, "assignW": 7.5, "reg": 80.0, "regW": 16.0, "event": 83.0, "eventW": 8.3, "sw": 71.0, "swW": 7.1, "final": 81.1 }, { "id": 1534584, "name": "Muntaha", "month": "September", "batch": "SBTE-202606C", "test": [13.5, 14.0, 13.5, 13.5, 12.0], "testTotal": 66.5, "testW": 26.6, "pres": 93.0, "presW": 9.3, "assign": 82.0, "assignW": 8.2, "reg": 100.0, "regW": 20.0, "event": 60.0, "eventW": 6.0, "sw": 90.0, "swW": 9.0, "final": 79.1 }, { "id": 1534585, "name": "Abraham", "month": "September", "batch": "SBTE-202602E", "test": [19.0, 19.5, 18.0, 17.0, 16.0], "testTotal": 89.5, "testW": 35.8, "pres": 98.0, "presW": 9.8, "assign": 90.0, "assignW": 9.0, "reg": 92.0, "regW": 18.4, "event": 62.0, "eventW": 6.2, "sw": 91.0, "swW": 9.1, "final": 88.3 }, { "id": 1534586, "name": "Hasin", "month": "September", "batch": "SBTE-202606C", "test": [17.0, 11.5, 13.0, 15.0, 13.0], "testTotal": 69.5, "testW": 27.8, "pres": 93.0, "presW": 9.3, "assign": 71.0, "assignW": 7.1, "reg": 79.0, "regW": 15.8, "event": 70.0, "eventW": 7.0, "sw": 100.0, "swW": 10.0, "final": 77.0 }, { "id": 1534587, "name": "Talha", "month": "September", "batch": "SBTE-202606C", "test": [16.5, 13.5, 15.5, 15.0, 14.5], "testTotal": 75.0, "testW": 30.0, "pres": 85.0, "presW": 8.5, "assign": 76.0, "assignW": 7.6, "reg": 95.0, "regW": 19.0, "event": 62.0, "eventW": 6.2, "sw": 97.0, "swW": 9.7, "final": 81.0 }, { "id": 1534588, "name": "Ekrash", "month": "September", "batch": "SBTE-202602E", "test": [13.5, 16.5, 16.0, 15.0, 15.5], "testTotal": 76.5, "testW": 30.6, "pres": 74.0, "presW": 7.4, "assign": 100.0, "assignW": 10.0, "reg": 67.0, "regW": 13.4, "event": 86.0, "eventW": 8.6, "sw": 74.0, "swW": 7.4, "final": 77.4 }, { "id": 1534589, "name": "Hassan", "month": "September", "batch": "SBTE-202602E", "test": [18.5, 15.0, 15.5, 13.0, 14.0], "testTotal": 76.0, "testW": 30.4, "pres": 75.0, "presW": 7.5, "assign": 83.0, "assignW": 8.3, "reg": 66.0, "regW": 13.2, "event": 98.0, "eventW": 9.8, "sw": 70.0, "swW": 7.0, "final": 76.2 }, { "id": 1534590, "name": "Alishba", "month": "September", "batch": "SBTE-202606C", "test": [16.5, 14.5, 17.5, 14.0, 16.0], "testTotal": 78.5, "testW": 31.4, "pres": 77.0, "presW": 7.7, "assign": 90.0, "assignW": 9.0, "reg": 69.0, "regW": 13.8, "event": 93.0, "eventW": 9.3, "sw": 90.0, "swW": 9.0, "final": 80.2 }, { "id": 1534591, "name": "Ali Ahsan", "month": "September", "batch": "SBTE-202602E", "test": [14.5, 17.0, 13.5, 14.5, 14.0], "testTotal": 73.5, "testW": 29.4, "pres": 98.0, "presW": 9.8, "assign": 83.0, "assignW": 8.3, "reg": 75.0, "regW": 15.0, "event": 94.0, "eventW": 9.4, "sw": 98.0, "swW": 9.8, "final": 81.7 }, { "id": 1534592, "name": "Ali Jawad", "month": "September", "batch": "SBTE-202606C", "test": [13.0, 14.5, 16.5, 15.5, 15.0], "testTotal": 74.5, "testW": 29.8, "pres": 67.0, "presW": 6.7, "assign": 94.0, "assignW": 9.4, "reg": 89.0, "regW": 17.8, "event": 90.0, "eventW": 9.0, "sw": 96.0, "swW": 9.6, "final": 82.3 }, { "id": 1534593, "name": "Abdul Hanan", "month": "September", "batch": "SBTE-202606C", "test": [13.5, 13.5, 18.5, 10.5, 13.0], "testTotal": 69.0, "testW": 27.6, "pres": 68.0, "presW": 6.8, "assign": 94.0, "assignW": 9.4, "reg": 93.0, "regW": 18.6, "event": 62.0, "eventW": 6.2, "sw": 93.0, "swW": 9.3, "final": 77.9 }, { "id": 1534594, "name": "Taha", "month": "September", "batch": "SBTE-202606C", "test": [16.5, 13.0, 15.0, 11.5, 16.0], "testTotal": 72.0, "testW": 28.8, "pres": 81.0, "presW": 8.1, "assign": 96.0, "assignW": 9.6, "reg": 72.0, "regW": 14.4, "event": 72.0, "eventW": 7.2, "sw": 66.0, "swW": 6.6, "final": 74.7 }, { "id": 1534595, "name": "Rehan", "month": "September", "batch": "SBTE-202602E", "test": [16.5, 15.5, 11.5, 18.0, 11.5], "testTotal": 73.0, "testW": 29.2, "pres": 72.0, "presW": 7.2, "assign": 72.0, "assignW": 7.2, "reg": 90.0, "regW": 18.0, "event": 76.0, "eventW": 7.6, "sw": 75.0, "swW": 7.5, "final": 76.7 }, { "id": 1534596, "name": "Yusra", "month": "October", "batch": "SBTE-202602E", "test": [13.0, 11.5, 13.0, 12.0, 14.5], "testTotal": 64.0, "testW": 25.6, "pres": 98.0, "presW": 9.8, "assign": 95.0, "assignW": 9.5, "reg": 66.0, "regW": 13.2, "event": 70.0, "eventW": 7.0, "sw": 95.0, "swW": 9.5, "final": 74.6 }, { "id": 1534597, "name": "Zunaira", "month": "October", "batch": "SBTE-202602E", "test": [14.0, 15.5, 18.0, 14.5, 15.0], "testTotal": 77.0, "testW": 30.8, "pres": 93.0, "presW": 9.3, "assign": 70.0, "assignW": 7.0, "reg": 98.0, "regW": 19.6, "event": 61.0, "eventW": 6.1, "sw": 81.0, "swW": 8.1, "final": 80.9 }, { "id": 1534598, "name": "Mukarram", "month": "October", "batch": "SBTE-202602E", "test": [18.0, 17.0, 13.5, 15.5, 17.0], "testTotal": 81.0, "testW": 32.4, "pres": 76.0, "presW": 7.6, "assign": 95.0, "assignW": 9.5, "reg": 84.0, "regW": 16.8, "event": 67.0, "eventW": 6.7, "sw": 77.0, "swW": 7.7, "final": 80.7 }, { "id": 1534599, "name": "Danish", "month": "October", "batch": "SBTE-202606C", "test": [17.0, 12.5, 12.5, 14.5, 16.0], "testTotal": 72.5, "testW": 29.0, "pres": 89.0, "presW": 8.9, "assign": 69.0, "assignW": 6.9, "reg": 82.0, "regW": 16.4, "event": 98.0, "eventW": 9.8, "sw": 69.0, "swW": 6.9, "final": 77.9 }, { "id": 1534600, "name": "Kabeer", "month": "October", "batch": "SBTE-202602E", "test": [15.5, 15.0, 16.0, 18.0, 18.5], "testTotal": 83.0, "testW": 33.2, "pres": 92.0, "presW": 9.2, "assign": 68.0, "assignW": 6.8, "reg": 71.0, "regW": 14.2, "event": 95.0, "eventW": 9.5, "sw": 60.0, "swW": 6.0, "final": 78.9 }, { "id": 1534601, "name": "Ibrahim", "month": "October", "batch": "SBTE-202602E", "test": [11.5, 16.0, 16.5, 19.5, 17.5], "testTotal": 81.0, "testW": 32.4, "pres": 76.0, "presW": 7.6, "assign": 81.0, "assignW": 8.1, "reg": 86.0, "regW": 17.2, "event": 80.0, "eventW": 8.0, "sw": 84.0, "swW": 8.4, "final": 81.7 }, { "id": 1534602, "name": "Riya", "month": "October", "batch": "SBTE-202602E", "test": [18.0, 16.5, 15.0, 17.5, 15.0], "testTotal": 82.0, "testW": 32.8, "pres": 64.0, "presW": 6.4, "assign": 86.0, "assignW": 8.6, "reg": 92.0, "regW": 18.4, "event": 74.0, "eventW": 7.4, "sw": 98.0, "swW": 9.8, "final": 83.4 }, { "id": 1534603, "name": "Ahmed", "month": "October", "batch": "SBTE-202602E", "test": [13.5, 16.5, 16.5, 16.0, 16.5], "testTotal": 79.0, "testW": 31.6, "pres": 90.0, "presW": 9.0, "assign": 64.0, "assignW": 6.4, "reg": 75.0, "regW": 15.0, "event": 90.0, "eventW": 9.0, "sw": 70.0, "swW": 7.0, "final": 78.0 }, { "id": 1534604, "name": "Hammad", "month": "October", "batch": "SBTE-202602E", "test": [16.0, 13.5, 12.5, 15.5, 18.5], "testTotal": 76.0, "testW": 30.4, "pres": 69.0, "presW": 6.9, "assign": 75.0, "assignW": 7.5, "reg": 83.0, "regW": 16.6, "event": 76.0, "eventW": 7.6, "sw": 81.0, "swW": 8.1, "final": 77.1 }, { "id": 1534605, "name": "Omer", "month": "October", "batch": "SBTE-202602E", "test": [14.5, 10.5, 11.0, 14.5, 13.5], "testTotal": 64.0, "testW": 25.6, "pres": 81.0, "presW": 8.1, "assign": 81.0, "assignW": 8.1, "reg": 80.0, "regW": 16.0, "event": 95.0, "eventW": 9.5, "sw": 100.0, "swW": 10.0, "final": 77.3 }, { "id": 1534606, "name": "Anas", "month": "October", "batch": "SBTE-202602E", "test": [19.0, 18.5, 13.5, 13.0, 19.0], "testTotal": 83.0, "testW": 33.2, "pres": 78.0, "presW": 7.8, "assign": 84.0, "assignW": 8.4, "reg": 85.0, "regW": 17.0, "event": 72.0, "eventW": 7.2, "sw": 74.0, "swW": 7.4, "final": 81.0 }, { "id": 1534607, "name": "Astle", "month": "October", "batch": "SBTE-202606C", "test": [15.5, 16.5, 10.5, 15.0, 18.5], "testTotal": 76.0, "testW": 30.4, "pres": 97.0, "presW": 9.7, "assign": 100.0, "assignW": 10.0, "reg": 77.0, "regW": 15.4, "event": 66.0, "eventW": 6.6, "sw": 66.0, "swW": 6.6, "final": 78.7 }, { "id": 1534608, "name": "Sarib", "month": "October", "batch": "SBTE-202606C", "test": [18.5, 11.5, 12.5, 17.0, 12.0], "testTotal": 71.5, "testW": 28.6, "pres": 97.0, "presW": 9.7, "assign": 80.0, "assignW": 8.0, "reg": 74.0, "regW": 14.8, "event": 76.0, "eventW": 7.6, "sw": 96.0, "swW": 9.6, "final": 78.3 }, { "id": 1534609, "name": "Khizar", "month": "October", "batch": "SBTE-202602E", "test": [14.0, 11.5, 17.0, 16.5, 18.5], "testTotal": 77.5, "testW": 31.0, "pres": 65.0, "presW": 6.5, "assign": 60.0, "assignW": 6.0, "reg": 89.0, "regW": 17.8, "event": 91.0, "eventW": 9.1, "sw": 68.0, "swW": 6.8, "final": 77.2 }, { "id": 1534610, "name": "Himesh", "month": "October", "batch": "SBTE-202602E", "test": [16.5, 11.5, 14.5, 16.5, 19.5], "testTotal": 78.5, "testW": 31.4, "pres": 83.0, "presW": 8.3, "assign": 65.0, "assignW": 6.5, "reg": 93.0, "regW": 18.6, "event": 75.0, "eventW": 7.5, "sw": 68.0, "swW": 6.8, "final": 79.1 }, { "id": 1534611, "name": "Abdul Wasay", "month": "October", "batch": "SBTE-202602E", "test": [13.5, 18.0, 12.5, 13.5, 12.0], "testTotal": 69.5, "testW": 27.8, "pres": 98.0, "presW": 9.8, "assign": 85.0, "assignW": 8.5, "reg": 93.0, "regW": 18.6, "event": 77.0, "eventW": 7.7, "sw": 84.0, "swW": 8.4, "final": 80.8 }, { "id": 1534612, "name": "Harmain", "month": "October", "batch": "SBTE-202606C", "test": [17.5, 14.0, 14.5, 16.5, 14.0], "testTotal": 76.5, "testW": 30.6, "pres": 96.0, "presW": 9.6, "assign": 88.0, "assignW": 8.8, "reg": 90.0, "regW": 18.0, "event": 67.0, "eventW": 6.7, "sw": 88.0, "swW": 8.8, "final": 82.5 }, { "id": 1534613, "name": "Muntaha", "month": "October", "batch": "SBTE-202606C", "test": [16.0, 15.5, 13.5, 13.5, 14.0], "testTotal": 72.5, "testW": 29.0, "pres": 72.0, "presW": 7.2, "assign": 71.0, "assignW": 7.1, "reg": 65.0, "regW": 13.0, "event": 83.0, "eventW": 8.3, "sw": 62.0, "swW": 6.2, "final": 70.8 }, { "id": 1534614, "name": "Abraham", "month": "October", "batch": "SBTE-202602E", "test": [15.5, 17.5, 14.5, 15.5, 14.5], "testTotal": 77.5, "testW": 31.0, "pres": 75.0, "presW": 7.5, "assign": 75.0, "assignW": 7.5, "reg": 95.0, "regW": 19.0, "event": 97.0, "eventW": 9.7, "sw": 75.0, "swW": 7.5, "final": 82.2 }, { "id": 1534615, "name": "Hasin", "month": "October", "batch": "SBTE-202606C", "test": [19.5, 13.5, 17.0, 16.0, 20.0], "testTotal": 86.0, "testW": 34.4, "pres": 86.0, "presW": 8.6, "assign": 95.0, "assignW": 9.5, "reg": 96.0, "regW": 19.2, "event": 72.0, "eventW": 7.2, "sw": 64.0, "swW": 6.4, "final": 85.3 }, { "id": 1534616, "name": "Talha", "month": "October", "batch": "SBTE-202602E", "test": [14.0, 13.5, 17.0, 13.0, 16.0], "testTotal": 73.5, "testW": 29.4, "pres": 85.0, "presW": 8.5, "assign": 67.0, "assignW": 6.7, "reg": 92.0, "regW": 18.4, "event": 74.0, "eventW": 7.4, "sw": 70.0, "swW": 7.0, "final": 77.4 }, { "id": 1534617, "name": "Ekrash", "month": "October", "batch": "SBTE-202606C", "test": [14.5, 14.5, 12.0, 13.0, 19.5], "testTotal": 73.5, "testW": 29.4, "pres": 76.0, "presW": 7.6, "assign": 74.0, "assignW": 7.4, "reg": 61.0, "regW": 12.2, "event": 77.0, "eventW": 7.7, "sw": 89.0, "swW": 8.9, "final": 73.2 }, { "id": 1534618, "name": "Hassan", "month": "October", "batch": "SBTE-202606C", "test": [16.0, 18.0, 19.5, 16.5, 12.5], "testTotal": 82.5, "testW": 33.0, "pres": 99.0, "presW": 9.9, "assign": 71.0, "assignW": 7.1, "reg": 62.0, "regW": 12.4, "event": 83.0, "eventW": 8.3, "sw": 64.0, "swW": 6.4, "final": 77.1 }, { "id": 1534619, "name": "Alishba", "month": "October", "batch": "SBTE-202602E", "test": [15.5, 16.5, 12.0, 14.0, 19.5], "testTotal": 77.5, "testW": 31.0, "pres": 64.0, "presW": 6.4, "assign": 68.0, "assignW": 6.8, "reg": 67.0, "regW": 13.4, "event": 61.0, "eventW": 6.1, "sw": 82.0, "swW": 8.2, "final": 71.9 }, { "id": 1534620, "name": "Ali Ahsan", "month": "October", "batch": "SBTE-202602E", "test": [18.0, 14.5, 16.5, 13.0, 12.0], "testTotal": 74.0, "testW": 29.6, "pres": 61.0, "presW": 6.1, "assign": 100.0, "assignW": 10.0, "reg": 63.0, "regW": 12.6, "event": 74.0, "eventW": 7.4, "sw": 95.0, "swW": 9.5, "final": 75.2 }, { "id": 1534621, "name": "Ali Jawad", "month": "October", "batch": "SBTE-202606C", "test": [14.0, 14.0, 16.0, 12.5, 19.0], "testTotal": 75.5, "testW": 30.2, "pres": 90.0, "presW": 9.0, "assign": 70.0, "assignW": 7.0, "reg": 61.0, "regW": 12.2, "event": 76.0, "eventW": 7.6, "sw": 68.0, "swW": 6.8, "final": 72.8 }, { "id": 1534622, "name": "Abdul Hanan", "month": "October", "batch": "SBTE-202602E", "test": [12.5, 14.5, 16.5, 13.5, 14.0], "testTotal": 71.0, "testW": 28.4, "pres": 80.0, "presW": 8.0, "assign": 89.0, "assignW": 8.9, "reg": 95.0, "regW": 19.0, "event": 72.0, "eventW": 7.2, "sw": 86.0, "swW": 8.6, "final": 80.1 }, { "id": 1534623, "name": "Taha", "month": "October", "batch": "SBTE-202606C", "test": [17.0, 15.5, 16.5, 16.5, 16.0], "testTotal": 81.5, "testW": 32.6, "pres": 72.0, "presW": 7.2, "assign": 68.0, "assignW": 6.8, "reg": 69.0, "regW": 13.8, "event": 95.0, "eventW": 9.5, "sw": 95.0, "swW": 9.5, "final": 79.4 }, { "id": 1534624, "name": "Rehan", "month": "October", "batch": "SBTE-202602E", "test": [12.5, 15.5, 14.0, 13.0, 17.0], "testTotal": 72.0, "testW": 28.8, "pres": 66.0, "presW": 6.6, "assign": 84.0, "assignW": 8.4, "reg": 93.0, "regW": 18.6, "event": 84.0, "eventW": 8.4, "sw": 82.0, "swW": 8.2, "final": 79.0 }];
+        const RECORDS = [{ "id": 1594638, "name": "Yusra Khurram", "month": "September", "batch": "SBTE-202606C", "test": [14.5, 15.0, 13.5, 14.5, 13.5], "testTotal": 71.0, "testW": 14.2, "pres": 88.0, "presW": 8.8, "assign": 75.0, "assignW": 7.5, "reg": 66.0, "regW": 26.4, "event": 90.0, "eventW": 9.0, "sw": 92.0, "swW": 9.2, "final": 75.1 }, { "id": 1594890, "name": "Muhammad Mukarram Munir", "month": "September", "batch": "SBTE-202606C", "test": [15.0, 12.0, 16.5, 13.0, 18.5], "testTotal": 75.0, "testW": 15.0, "pres": 99.0, "presW": 9.9, "assign": 93.0, "assignW": 9.3, "reg": 61.0, "regW": 24.4, "event": 92.0, "eventW": 9.2, "sw": 78.0, "swW": 7.8, "final": 75.6 }, { "id": 1592379, "name": "Muhammad Ibrahim Awan", "month": "September", "batch": "SBTE-202606C", "test": [11.0, 17.0, 20.0, 15.5, 17.0], "testTotal": 80.5, "testW": 16.1, "pres": 80.0, "presW": 8.0, "assign": 96.0, "assignW": 9.6, "reg": 100.0, "regW": 40.0, "event": 63.0, "eventW": 6.3, "sw": 94.0, "swW": 9.4, "final": 89.4 }, { "id": 1578080, "name": "Muhammad Anas Khan", "month": "September", "batch": "SBTE-202606C", "test": [17.0, 17.0, 13.5, 10.5, 13.0], "testTotal": 71.0, "testW": 14.2, "pres": 69.0, "presW": 6.9, "assign": 70.0, "assignW": 7.0, "reg": 90.0, "regW": 36.0, "event": 72.0, "eventW": 7.2, "sw": 95.0, "swW": 9.5, "final": 80.8 }, { "id": 1734594, "name": "Himesh Dua Maheshwari", "month": "September", "batch": "SBTE-202606C", "test": [16.5, 15.0, 15.0, 13.5, 14.0], "testTotal": 74.0, "testW": 14.8, "pres": 74.0, "presW": 7.4, "assign": 72.0, "assignW": 7.2, "reg": 78.0, "regW": 31.2, "event": 94.0, "eventW": 9.4, "sw": 100.0, "swW": 10.0, "final": 80.0 }, { "id": 1549891, "name": "Abdul Wasay Ali", "month": "September", "batch": "SBTE-202606C", "test": [12.5, 17.0, 16.0, 19.5, 15.0], "testTotal": 80.0, "testW": 16.0, "pres": 68.0, "presW": 6.8, "assign": 97.0, "assignW": 9.7, "reg": 61.0, "regW": 24.4, "event": 79.0, "eventW": 7.9, "sw": 64.0, "swW": 6.4, "final": 71.2 }, { "id": 1594695, "name": "Syeda Muntaha Shah", "month": "September", "batch": "SBTE-202606C", "test": [13.5, 14.0, 13.5, 13.5, 12.0], "testTotal": 66.5, "testW": 13.3, "pres": 93.0, "presW": 9.3, "assign": 82.0, "assignW": 8.2, "reg": 100.0, "regW": 40.0, "event": 60.0, "eventW": 6.0, "sw": 90.0, "swW": 9.0, "final": 85.8 }, { "id": 1592373, "name": "M. Hasin Babar", "month": "September", "batch": "SBTE-202606C", "test": [17.0, 11.5, 13.0, 15.0, 13.0], "testTotal": 69.5, "testW": 13.9, "pres": 93.0, "presW": 9.3, "assign": 71.0, "assignW": 7.1, "reg": 79.0, "regW": 31.6, "event": 70.0, "eventW": 7.0, "sw": 100.0, "swW": 10.0, "final": 78.9 }, { "id": 1574213, "name": "Muhammad Talha Hassan", "month": "September", "batch": "SBTE-202606C", "test": [16.5, 13.5, 15.5, 15.0, 14.5], "testTotal": 75.0, "testW": 15.0, "pres": 85.0, "presW": 8.5, "assign": 76.0, "assignW": 7.6, "reg": 95.0, "regW": 38.0, "event": 62.0, "eventW": 6.2, "sw": 97.0, "swW": 9.7, "final": 85.0 }, { "id": 1594885, "name": "Alishba", "month": "September", "batch": "SBTE-202606C", "test": [16.5, 14.5, 17.5, 14.0, 16.0], "testTotal": 78.5, "testW": 15.7, "pres": 77.0, "presW": 7.7, "assign": 90.0, "assignW": 9.0, "reg": 69.0, "regW": 27.6, "event": 93.0, "eventW": 9.3, "sw": 90.0, "swW": 9.0, "final": 78.3 }, { "id": 1508449, "name": "Muhammad Abdul Hannan", "month": "September", "batch": "SBTE-202606C", "test": [13.5, 13.5, 18.5, 10.5, 13.0], "testTotal": 69.0, "testW": 13.8, "pres": 68.0, "presW": 6.8, "assign": 94.0, "assignW": 9.4, "reg": 93.0, "regW": 37.2, "event": 62.0, "eventW": 6.2, "sw": 93.0, "swW": 9.3, "final": 82.7 }, { "id": 1596237, "name": "Taha Asif", "month": "September", "batch": "SBTE-202606C", "test": [16.5, 13.0, 15.0, 11.5, 16.0], "testTotal": 72.0, "testW": 14.4, "pres": 81.0, "presW": 8.1, "assign": 96.0, "assignW": 9.6, "reg": 72.0, "regW": 28.8, "event": 72.0, "eventW": 7.2, "sw": 66.0, "swW": 6.6, "final": 74.7 }, { "id": 1595675, "name": "Danish Asif Sheikhani", "month": "October", "batch": "SBTE-202606C", "test": [17.0, 12.5, 12.5, 14.5, 16.0], "testTotal": 72.5, "testW": 14.5, "pres": 89.0, "presW": 8.9, "assign": 69.0, "assignW": 6.9, "reg": 82.0, "regW": 32.8, "event": 98.0, "eventW": 9.8, "sw": 69.0, "swW": 6.9, "final": 79.8 }, { "id": 1732791, "name": "Astle Elijah", "month": "October", "batch": "SBTE-202606C", "test": [15.5, 16.5, 10.5, 15.0, 18.5], "testTotal": 76.0, "testW": 15.2, "pres": 97.0, "presW": 9.7, "assign": 100.0, "assignW": 10.0, "reg": 77.0, "regW": 30.8, "event": 66.0, "eventW": 6.6, "sw": 66.0, "swW": 6.6, "final": 78.9 }, { "id": 1594650, "name": "Muhammad Sarib Khan", "month": "October", "batch": "SBTE-202606C", "test": [18.5, 11.5, 12.5, 17.0, 12.0], "testTotal": 71.5, "testW": 14.3, "pres": 97.0, "presW": 9.7, "assign": 80.0, "assignW": 8.0, "reg": 74.0, "regW": 29.6, "event": 76.0, "eventW": 7.6, "sw": 96.0, "swW": 9.6, "final": 78.8 }, { "id": 1506077, "name": "Harmain", "month": "October", "batch": "SBTE-202606C", "test": [17.5, 14.0, 14.5, 16.5, 14.0], "testTotal": 76.5, "testW": 15.3, "pres": 96.0, "presW": 9.6, "assign": 88.0, "assignW": 8.8, "reg": 90.0, "regW": 36.0, "event": 67.0, "eventW": 6.7, "sw": 88.0, "swW": 8.8, "final": 85.2 }, { "id": 1594695, "name": "Syeda Muntaha Shah", "month": "October", "batch": "SBTE-202606C", "test": [16.0, 15.5, 13.5, 13.5, 14.0], "testTotal": 72.5, "testW": 14.5, "pres": 72.0, "presW": 7.2, "assign": 71.0, "assignW": 7.1, "reg": 65.0, "regW": 26.0, "event": 83.0, "eventW": 8.3, "sw": 62.0, "swW": 6.2, "final": 69.3 }, { "id": 1592373, "name": "M. Hasin Babar", "month": "October", "batch": "SBTE-202606C", "test": [19.5, 13.5, 17.0, 16.0, 20.0], "testTotal": 86.0, "testW": 17.2, "pres": 86.0, "presW": 8.6, "assign": 95.0, "assignW": 9.5, "reg": 96.0, "regW": 38.4, "event": 72.0, "eventW": 7.2, "sw": 64.0, "swW": 6.4, "final": 87.3 }, { "id": 1594665, "name": "Ekrash Murtaza", "month": "October", "batch": "SBTE-202606C", "test": [14.5, 14.5, 12.0, 13.0, 19.5], "testTotal": 73.5, "testW": 14.7, "pres": 76.0, "presW": 7.6, "assign": 74.0, "assignW": 7.4, "reg": 61.0, "regW": 24.4, "event": 77.0, "eventW": 7.7, "sw": 89.0, "swW": 8.9, "final": 70.7 }, { "id": 1589050, "name": "Muhammad Hassaan", "month": "October", "batch": "SBTE-202606C", "test": [16.0, 18.0, 19.5, 16.5, 12.5], "testTotal": 82.5, "testW": 16.5, "pres": 99.0, "presW": 9.9, "assign": 71.0, "assignW": 7.1, "reg": 62.0, "regW": 24.8, "event": 83.0, "eventW": 8.3, "sw": 64.0, "swW": 6.4, "final": 73.0 }, { "id": 1596237, "name": "Taha Asif", "month": "October", "batch": "SBTE-202606C", "test": [17.0, 15.5, 16.5, 16.5, 16.0], "testTotal": 81.5, "testW": 16.3, "pres": 72.0, "presW": 7.2, "assign": 68.0, "assignW": 6.8, "reg": 69.0, "regW": 27.6, "event": 95.0, "eventW": 9.5, "sw": 95.0, "swW": 9.5, "final": 76.9 }];
 
-        /* Class Test: 5 tests (T1-T5), /20 each, 40% weight. Older records stored separate Maths and Physics
+        /* Class Test: 5 tests (T1-T5), /20 each, 20% weight; Regularity & punctuality 40%. Older records stored separate Maths and Physics
            tests; they are folded in here by averaging each test pair, which keeps every final score unchanged. */
         function normalizeRecord(r) {
             if (!Array.isArray(r.test) && (Array.isArray(r.math) || Array.isArray(r.phy))) {
@@ -7041,17 +8504,72 @@
             if (Array.isArray(r.test)) {
                 r.test = [0, 1, 2, 3, 4].map(i => { const v = Number(r.test[i]); return isFinite(v) ? v : 0; });
                 r.testTotal = round1(r.test.reduce((a, b) => a + b, 0));
-                r.testW = round1(r.testTotal / 100 * 40);
+                r.testW = round1(r.testTotal / 100 * 20);
+            }
+            // weights: Class Test 20%, Regularity 40% (rows saved under the old 40% / 20% split are recomputed here)
+            if (isFinite(r.reg)) r.regW = round1(r.reg / 100 * 40);
+            if ([r.testW, r.presW, r.assignW, r.regW, r.eventW, r.swW].every(v => isFinite(v))) {
+                r.final = round1(r.testW + r.presW + r.assignW + r.regW + r.eventW + r.swW);
             }
             delete r.math; delete r.mathTotal; delete r.mathW; delete r.phy; delete r.phyTotal; delete r.phyW;
             return r;
         }
 
+        /* Students enrolled but not yet evaluated. They can sign in (Student ID + name), appear in Attendance,
+           notes/simulation batch targeting and the password manager. Once marks are entered through "Add Student Entry"
+           they get a normal evaluation record (matched by Student ID). */
+        const ROSTER = [{ "id": 1573930, "name": "Rafid Ahmed", "batch": "SBTE-202609B" }, { "id": 1583064, "name": "Yousuf Ali", "batch": "SBTE-202609B" }, { "id": 1600101, "name": "Zain Waseem", "batch": "SBTE-202609B" }, { "id": 1603998, "name": "Muhammad Wasif", "batch": "SBTE-202609B" }, { "id": 1601057, "name": "Afifa Zia", "batch": "SBTE-202609B" }, { "id": 1603037, "name": "Muhammad Sohaib", "batch": "SBTE-202609B" }, { "id": 1605329, "name": "Faizan Ahmed", "batch": "SBTE-202609B" }, { "id": 1607873, "name": "Naveem Alam", "batch": "SBTE-202609B" }, { "id": 1608461, "name": "Mudasir Hussain Shah", "batch": "SBTE-202609B" }, { "id": 1608283, "name": "Ahyan Muhammad", "batch": "SBTE-202609B" }, { "id": 1607548, "name": "Muhammad Moeez Malik", "batch": "SBTE-202609B" }, { "id": 1612199, "name": "Anamta Khalid", "batch": "SBTE-202609B" }, { "id": 1607529, "name": "Muhammad Umer", "batch": "SBTE-202609B" }, { "id": 1610875, "name": "M.Salman Asif", "batch": "SBTE-202609B" }, { "id": 1610839, "name": "Muhammad Ashir", "batch": "SBTE-202609B" }, { "id": 1606398, "name": "Muniba Asif", "batch": "SBTE-202609B" }, { "id": 1612431, "name": "Wahaj Ur Rehman Khan", "batch": "SBTE-202609B" }, { "id": 1615703, "name": "Hannan Nasir", "batch": "SBTE-202609B" }, { "id": 1615708, "name": "Komal Adil", "batch": "SBTE-202609B" }, { "id": 1615685, "name": "Jazil Abbas Awan", "batch": "SBTE-202609B" }, { "id": 1612960, "name": "Muhammad Qasim Awan", "batch": "SBTE-202609B" }, { "id": 1609680, "name": "Khansa Noor", "batch": "SBTE-202609B" }, { "id": 1732411, "name": "Ali Usman", "batch": "SBTE-202609B" }, { "id": 1398307, "name": "Muhammad Hassan", "batch": "SBTE-202609B" }, { "id": 1602158, "name": "Hala Haroon", "batch": "SBTE-202609B" }, { "id": 1603752, "name": "Muhammad Muqtasid Barsal", "batch": "SBTE-202609B" }, { "id": 1602471, "name": "Muhammad Safeer", "batch": "SBTE-202609B" }, { "id": 1605530, "name": "Mirza Arham Baig", "batch": "SBTE-202609B" }, { "id": 1526380, "name": "Talha Bin Ali", "batch": "SBTE-202609B" }, { "id": 1584763, "name": "Ibraham Daniyal", "batch": "SBTE-202606C" }, { "id": 1580849, "name": "Riya", "batch": "SBTE-202606C" }, { "id": 1588673, "name": "Abdul Kabeer Durrani", "batch": "SBTE-202606C" }, { "id": 1589068, "name": "Zunaira Hamid", "batch": "SBTE-202606C" }, { "id": 1598139, "name": "Ali", "batch": "SBTE-202606C" }, { "id": 1596355, "name": "Rehan Wasim", "batch": "SBTE-202606C" }, { "id": 1596352, "name": "Zohaib Sultan", "batch": "SBTE-202606C" }, { "id": 1602144, "name": "Omer Altaf", "batch": "SBTE-202606C" }, { "id": 1603911, "name": "Muhammad Khizar Siddiqui", "batch": "SBTE-202606C" }, { "id": 1602355, "name": "Syed Ali Ahsan", "batch": "SBTE-202606C" }, { "id": 1603783, "name": "Muhammad Ahmed", "batch": "SBTE-202606C" }, { "id": 1603748, "name": "Hammad Abid", "batch": "SBTE-202606C" }, { "id": 1732304, "name": "Muhammad Ali Khan", "batch": "SBTE-202606C" }, { "id": 1578481, "name": "Hafiz Syed Shaheer Amir", "batch": "SBTE-202606C" }];
+        function rosterStudents() {
+            const m = new Map();
+            RECORDS.forEach(r => { const id = String(r.id); if (!m.has(id)) m.set(id, { id, name: r.name, batch: r.batch }); });
+            ROSTER.forEach(r => { const id = String(r.id); if (!m.has(id)) m.set(id, { id, name: r.name, batch: r.batch }); });
+            return [...m.values()];
+        }
+
+        /* ---- Batch update (Oct 2026): SBTE-202602E removed, SBTE-202606C replaced by the new class list. ----
+           Data saved earlier (cloud / device) still has the old rows, so they are converted on load. It is safe to
+           run repeatedly: only rows that still carry an old Student ID or the removed batch are touched. */
+        const BATCH_UPDATE = {
+            removeBatches: ['SBTE-202602E'],
+            idMap: { "1534567": { "id": 1594638, "name": "Yusra Khurram" }, "1534569": { "id": 1594890, "name": "Muhammad Mukarram Munir" }, "1534572": { "id": 1592379, "name": "Muhammad Ibrahim Awan" }, "1534577": { "id": 1578080, "name": "Muhammad Anas Khan" }, "1534581": { "id": 1734594, "name": "Himesh Dua Maheshwari" }, "1534582": { "id": 1549891, "name": "Abdul Wasay Ali" }, "1534584": { "id": 1594695, "name": "Syeda Muntaha Shah" }, "1534586": { "id": 1592373, "name": "M. Hasin Babar" }, "1534587": { "id": 1574213, "name": "Muhammad Talha Hassan" }, "1534590": { "id": 1594885, "name": "Alishba" }, "1534593": { "id": 1508449, "name": "Muhammad Abdul Hannan" }, "1534594": { "id": 1596237, "name": "Taha Asif" }, "1534599": { "id": 1595675, "name": "Danish Asif Sheikhani" }, "1534607": { "id": 1732791, "name": "Astle Elijah" }, "1534608": { "id": 1594650, "name": "Muhammad Sarib Khan" }, "1534612": { "id": 1506077, "name": "Harmain" }, "1534613": { "id": 1594695, "name": "Syeda Muntaha Shah" }, "1534615": { "id": 1592373, "name": "M. Hasin Babar" }, "1534617": { "id": 1594665, "name": "Ekrash Murtaza" }, "1534618": { "id": 1589050, "name": "Muhammad Hassaan" }, "1534623": { "id": 1596237, "name": "Taha Asif" } },          // old 202606C Student ID -> new Student ID and name
+            dropIds: [1534592, 1534621],        // old 202606C students with no match in the new list
+            removedIds: [1534568, 1534570, 1534571, 1534573, 1534574, 1534575, 1534576, 1534578, 1534579, 1534580, 1534583, 1534585, 1534588, 1534589, 1534591, 1534595, 1534596, 1534597, 1534598, 1534600, 1534601, 1534602, 1534603, 1534604, 1534605, 1534606, 1534609, 1534610, 1534611, 1534614, 1534616, 1534619, 1534620, 1534622, 1534624]      // every Student ID of the removed batch
+        };
+        function applyBatchUpdate(records) {                 // mutates `records`; returns what must be changed in the cloud
+            const ops = { remove: [], set: [] };
+            for (let i = records.length - 1; i >= 0; i--) {
+                const r = records[i];
+                if (BATCH_UPDATE.removeBatches.includes(r.batch) || (r.batch === 'SBTE-202606C' && BATCH_UPDATE.dropIds.includes(+r.id))) {
+                    ops.remove.push(recKey(r)); records.splice(i, 1);
+                } else if (r.batch === 'SBTE-202606C' && BATCH_UPDATE.idMap[r.id]) {
+                    const t = BATCH_UPDATE.idMap[r.id], nr = { ...r, id: t.id, name: t.name };
+                    ops.remove.push(recKey(r)); ops.set.push(nr); records[i] = nr;
+                }
+            }
+            return ops;
+        }
+        let pendingBatchSync = null;
+        async function flushBatchSync() {                    // writes the conversion to the cloud once an admin is signed in
+            if (!pendingBatchSync || !isAdminRole() || !FB || !FB.set) return;
+            const ops = pendingBatchSync; pendingBatchSync = null;
+            try {
+                await Promise.all(ops.remove.map(k => FB.remove(FB.ref(FB.db, 'records/' + k))));
+                await Promise.all(ops.set.map(r => FB.set(FB.ref(FB.db, 'records/' + recKey(r)), r)));
+            } catch (err) { console.warn('Batch update could not be saved to the cloud:', err); pendingBatchSync = ops; }
+        }
+        const rosterBatches = () => uniq(rosterStudents().map(r => r.batch)).sort();
+        function studentBatch() {                       // batch of the signed-in student (by Student ID, else name)
+            const ses = getSavedSession(); if (!ses) return null;
+            const all = rosterStudents();
+            const rec = (ses.id != null && all.find(r => r.id === String(ses.id))) || all.find(r => r.name === ses.name);
+            return rec ? rec.batch : null;
+        }
+
         const POLICY = [
-            { cat: "Class Test (T1–T5)", weight: "40%", desc: "Five class tests during the month (T1, T2, T3, T4, T5), marked out of 20 each (100 total). The sum of all five is scaled from /100 up to a /40 weighted contribution — the highest-weighted category." },
+            { cat: "Class Test (T1–T5)", weight: "20%", desc: "Five class tests during the month (T1, T2, T3, T4, T5), marked out of 20 each (100 total). The sum of all five is scaled from /100 down to a /20 weighted contribution." },
             { cat: "Presentation", weight: "10%", desc: "One in-class presentation per month, marked out of 100 for content, delivery and clarity, then scaled to a /10 weighted contribution." },
             { cat: "Assignment", weight: "10%", desc: "Assigned coursework for the month, marked out of 100 for completeness and correctness, then scaled to a /10 weighted contribution." },
-            { cat: "Regularity and Punctuality", weight: "20%", desc: "Attendance and on-time arrival across the month, marked out of 100, then scaled to a /20 weighted contribution — the single highest-weighted non-academic category." },
+            { cat: "Regularity and Punctuality", weight: "40%", desc: "Attendance and on-time arrival across the month, marked out of 100, then scaled to a /40 weighted contribution — the highest-weighted category." },
             { cat: "Event Participation", weight: "10%", desc: "Participation in institute events, workshops, or co-curricular activity, marked out of 100 then scaled to a /10 weighted contribution." },
             { cat: "Social Work", weight: "10%", desc: "Community or campus service undertaken during the month, marked out of 100 then scaled to a /10 weighted contribution." },
         ];
@@ -7114,10 +8632,10 @@
             const batchAvg = avg(cohort.map(x => x.final));
             const diff = round1(r.final - batchAvg);
             const cats = [
-                { label: 'Class Test', w: r.testW, max: 40 },
+                { label: 'Class Test', w: r.testW, max: 20 },
                 { label: 'Presentation', w: r.presW, max: 10 },
                 { label: 'Assignment', w: r.assignW, max: 10 },
-                { label: 'Regularity', w: r.regW, max: 20 },
+                { label: 'Regularity', w: r.regW, max: 40 },
                 { label: 'Event participation', w: r.eventW, max: 10 },
                 { label: 'Social work', w: r.swW, max: 10 },
             ].map(c => ({ ...c, pct: c.max ? round1(c.w / c.max * 100) : 0 }));
@@ -7196,7 +8714,7 @@
                 xlabels += `<text x="${(x + barW / 2).toFixed(1)}" y="${(padT + chartH + 18).toFixed(1)}" text-anchor="middle" font-size="9.5" font-family="Inter,sans-serif" fill="var(--ink-soft)">${it.label}</text>`;
             });
             return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="max-height:${h}px;" role="img" aria-label="${opts.aria || 'Bar chart'}">
-    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0EA5E9"/><stop offset="100%" stop-color="#0284C7"/></linearGradient></defs>
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--sky)"/><stop offset="100%" stop-color="var(--sky-dark)"/></linearGradient></defs>
     <line x1="${padL}" y1="${padT + chartH}" x2="${w - padR}" y2="${padT + chartH}" stroke="var(--rule)" stroke-width="1"/>
     ${bars}${vlabels}${xlabels}
   </svg>`;
@@ -7223,7 +8741,7 @@
                 const barW = Math.max(2, (it.value / maxVal) * chartW);
                 rows += `
       <text x="${padL - 8}" y="${(y + rowH / 2 + 3.5).toFixed(1)}" text-anchor="end" font-size="${fontSize}" font-family="Inter,sans-serif" fill="var(--ink)">${String(it.label).length > 16 ? String(it.label).slice(0, 15) + '…' : it.label}</text>
-      <rect x="${padL}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${rowH}" rx="4" fill="${it.color || '#0284C7'}"/>
+      <rect x="${padL}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${rowH}" rx="4" fill="${it.color || 'var(--sky-dark)'}"/>
       <text x="${(padL + barW + 7).toFixed(1)}" y="${(y + rowH / 2 + 3.5).toFixed(1)}" font-size="${fontSize}" font-family="Inter,sans-serif" font-weight="700" fill="var(--ink)">${it.value}</text>
     `;
             });
@@ -7270,13 +8788,13 @@
                 const a = angleFor(i);
                 const f = Math.max(0, Math.min(1, it.value / (it.max || 100)));
                 const x = cx + Math.cos(a) * rMax * f, y = cy + Math.sin(a) * rMax * f;
-                return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#fff" stroke="${opts.stroke || '#0284C7'}" stroke-width="2"/>`;
+                return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#fff" stroke="${opts.stroke || 'var(--sky-dark)'}" stroke-width="2"/>`;
             }).join('');
 
             return `<svg viewBox="0 0 ${size} ${size}" width="100%" style="max-height:${size}px;" role="img" aria-label="${opts.aria || 'Radar chart'}">
-    <defs><radialGradient id="${gid}"><stop offset="0%" stop-color="${opts.fill || '#0EA5E9'}" stop-opacity="0.55"/><stop offset="100%" stop-color="${opts.fill || '#0284C7'}" stop-opacity="0.18"/></radialGradient></defs>
+    <defs><radialGradient id="${gid}"><stop offset="0%" stop-color="${opts.fill || 'var(--sky)'}" stop-opacity="0.55"/><stop offset="100%" stop-color="${opts.fill || 'var(--sky-dark)'}" stop-opacity="0.18"/></radialGradient></defs>
     ${rings}${spokes}
-    <polygon points="${shapePts}" fill="url(#${gid})" stroke="${opts.stroke || '#0284C7'}" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="${shapePts}" fill="url(#${gid})" stroke="${opts.stroke || 'var(--sky-dark)'}" stroke-width="2" stroke-linejoin="round"/>
     ${dots}
     ${labels}
   </svg>`;
@@ -7290,7 +8808,7 @@
             const rOuter = opts.rOuter || size * 0.42;
             const rInner = opts.rInner || rOuter * 0.6;
             const total = items.reduce((s, it) => s + it.value, 0) || 1;
-            const palette = opts.palette || ['#0284C7', '#7DD3FC', '#0F172A', '#33587A', '#A8701F', '#2E6B4C', '#A13C3C'];
+            const palette = opts.palette || ['var(--sky-dark)', 'var(--accent-soft)', '#0F172A', '#33587A', '#A8701F', '#2E6B4C', '#A13C3C'];
 
             let angle = -Math.PI / 2;
             let arcs = '';
@@ -7326,8 +8844,8 @@
 
 
         function rebuildSelectors() {
-            document.getElementById('metaCount').textContent = uniq(RECORDS.map(r => r.id)).length;
-            document.getElementById('metaBatches').textContent = uniq(RECORDS.map(r => r.batch)).sort().join(', ');
+            document.getElementById('metaCount').textContent = rosterStudents().length;
+            document.getElementById('metaBatches').textContent = rosterBatches().join(', ');
 
             const rebuildSelect = (sel, values, allLabel) => {
                 const cur = sel.value;
@@ -7339,16 +8857,16 @@
                 if ([...sel.options].some(o => o.value === cur)) sel.value = cur;
             };
 
-            rebuildSelect(dashBatch, uniq(RECORDS.map(r => r.batch)).sort(), 'All batches');
+            rebuildSelect(dashBatch, rosterBatches(), 'All batches');
             rebuildSelect(repStudent, uniq(RECORDS.map(r => r.name)).sort(), null);
-            rebuildSelect(batchSelect, uniq(RECORDS.map(r => r.batch)).sort(), null);
+            rebuildSelect(batchSelect, rosterBatches(), null);
             if (typeof refreshNoteBatchSelects === 'function') refreshNoteBatchSelects();
             if (typeof refreshSimBatchSelects === 'function') refreshSimBatchSelects();
         }
 
         /* ============ Header meta ============ */
-        document.getElementById('metaCount').textContent = uniq(RECORDS.map(r => r.id)).length;
-        document.getElementById('metaBatches').textContent = uniq(RECORDS.map(r => r.batch)).sort().join(', ');
+        document.getElementById('metaCount').textContent = rosterStudents().length;
+        document.getElementById('metaBatches').textContent = rosterBatches().join(', ');
 
         /* ============ USER SESSION & ACTIVE VIEW PERSISTENCE ============ */
         const SESSION_KEY = 'sbte_session_v1';
@@ -7400,6 +8918,10 @@
             if (viewName === 'simulations' && typeof renderSims === 'function') renderSims();
             if (viewName === 'seating' && typeof renderSeating === 'function') renderSeating();
             if (viewName === 'attendance' && typeof renderAttendance === 'function') renderAttendance();
+            try {
+                if (viewName === 'report' && typeof currentReportRecord === 'function' && currentReportRecord()) renderReport(currentReportRecord());
+                if (viewName === 'batch' && typeof renderBatch === 'function') renderBatch();
+            } catch (e) { }
             if (typeof scheduleFit === 'function') setTimeout(scheduleFit, 60);
         }
 
@@ -7417,7 +8939,7 @@
         const dashEmpty = document.getElementById('dashEmpty');
         const dashCount = document.getElementById('dashCount');
 
-        uniq(RECORDS.map(r => r.batch)).sort().forEach(b => {
+        rosterBatches().forEach(b => {
             const o = document.createElement('option'); o.value = b; o.textContent = b;
             dashBatch.appendChild(o);
         });
@@ -7427,6 +8949,22 @@
         });
 
         let sortKey = 'name', sortDir = 1;
+
+        // enrolled students that have no evaluation record at all (shown in the Register as "No marks yet")
+        function pendingStudents() {
+            const have = new Set(RECORDS.map(r => String(r.id)));
+            const q = dashSearch.value.trim().toLowerCase(), b = dashBatch.value;
+            if (dashMonth.value) return [];
+            return rosterStudents().filter(st => !have.has(st.id) && (!b || st.batch === b) &&
+                (!q || st.name.toLowerCase().includes(q) || st.id.includes(q))).sort((a, c) => a.name.localeCompare(c.name));
+        }
+        function openNewStudentFor(st) {
+            openNewStudentDialog();
+            document.getElementById('newStuName').value = st.name;
+            document.getElementById('newStuId').value = st.id;
+            newStuBatch.value = st.batch;
+            document.getElementById('newStuName').blur();
+        }
 
         function filteredRecords() {
             const q = dashSearch.value.trim().toLowerCase();
@@ -7452,7 +8990,7 @@
             const batches = uniq(RECORDS.map(r => r.batch)).sort();
             const batchAvgs = batches.map(b => ({ label: b, value: avg(RECORDS.filter(r => r.batch === b).map(r => r.final)) }));
             const topBatch = batchAvgs.slice().sort((a, b) => b.value - a.value)[0];
-            const batchItems = batchAvgs.map(b => ({ ...b, color: topBatch && b.label === topBatch.label ? '#0284C7' : '#7DD3FC' }));
+            const batchItems = batchAvgs.map(b => ({ ...b, color: topBatch && b.label === topBatch.label ? 'var(--sky-dark)' : 'var(--accent-soft)' }));
 
             const buckets = [
                 { label: '0-59', min: 0, max: 59 },
@@ -7466,7 +9004,7 @@
             const distChartItems = distCounts.map(d => ({ ...d, height: d.value / maxDist * 100 }));
 
             const months = uniq(RECORDS.map(r => r.month)).sort(byMonthOrder);
-            const monthAvgs = months.map(m => ({ label: m.slice(0, 3), value: avg(RECORDS.filter(r => r.month === m).map(r => r.final)), height: avg(RECORDS.filter(r => r.month === m).map(r => r.final)), color: '#0284C7' }));
+            const monthAvgs = months.map(m => ({ label: m.slice(0, 3), value: avg(RECORDS.filter(r => r.month === m).map(r => r.final)), height: avg(RECORDS.filter(r => r.month === m).map(r => r.final)), color: 'var(--sky-dark)' }));
 
             el.innerHTML = `
     <div class="kpi-strip">
@@ -7515,9 +9053,10 @@
                 if (av > bv) return 1 * sortDir;
                 return 0;
             });
+            const pend = pendingStudents();
             dashBody.innerHTML = '';
-            dashEmpty.style.display = rows.length ? 'none' : 'block';
-            dashCount.textContent = rows.length + (rows.length === 1 ? ' record' : ' records');
+            dashEmpty.style.display = (rows.length || pend.length) ? 'none' : 'block';
+            dashCount.textContent = rows.length + (rows.length === 1 ? ' record' : ' records') + (pend.length ? ' · ' + pend.length + ' awaiting marks' : '');
 
             rows.forEach(r => {
                 const st = standing(r.final);
@@ -7546,6 +9085,24 @@
                         confirmDeleteRow(r);
                     });
                 }
+                dashBody.appendChild(tr);
+            });
+
+            pend.forEach(st => {
+                const tr = document.createElement('tr');
+                tr.className = 'pending-row';
+                tr.title = isAdminRole() ? 'No marks yet — click to enter this student\'s marks' : '';
+                tr.innerHTML = `
+      <td class="name-cell" data-label="Student">${st.name}</td>
+      <td class="id-cell" data-label="ID">${st.id}</td>
+      <td data-label="Month">—</td>
+      <td data-label="Batch">${st.batch}</td>
+      <td data-label="Class Test /100">—</td>
+      <td data-label="Regularity">—</td>
+      <td data-label="Final">—</td>
+      <td data-label="Standing"><span class="badge pending">No marks yet</span></td>
+      <td class="admin-only td-action" data-label="Action"></td>`;
+                tr.addEventListener('click', () => { if (isAdminRole()) openNewStudentFor(st); });
                 dashBody.appendChild(tr);
             });
 
@@ -7583,6 +9140,7 @@
             const rows = filteredRecords();
             const headers = ["Name", "ID", "Month", "Batch", "ClassTestTotal", "Presentation", "Assignment", "Regularity", "Event", "SocialWork", "FinalScore", "Standing"];
             const body = rows.map(r => [r.name, r.id, r.month, r.batch, r.testTotal, r.pres, r.assign, r.reg, r.event, r.sw, r.final, standing(r.final).label]);
+            pendingStudents().forEach(st => body.push([st.name, st.id, '', st.batch, '', '', '', '', '', '', '', 'No marks yet']));
             downloadCsv('sbte_register_filtered.csv', [headers, ...body]);
         });
 
@@ -7643,16 +9201,91 @@
         }
 
         function renderReport(r) {
-            if (!r) { reportOutput.innerHTML = '<div class="empty-state">No record found for this student in that month.</div>'; return; }
+            if (!r) { reportOutput.innerHTML = '<div class="empty-state">No evaluation has been recorded for this student yet. It will appear here once marks are entered.</div>'; return; }
             reportEditMode ? renderReportEdit(r) : renderReportView(r);
+        }
+
+        /* ---- attendance figures used by the report card and the batch report ---- */
+        const ATT_COLORS = { P: '#3FA66B', T: '#9CA3AF', L: '#E3B93C', A: '#D9534F', N: '#CBD5E1' };
+        const ATT_MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        // Records only know the month name, so use the latest year that has attendance saved for that month.
+        function attReportData(monthName, ids) {
+            try {
+                const mi = ATT_MONTH_NAMES.indexOf(monthName) + 1; if (!mi) return null;
+                const keys = Object.keys(ATT).filter(k => +k.split('-')[1] === mi).sort();
+                if (!keys.length) return null;
+                const key = keys[keys.length - 1], data = ATT[key], marks = (data && data.marks) || {};
+                const status = (id, d) => (marks[id] && marks[id][d]) || '';
+                const recorded = [];
+                for (let d = 1; d <= atDaysIn(key); d++) {
+                    if (atIsHoliday(key, d)) continue;
+                    if (ids.some(id => status(id, d))) recorded.push(d);
+                }
+                return recorded.length ? { key, recorded, status } : null;
+            } catch (e) { return null; }
+        }
+        const attBatchIds = batch => rosterStudents().filter(s => s.batch === batch).map(s => s.id);
+        const attEmpty = msg => `<div class="empty-state" style="padding:22px 8px;">${msg}</div>`;
+
+        function attStudentBlock(r) {            // replaces "Final Score Composition" on the report card
+            const A = attReportData(r.month, attBatchIds(r.batch));
+            const head = `<div class="chart-block" style="border-top:1px solid var(--rule-soft);"><div class="chart-title">Attendance — ${r.month}</div>`;
+            if (!A) return head + attEmpty('No attendance has been recorded for ' + r.month + ' yet.') + '</div>';
+            const c = { P: 0, T: 0, L: 0, A: 0, N: 0 };
+            A.recorded.forEach(d => { c[A.status(String(r.id), d) || 'N']++; });
+            const pct = round1((c.P + c.T) / A.recorded.length * 100);
+            const items = [['Present', 'P'], ['Late arrival', 'T'], ['Leave', 'L'], ['Absent', 'A'], ['Not marked', 'N']]
+                .map(([label, k]) => ({ label, value: c[k], color: ATT_COLORS[k] })).filter(i => i.value > 0);
+            return head + `
+        <div class="donut-row">
+          ${svgDonut(items, { size: 170, centerValue: pct + '%', centerLabel: 'attendance', aria: 'Attendance for the month' })}
+          <div class="donut-legend">
+            ${items.map(d => `<span class="dl-item"><i style="background:${d.color};"></i>${d.label} <b>${d.value}</b></span>`).join('')}
+            <span class="dl-item" style="color:var(--ink-soft);">out of ${A.recorded.length} working day${A.recorded.length === 1 ? '' : 's'}</span>
+          </div>
+        </div>
+      </div>`;
+        }
+
+        function attBatchBlock(batch, month) {   // replaces "Standing Distribution" in the batch report
+            const ids = attBatchIds(batch), A = attReportData(month, ids);
+            const head = `<div class="chart-block" style="border-top:1px solid var(--rule-soft);"><div class="chart-title">Attendance — ${month}</div>`;
+            if (!A || !ids.length) return head + attEmpty('No attendance has been recorded for ' + month + ' yet.') + '</div>';
+            const tot = { P: 0, T: 0, L: 0, A: 0, N: 0 };
+            const days = A.recorded.map(d => {
+                let pres = 0;
+                ids.forEach(id => { const v = A.status(id, d) || 'N'; tot[v]++; if (v === 'P' || v === 'T') pres++; });
+                return { d, pct: pres / ids.length * 100, pres };
+            });
+            const avgPct = round1((tot.P + tot.T) / (A.recorded.length * ids.length) * 100);
+            const w = 520, h = 200, padL = 34, padR = 12, padT = 16, padB = 30, cw = w - padL - padR, ch = h - padT - padB;
+            const gap = days.length > 14 ? 4 : 8, bw = Math.max(4, (cw - gap * (days.length - 1)) / days.length);
+            const y = v => padT + ch - v / 100 * ch;
+            let bars = '', lbl = '';
+            days.forEach((x, i) => {
+                const bx = padL + i * (bw + gap), by = y(x.pct), col = x.pct >= 75 ? ATT_COLORS.P : ATT_COLORS.L;
+                bars += `<rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(2, padT + ch - by).toFixed(1)}" rx="3" fill="${col}"><title>Day ${x.d}: ${x.pres} of ${ids.length} present (${round1(x.pct)}%)</title></rect>`;
+                if (days.length <= 16) lbl += `<text x="${(bx + bw / 2).toFixed(1)}" y="${(by - 5).toFixed(1)}" text-anchor="middle" font-size="9.5" font-weight="700" font-family="Inter,sans-serif" fill="var(--ink)">${Math.round(x.pct)}</text>`;
+                if (days.length <= 16 || i % 2 === 0) lbl += `<text x="${(bx + bw / 2).toFixed(1)}" y="${padT + ch + 17}" text-anchor="middle" font-size="9.5" font-family="Inter,sans-serif" fill="var(--ink-soft)">${x.d}</text>`;
+            });
+            const grid = [0, 50, 100].map(v => `<line x1="${padL}" y1="${y(v)}" x2="${w - padR}" y2="${y(v)}" stroke="var(--rule)" stroke-width="1" ${v ? 'stroke-dasharray="3 4"' : ''}/><text x="${padL - 6}" y="${y(v) + 3.5}" text-anchor="end" font-size="9.5" font-family="Inter,sans-serif" fill="var(--ink-soft)">${v}%</text>`).join('');
+            const legend = [['Present', 'P'], ['Late arrival', 'T'], ['Leave', 'L'], ['Absent', 'A']].filter(([, k]) => tot[k] > 0)
+                .map(([label, k]) => `<span class="dl-item"><i style="background:${ATT_COLORS[k]};"></i>${label} <b>${tot[k]}</b></span>`).join('');
+            return head + `
+        <svg viewBox="0 0 ${w} ${h}" width="100%" style="max-height:${h}px;" role="img" aria-label="Daily attendance percentage for the batch">${grid}${bars}${lbl}</svg>
+        <div class="donut-legend" style="margin-top:6px;">
+          <span class="dl-item"><b>${avgPct}%</b> average attendance</span>${legend}
+          <span class="dl-item" style="color:var(--ink-soft);">${A.recorded.length} working day${A.recorded.length === 1 ? '' : 's'} · ${ids.length} students</span>
+        </div>
+      </div>`;
         }
 
         function reportCharts(r) {
             const catItems = [
-                { label: 'Class Test', value: r.testW, max: 40 },
+                { label: 'Class Test', value: r.testW, max: 20 },
                 { label: 'Present.', value: r.presW, max: 10 },
                 { label: 'Assign.', value: r.assignW, max: 10 },
-                { label: 'Regular.', value: r.regW, max: 20 },
+                { label: 'Regular.', value: r.regW, max: 40 },
                 { label: 'Event', value: r.eventW, max: 10 },
                 { label: 'Soc.Work', value: r.swW, max: 10 },
             ].map(c => ({ ...c, height: c.max ? (c.value / c.max * 100) : 0 }));
@@ -7663,7 +9296,7 @@
             const studentMonths = RECORDS.filter(x => x.name === r.name).slice().sort((a, b) => byMonthOrder(a.month, b.month));
             let trendBlock = '';
             if (studentMonths.length > 1) {
-                const trendItems = studentMonths.map(m => ({ label: m.month.slice(0, 3), value: m.final, height: m.final, color: m.month === r.month ? '#0284C7' : '#7DD3FC' }));
+                const trendItems = studentMonths.map(m => ({ label: m.month.slice(0, 3), value: m.final, height: m.final, color: m.month === r.month ? 'var(--sky-dark)' : 'var(--accent-soft)' }));
                 trendBlock = `
       <div class="chart-block" style="border-top:1px solid var(--rule-soft);">
         <div class="chart-title">Final Score Trend By Month</div>
@@ -7681,15 +9314,7 @@
         <div class="chart-title">Category Breakdown (Weighted Score vs. Category Cap)</div>
         ${svgVerticalBars(catItems, { height: Math.round(190 * LAYOUT.rep.gh / 100), maxHeight: 100, aria: 'Weighted category scores' })}
       </div>
-      <div class="chart-block" style="border-top:1px solid var(--rule-soft);">
-        <div class="chart-title">Final Score Composition</div>
-        <div class="donut-row">
-          ${svgDonut(donutItems, { size: 170, centerValue: r.final, centerLabel: st.label, aria: 'Final score composition by category' })}
-          <div class="donut-legend">
-            ${donutItems.map((d, i) => `<span class="dl-item"><i style="background:${['#0284C7', '#7DD3FC', '#0F172A', '#33587A', '#A8701F', '#2E6B4C', '#A13C3C'][i % 7]}"></i>${d.label} <b>${d.value}</b></span>`).join('')}
-          </div>
-        </div>
-      </div>
+      ${attStudentBlock(r)}
       ${trendBlock}
     </div>
   `;
@@ -7730,10 +9355,10 @@
       <div class="metric-row head">
         <div>Category</div><div style="text-align:right;">Raw</div><div style="text-align:right;">Weighted</div><div></div>
       </div>
-      ${metricRow("Class Test (T1–T5)", r.testTotal, 100, r.testW, 40)}
+      ${metricRow("Class Test (T1–T5)", r.testTotal, 100, r.testW, 20)}
       ${metricRow("Presentation", r.pres, 100, r.presW, 10)}
       ${metricRow("Assignment", r.assign, 100, r.assignW, 10)}
-      ${metricRow("Regularity &amp; punctuality", r.reg, 100, r.regW, 20)}
+      ${metricRow("Regularity &amp; punctuality", r.reg, 100, r.regW, 40)}
       ${metricRow("Event participation", r.event, 100, r.eventW, 10)}
       ${metricRow("Social work", r.sw, 100, r.swW, 10)}
       <div class="report-tests">
@@ -7745,7 +9370,7 @@
         <div class="rb-text">${studentRemark(r, ins)}</div>
       </div>
       <div class="report-foot">
-        <span>Weighted per policy: Class Test 40% · Presentation 10% · Assignment 10% · Regularity 20% · Event 10% · Social work 10%</span>
+        <span>Weighted per policy: Class Test 20% · Presentation 10% · Assignment 10% · Regularity 40% · Event 10% · Social work 10%</span>
       </div>
     </div>
     </div>
@@ -7867,10 +9492,10 @@
             r.sw = Math.min(100, num('editSw'));
 
             r.testTotal = round1(r.test.reduce((s, v) => s + v, 0));
-            r.testW = round1(r.testTotal / 100 * 40);
+            r.testW = round1(r.testTotal / 100 * 20);
             r.presW = round1(r.pres / 100 * 10);
             r.assignW = round1(r.assign / 100 * 10);
-            r.regW = round1(r.reg / 100 * 20);
+            r.regW = round1(r.reg / 100 * 40);
             r.eventW = round1(r.event / 100 * 10);
             r.swW = round1(r.sw / 100 * 10);
             r.final = round1(r.testW + r.presW + r.assignW + r.regW + r.eventW + r.swW);
@@ -7903,7 +9528,7 @@
         downloadReportBtn.addEventListener('click', () => {
             const r = currentReportRecord();
             if (!r) return;
-            const headers = ["Name", "ID", "Month", "Batch", "T1", "T2", "T3", "T4", "T5", "ClassTestTotal", "ClassTest(40%)", "Presentation", "Pres(10%)", "Assignment", "Assign(10%)", "Regularity", "Reg(20%)", "Event", "Event(10%)", "SocialWork", "SW(10%)", "FinalScore"];
+            const headers = ["Name", "ID", "Month", "Batch", "T1", "T2", "T3", "T4", "T5", "ClassTestTotal", "ClassTest(20%)", "Presentation", "Pres(10%)", "Assignment", "Assign(10%)", "Regularity", "Reg(40%)", "Event", "Event(10%)", "SocialWork", "SW(10%)", "FinalScore"];
             const row = [r.name, r.id, r.month, r.batch, ...r.test, r.testTotal, r.testW, r.pres, r.presW, r.assign, r.assignW, r.reg, r.regW, r.event, r.eventW, r.sw, r.swW, r.final];
             downloadCsv(`${r.name}_${r.month}_report.csv`, [headers, row]);
         });
@@ -8042,7 +9667,7 @@
         const newStuBatchCustom = document.getElementById('newStuBatchCustom');
 
         function populateBatchDropdown() {
-            const batches = uniq(RECORDS.map(r => r.batch)).sort();
+            const batches = rosterBatches();
             newStuBatch.innerHTML = '';
             batches.forEach(b => {
                 const opt = document.createElement('option');
@@ -8077,10 +9702,10 @@
             const sw = num('newSw', 100);
 
             const testTotal = round1(test.reduce((a, b) => a + b, 0));
-            const testW = round1(testTotal / 100 * 40);
+            const testW = round1(testTotal / 100 * 20);
             const presW = round1(pres / 100 * 10);
             const assignW = round1(assign / 100 * 10);
-            const regW = round1(reg / 100 * 20);
+            const regW = round1(reg / 100 * 40);
             const eventW = round1(event / 100 * 10);
             const swW = round1(sw / 100 * 10);
             const finalScore = round1(testW + presW + assignW + regW + eventW + swW);
@@ -8238,7 +9863,7 @@
         const batchMonth = document.getElementById('batchMonth');
         const batchOutput = document.getElementById('batchOutput');
 
-        uniq(RECORDS.map(r => r.batch)).sort().forEach(b => {
+        rosterBatches().forEach(b => {
             const o = document.createElement('option'); o.value = b; o.textContent = b;
             batchSelect.appendChild(o);
         });
@@ -8257,10 +9882,10 @@
 
         function batchCharts(rows) {
             const catItems = [
-                { label: 'Class Test', value: avg(rows.map(r => r.testW)), max: 40 },
+                { label: 'Class Test', value: avg(rows.map(r => r.testW)), max: 20 },
                 { label: 'Present.', value: avg(rows.map(r => r.presW)), max: 10 },
                 { label: 'Assign.', value: avg(rows.map(r => r.assignW)), max: 10 },
-                { label: 'Regular.', value: avg(rows.map(r => r.regW)), max: 20 },
+                { label: 'Regular.', value: avg(rows.map(r => r.regW)), max: 40 },
                 { label: 'Event', value: avg(rows.map(r => r.eventW)), max: 10 },
                 { label: 'Soc.Work', value: avg(rows.map(r => r.swW)), max: 10 },
             ].map(c => ({ ...c, height: c.max ? (c.value / c.max * 100) : 0 }));
@@ -8281,15 +9906,7 @@
         <div class="chart-title">Average Weighted Score By Category</div>
         ${svgVerticalBars(catItems, { height: Math.round(190 * LAYOUT.rep.gh / 100), maxHeight: 100, aria: 'Average weighted score by category' })}
       </div>
-      <div class="chart-block" style="border-top:1px solid var(--rule-soft);">
-        <div class="chart-title">Standing Distribution</div>
-        <div class="donut-row">
-          ${svgDonut(distItems, { size: 150, centerValue: rows.length, centerLabel: 'students', aria: 'Standing distribution donut' })}
-          <div class="donut-legend">
-            ${distItems.map(d => `<span class="dl-item"><i style="background:${d.color};"></i>${d.label} <b>${d.value}</b></span>`).join('')}
-          </div>
-        </div>
-      </div>
+      ${attBatchBlock(rows[0].batch, rows[0].month)}
     </div>
   `;
         }
@@ -8297,7 +9914,28 @@
         function renderBatch() {
             const b = batchSelect.value, m = batchMonth.value;
             const rows = RECORDS.filter(r => r.batch === b && r.month === m);
-            if (!rows.length) { batchOutput.innerHTML = '<div class="empty-state">No records for that batch and month.</div>'; return; }
+            const enrolled = rosterStudents().filter(st => st.batch === b).sort((x, y) => x.name.localeCompare(y.name));
+            if (!rows.length) {
+                if (!RECORDS.some(r => r.batch === b) && enrolled.length) {      // batch exists, nothing evaluated yet
+                    batchOutput.innerHTML = `
+    <div class="batch-layout"><div class="batch-col-side"><div class="batch-card">
+      <div class="batch-head">
+        <div><h3>${b}</h3><div class="rh-sub" style="font-size:calc(13px * var(--fs, 1));color:var(--ink-soft);">Batch roster</div></div>
+        <div class="bh-avg">${enrolled.length}<small>students enrolled</small></div>
+      </div>
+      <div class="batch-table-wrap">
+        <div class="chart-title">Students</div>
+        <div class="rank-table-scroll"><table class="rank-table">
+          <thead><tr><th>#</th><th>Name</th><th>Student ID</th><th>Status</th></tr></thead>
+          <tbody>${enrolled.map((st, i) => `<tr><td>${i + 1}</td><td>${st.name}</td><td>${st.id}</td><td><span class="badge pending">No marks yet</span></td></tr>`).join('')}</tbody>
+        </table></div>
+      </div>
+      <div class="batch-foot">No evaluations have been recorded for this batch yet. Averages, rankings and charts appear after marks are entered with Add Student Entry.</div>
+    </div></div></div>`;
+                } else batchOutput.innerHTML = '<div class="empty-state">No records for that batch and month.</div>';
+                return;
+            }
+            const pendHere = enrolled.filter(st => !RECORDS.some(r => r.batch === b && r.month === m && String(r.id) === st.id));
             const metrics = [
                 ["Avg Class Test /100", avg(rows.map(r => r.testTotal))],
                 ["Avg Presentation /100", avg(rows.map(r => r.pres))],
@@ -8382,11 +10020,12 @@
                   <td><span class="standing-tag" style="border-color:${STANDING_COLORS[rst.label]};color:${STANDING_COLORS[rst.label]};">${rst.label}</span></td>
                 </tr>`;
             }).join('')}
+              ${pendHere.map(st => `<tr><td>–</td><td>${st.name}</td><td>${st.id}</td><td>–</td><td>–</td><td><span class="badge pending">No marks yet</span></td></tr>`).join('')}
             </tbody>
           </table>
         </div>
       </div>
-      <div class="batch-foot">Averaged across ${rows.length} student ${rows.length === 1 ? 'record' : 'records'} on file for this batch and month.</div>
+      <div class="batch-foot">Averaged across ${rows.length} student ${rows.length === 1 ? 'record' : 'records'} on file for this batch and month.${pendHere.length ? ` ${pendHere.length} enrolled student${pendHere.length === 1 ? ' has' : 's have'} no marks for ${m} yet and ${pendHere.length === 1 ? 'is' : 'are'} not counted.` : ''}</div>
     </div>
     </div>
     <div class="batch-col-side">
@@ -8440,7 +10079,7 @@
         const noteUploadHint = document.getElementById('noteUploadHint');
 
         function refreshNoteBatchSelects() {
-            const batches = uniq(RECORDS.map(r => r.batch)).sort();
+            const batches = rosterBatches();
             [noteBatch, notesFilterBatch].forEach(sel => {
                 if (!sel) return;
                 const cur = sel.value;
@@ -8460,9 +10099,7 @@
                 const f = notesFilterBatch.value;
                 if (f) list = list.filter(n => n.batch === f);
             } else {
-                const name = currentStudentName();
-                const rec = name ? RECORDS.find(r => r.name === name) : null;
-                const myBatch = rec ? rec.batch : null;
+                const myBatch = studentBatch();
                 list = list.filter(n => !n.batch || n.batch === myBatch);
             }
             return list;
@@ -8606,7 +10243,7 @@
         const simsCount = document.getElementById('simsCount');
 
         function refreshSimBatchSelects() {
-            const batches = uniq(RECORDS.map(r => r.batch)).sort();
+            const batches = rosterBatches();
             [simBatch, simsFilterBatch].forEach(sel => {
                 if (!sel) return;
                 const cur = sel.value;
@@ -8626,9 +10263,7 @@
                 const f = simsFilterBatch.value;
                 if (f) list = list.filter(s => s.batch === f);
             } else {
-                const name = currentStudentName();
-                const rec = name ? RECORDS.find(r => r.name === name) : null;
-                const myBatch = rec ? rec.batch : null;
+                const myBatch = studentBatch();
                 list = list.filter(s => !s.batch || s.batch === myBatch);
             }
             return list;
@@ -8785,7 +10420,7 @@
         policyBody.appendChild(totalTr);
 
         // Weight-distribution donut, built from the same POLICY data as the table above
-        const policyDonutPalette = ['#0284C7', '#7DD3FC', '#0F172A', '#33587A', '#A8701F', '#2E6B4C', '#A13C3C'];
+        const policyDonutPalette = ['var(--sky-dark)', 'var(--accent-soft)', '#0F172A', '#33587A', '#A8701F', '#2E6B4C', '#A13C3C'];
         const policyDonutItems = POLICY.map((p, i) => ({ label: p.cat.split(':').pop().split('(')[0].trim(), value: parseFloat(p.weight), color: policyDonutPalette[i % policyDonutPalette.length] }));
         const policyDonutEl = document.getElementById('policyDonut');
         if (policyDonutEl) {
@@ -8841,7 +10476,8 @@
         async function stuCheckPassword(rec, pw) {
             const id = String(rec.id), custom = STU_PW[id];
             if (custom) return custom === await stuHash(id, pw) || custom === 'plain:' + pw;
-            return pw.trim().toLowerCase() === String(rec.name).trim().toLowerCase();
+            const norm = t => String(t).toLowerCase().replace(/[^a-z0-9]/g, '');
+            return norm(pw) !== '' && norm(pw) === norm(rec.name);
         }
         async function stuLoadPasswords(fb) {
             try {
@@ -8876,8 +10512,7 @@
             document.body.appendChild(wrap);
             const list = wrap.querySelector('#pwList'), search = wrap.querySelector('#pwSearch');
             const students = () => {
-                const m = new Map(); RECORDS.forEach(r => { if (!m.has(String(r.id))) m.set(String(r.id), r); });
-                return [...m.values()].sort((a, b) => a.name.localeCompare(b.name));
+                return rosterStudents().sort((a, b) => a.name.localeCompare(b.name));
             };
             const render = () => {
                 const q = search.value.trim().toLowerCase();
@@ -8943,7 +10578,7 @@
             const p = document.getElementById('adminPass').value.trim();
             if (u === ADMIN_CREDENTIALS.username && p === ADMIN_CREDENTIALS.password) {
                 adminLoginError.classList.remove('show');
-                logIn({ role: 'admin' });
+                loginWithTransition({ role: 'admin' });
             } else {
                 adminLoginError.classList.add('show');
             }
@@ -8954,10 +10589,10 @@
             const pw = document.getElementById('stuPass').value;
             // make sure passwords changed by the admin have been fetched from the cloud first
             await Promise.race([STU_PW_READY, new Promise(r => setTimeout(r, 3000))]);
-            const rec = RECORDS.find(r => String(r.id) === id);
+            const rec = rosterStudents().find(r => r.id === id);
             if (rec && pw && await stuCheckPassword(rec, pw)) {
                 studentLoginError.classList.remove('show');
-                logIn({ role: 'student', name: rec.name, id: rec.id });
+                loginWithTransition({ role: 'student', name: rec.name, id: rec.id });
             } else {
                 studentLoginError.classList.add('show');
             }
@@ -8986,6 +10621,7 @@
             if (user.role === 'admin') {
                 roleBadge.textContent = 'ADMIN';
                 sessionWho.textContent = 'Signed in as administrator';
+                flushBatchSync();
 
                 // Restore active view (defaults to dashboard)
                 let savedView = null;
@@ -9047,12 +10683,12 @@
             if (typeof renderAttendance === 'function') renderAttendance();
         }
 
-        logoutBtn.addEventListener('click', () => {
+        logoutBtn.addEventListener('click', () => logoutWithTransition(() => {
             clearSession();
             document.documentElement.classList.remove('is-authed', 'is-role-admin', 'is-role-student');
             document.body.classList.remove('authed', 'role-admin', 'role-student');
             window.location.reload();
-        });
+        }));
 
         /* ============ Atom logo: electron burst across the page ============ */
         const mainAtomLogo = document.getElementById('mainAtomLogo');
@@ -9768,6 +11404,20 @@
             return d;
         }
         Object.keys(ATT).forEach(k => atMigrate(ATT[k]));
+        function atRemapIds() {                                // follow the batch update (see BATCH_UPDATE)
+            const changed = [];
+            Object.keys(ATT).forEach(k => {
+                const marks = ATT[k] && ATT[k].marks; if (!marks) return; let ch = false;
+                Object.keys(marks).forEach(id => {
+                    const t = BATCH_UPDATE.idMap[id];
+                    if (t) { marks[t.id] = Object.assign({}, marks[id], marks[t.id] || {}); delete marks[id]; ch = true; }
+                    else if (BATCH_UPDATE.dropIds.includes(+id) || BATCH_UPDATE.removedIds.includes(+id)) { delete marks[id]; ch = true; }
+                });
+                if (ch) changed.push(k);
+            });
+            return changed;
+        }
+        atRemapIds();
         const atDirty = new Set();
         let atSelDay = null, atSaveTimer = null, atWarned = false;
 
@@ -9787,9 +11437,7 @@
             return ATT[key];
         }
         function atAllStudents() {
-            const m = new Map();
-            RECORDS.forEach(r => { const id = String(r.id); if (!m.has(id)) m.set(id, { id, name: r.name, batch: r.batch }); });
-            return [...m.values()].sort((a, b) => a.batch.localeCompare(b.batch) || a.name.localeCompare(b.name));
+            return rosterStudents().sort((a, b) => a.batch.localeCompare(b.batch) || a.name.localeCompare(b.name));
         }
         function atVisibleStudents() {
             let list = atAllStudents();
@@ -9843,7 +11491,7 @@
                 mSel.value = now.getMonth() + 1; ySel.value = now.getFullYear();
             }
             const bSel = atEl('atBatchSel'), cur = bSel.value;
-            const batches = [...new Set(RECORDS.map(r => r.batch))].sort();
+            const batches = rosterBatches();
             bSel.innerHTML = '<option value="">All batches</option>' + batches.map(b => `<option value="${escH(b)}">${escH(b)}</option>`).join('');
             if (batches.includes(cur)) bSel.value = cur;
         }
@@ -9927,6 +11575,7 @@
             const snap = await fb.get(fb.ref(fb.db, AT_CLOUD));
             const cloud = snap.exists() ? snap.val() : {};
             Object.keys(cloud).forEach(k => { try { const v = typeof cloud[k] === 'string' ? JSON.parse(cloud[k]) : cloud[k]; if (v && typeof v === 'object') ATT[k] = atMigrate(v); } catch (e) { } });
+            atRemapIds().forEach(k => atDirty.add(k));
             try { localStorage.setItem(AT_KEY, JSON.stringify(ATT)); } catch (e) { }
             if (isAdminRole()) { Object.keys(ATT).forEach(k => { if (!(k in cloud)) atDirty.add(k); }); if (atDirty.size) atSave(); }   // push device-only months up
             renderAttendance();
@@ -10006,6 +11655,20 @@
             { id: 'glass', name: 'Glassmorphism', desc: 'Frosted see-through panels over a soft gradient.' },
             { id: 'brutalist', name: 'Brutalism', desc: 'Bold black outlines, hard shadows, bright colours.' }
         ];
+        const ACCENTS = [
+            { id: 'blue', name: 'Blue', color: '#0284C7' }, { id: 'red', name: 'Red', color: '#D13438' },
+            { id: 'yellow', name: 'Yellow', color: '#EAB308' }, { id: 'green', name: 'Green', color: '#1F8A57' },
+            { id: 'pink', name: 'Pink', color: '#DB2777' }, { id: 'brown', name: 'Brown', color: '#8B5A2B' }
+        ];
+        const currentAccent = () => document.documentElement.getAttribute('data-accent') || 'blue';
+        function applyAccent(id) {        // charts use CSS variables, so they follow the new colour without a redraw
+            if (!ACCENTS.some(a => a.id === id)) id = 'blue';
+            document.documentElement.setAttribute('data-accent', id);
+            try { localStorage.setItem('sbte_accent', id); } catch (e) { }
+        }
+        const accentHtml = () => `<div class="ac-title">Theme colour</div><div class="ac-row">${ACCENTS.map(a =>
+            `<button type="button" class="ac-sw${a.id === currentAccent() ? ' on' : ''}" data-a="${a.id}" style="background:${a.color};" title="${a.name}" aria-label="${a.name}" aria-pressed="${a.id === currentAccent()}">${a.id === currentAccent() ? '✓' : ''}</button>`).join('')}</div>
+        <div class="ac-note">The colour works in light and dark mode and with every design.</div>`;
         const currentDesign = () => document.documentElement.getAttribute('data-design') || 'neumorphic';
         function applyDesign(id) {
             if (!DESIGNS.some(d => d.id === id)) id = 'neumorphic';
@@ -10022,8 +11685,8 @@
           <div class="dg-desc">${d.desc}</div></button>`;
             wrap.innerHTML = `<div class="dlg" role="dialog" aria-modal="true" aria-label="Choose website design" tabindex="-1" style="width:min(820px,95vw);max-width:95vw;">
         <h3>Choose a website design</h3>
-        <div class="dlg-body">Pick a picture to switch the whole website to that style. It applies straight away and is remembered on this device.
-        <div class="dg-grid">${DESIGNS.map(card).join('')}</div></div>
+        <div class="dlg-body">Pick a picture to switch the whole website to that style, then choose a theme colour. Both apply straight away and are remembered on this device.
+        <div class="dg-grid">${DESIGNS.map(card).join('')}</div>${accentHtml()}</div>
         <div class="dlg-btns"><button type="button" class="btn primary" data-close="1">Done</button></div></div>`;
             document.body.appendChild(wrap);
             const refresh = () => wrap.querySelectorAll('.dg-card').forEach(c => {
@@ -10032,6 +11695,12 @@
                 c.querySelector('.dg-tick').textContent = on ? '✓ Selected' : '';
             });
             wrap.addEventListener('click', e => {
+                const sw = e.target.closest('.ac-sw');
+                if (sw) {
+                    applyAccent(sw.dataset.a);
+                    wrap.querySelectorAll('.ac-sw').forEach(x => { const on = x.dataset.a === currentAccent(); x.classList.toggle('on', on); x.setAttribute('aria-pressed', on); x.textContent = on ? '✓' : ''; });
+                    return;
+                }
                 const c = e.target.closest('.dg-card');
                 if (c) { applyDesign(c.dataset.d); refresh(); return; }
                 if (e.target === wrap || e.target.dataset.close) wrap.remove();
@@ -10040,6 +11709,92 @@
             const sel = wrap.querySelector('.dg-card.on'); if (sel) sel.focus();
         }
         ['designBtn', 'designBtnLogin'].forEach(id => { const b = document.getElementById(id); if (b) b.addEventListener('click', openDesignPicker); });
+
+        /* ============ LOGIN PAGE: rotating science scenes (every 3 seconds) ============ */
+        (function loginScenes() {
+            const q = sel => [...document.querySelectorAll('#loginOverlay ' + sel)];
+            const scenes = q('.lg-scene'), caps = q('.lg-cap');          // nine scenes: maths, physics, chemistry, three times over
+            if (!scenes.length) return;
+            let cur = 0;
+            const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;   // motion-sensitive visitors keep the first scene
+            const visible = () => !document.documentElement.classList.contains('is-authed') && !document.body.classList.contains('authed') && !document.hidden && !loginFxBusy;
+            function show(n) { cur = n;[scenes, caps].forEach(list => list.forEach((el, k) => el.classList.toggle('on', k === n))); }
+            if (!reduce) setInterval(() => { if (visible()) show((cur + 1) % scenes.length); }, 3000);
+        })();
+
+        /* ============ ELECTRON TRANSITION (login and logout) ============
+           Electrons burst out of an atom logo and spread over the whole page, one electron leaves the same logo and
+           flies toward the viewer until it fills the screen, and only then is the page switched behind the flash.
+           Login: from the logo in the login box to the main page.  Logout: from the logo in the header to the login page. */
+        let loginFxBusy = false;
+        function runElectronTransition(logoEl, fadeEl, onCovered, revealAfter) {
+            let finished = false, fadeAnim = null, fx = null;
+            const end = () => {
+                if (finished) return; finished = true;
+                try { onCovered(); } catch (err) { console.warn('Transition switch failed:', err); }
+                if (fadeAnim) fadeAnim.cancel();
+                if (revealAfter && fx) fx.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 480, easing: 'ease-out', fill: 'forwards' }).onfinish = () => { fx.remove(); loginFxBusy = false; };
+                else if (revealAfter) loginFxBusy = false;          // (after a logout the page reloads, so the layer is simply left in place)
+            };
+            try {
+                const r = logoEl.getBoundingClientRect(), ox = r.left + r.width / 2, oy = r.top + r.height / 2;
+                const vw = window.innerWidth, vh = window.innerHeight;
+                logoEl.animate([{ filter: 'drop-shadow(0 0 0 rgba(var(--sky-rgb), 0))' }, { filter: 'drop-shadow(0 0 16px rgba(var(--sky-rgb), 1))', offset: .35 }, { filter: 'drop-shadow(0 0 0 rgba(var(--sky-rgb), 0))' }], { duration: 700 });
+                if (fadeEl) fadeAnim = fadeEl.animate([{ opacity: 1 }, { opacity: revealAfter ? 0 : .35 }], { duration: 520, delay: 220, easing: 'ease-in', fill: 'both' });
+                fx = document.createElement('div'); fx.id = 'loginFx'; fx.setAttribute('aria-hidden', 'true'); document.body.appendChild(fx);
+                const bend = (x0, y0, x1, y1) => {
+                    const dx = x1 - x0, dy = y1 - y0, len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+                    const b = (Math.random() < .5 ? -1 : 1) * len * (.15 + Math.random() * .25);
+                    return { cx: (x0 + x1) / 2 + nx * b, cy: (y0 + y1) / 2 + ny * b };
+                };
+                // 1) electrons scatter from the logo over the whole page and fade out as they land
+                const COUNT = 64;
+                for (let i = 0; i < COUNT; i++) {
+                    setTimeout(() => {
+                        const el = document.createElement('div'); el.className = 'flying-electron'; fx.appendChild(el);
+                        const tx = 20 + Math.random() * (vw - 40), ty = 20 + Math.random() * (vh - 40), c = bend(ox, oy, tx, ty);
+                        animateElectronPath(el, ox, oy, c.cx, c.cy, tx, ty, 520 + Math.random() * 280,
+                            t => t < .1 ? t / .1 : 1,
+                            () => { el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, fill: 'forwards' }).onfinish = () => el.remove(); });
+                    }, i * 6);
+                }
+                // 2) while they scatter, one electron leaves the same logo and flies toward the viewer until it fills the screen
+                setTimeout(() => {
+                    const core = document.createElement('div'); core.className = 'lg-fx-core'; fx.appendChild(core);
+                    const mid = bend(ox, oy, vw / 2, vh / 2), full = 2.4 * Math.hypot(vw, vh) / 16;
+                    core.animate([
+                        { transform: `translate(${ox}px, ${oy}px) scale(1)`, opacity: 1, offset: 0 },
+                        { transform: `translate(${mid.cx}px, ${mid.cy}px) scale(2.6)`, opacity: 1, offset: .4 },
+                        { transform: `translate(${vw / 2}px, ${vh / 2}px) scale(5)`, opacity: 1, offset: .62 },
+                        { transform: `translate(${vw / 2}px, ${vh / 2}px) scale(${full})`, opacity: 1, offset: 1 }
+                    ], { duration: 1050, easing: 'cubic-bezier(.45, 0, .85, .55)', fill: 'forwards' }).onfinish = end;
+                }, 380);
+                setTimeout(end, 4500);                              // safety net
+            } catch (err) { console.warn('Transition skipped:', err); end(); }
+        }
+        function loginWithTransition(user) {
+            const overlay = document.getElementById('loginOverlay'), card = overlay && overlay.querySelector('.login-card');
+            if (loginFxBusy) return;
+            if (!card || prefersReducedMotion || !card.animate) { logIn(user); return; }
+            loginFxBusy = true;
+            runElectronTransition(card.querySelector('.atom-logo') || card, card, () => { if (!document.body.classList.contains('authed')) logIn(user); }, true);
+        }
+        function logoutWithTransition(doLogout) {
+            const logo = document.getElementById('mainAtomLogo');
+            if (loginFxBusy) return;
+            if (!logo || prefersReducedMotion || !logo.animate) { doLogout(); return; }
+            loginFxBusy = true;
+            runElectronTransition(logo, document.getElementById('app'), () => {
+                try { sessionStorage.setItem('sbte_fx_in', '1'); } catch (e) { }   // tells the reloaded page to fade in from white
+                doLogout();
+            }, false);
+        }
+        (function logoutReveal() {                                  // runs on the page that loads right after a logout
+            const root = document.documentElement;
+            if (!root.classList.contains('fx-cover')) return;
+            try { sessionStorage.removeItem('sbte_fx_in'); } catch (e) { }
+            setTimeout(() => { root.classList.add('fx-out'); setTimeout(() => root.classList.remove('fx-cover', 'fx-out'), 650); }, 200);
+        })();
 
         /* ============ Auto-restore Session on Page Load ============ */
         (function restoreSessionOnLoad() {
@@ -10098,6 +11853,8 @@
                         ...rec,
                         id: rec.id,
                     })).map(normalizeRecord);
+                    const batchOps = applyBatchUpdate(cloudRecords);
+                    if (batchOps.remove.length || batchOps.set.length) { pendingBatchSync = batchOps; flushBatchSync(); }
                     if (cloudRecords.length) {
                         RECORDS.length = 0;
                         cloudRecords.forEach(r => RECORDS.push(r));
